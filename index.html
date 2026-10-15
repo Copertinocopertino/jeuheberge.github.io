@@ -124,6 +124,33 @@
   .ines-preview    { background: #e4c77a; }
   .tam-preview     { background: #4d7a8c; }
 
+  /* ---------- Liste des parties ---------- */
+  #roomList {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 3px solid #58617d;
+    text-align: left;
+  }
+  #roomList .rl-title {
+    font-size: 12px; letter-spacing: 2px; opacity: .75;
+    margin-bottom: 8px; text-transform: uppercase; text-align: center;
+  }
+  #roomListItems {
+    display: flex; flex-direction: column; gap: 8px;
+    max-height: 220px; overflow-y: auto; padding: 2px 4px 6px 2px;
+  }
+  .room-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: #151a2a; border: 3px solid #58617d; padding: 8px 10px;
+  }
+  .room-item:hover { border-color: #fff; }
+  .room-item .ri-code {
+    font-size: 20px; font-weight: 900; letter-spacing: 4px; color: #ffd447;
+  }
+  .room-item .ri-meta { font-size: 11px; opacity: .8; margin-top: 2px; }
+  .room-item .lobby-btn { padding: 6px 12px; font-size: 13px; box-shadow: 3px 3px 0 #080a10; }
+  .rl-empty { font-size: 13px; opacity: .7; text-align: center; padding: 8px 0; }
+
   /* ---------- Header ---------- */
   #topBar {
     display: flex;
@@ -497,6 +524,10 @@
         </div>
         <div class="lobby-row">
           <button class="lobby-btn" id="btnSolo" style="background:#2a324c;color:#fff;border-color:#58617d">Jouer solo</button>
+        </div>
+        <div id="roomList">
+          <div class="rl-title">Parties en cours</div>
+          <div id="roomListItems"><div class="rl-empty">Chargement…</div></div>
         </div>
       </div>
 
@@ -1169,7 +1200,92 @@ function applyRemote(data) {
   checkBurnout();
 }
 
+// ---------- Liste des parties (écran d'accueil) ----------
+function stopRoomList() {
+  if (state.listRef) {
+    try { state.listRef.off(); } catch (e) {}
+    state.listRef = null;
+  }
+}
+
+function renderRoomList(rooms) {
+  const box = $("roomListItems");
+  box.innerHTML = "";
+  const list = Object.keys(rooms || {})
+    .filter(code => /^[A-Z0-9]{3,8}$/.test(code) && rooms[code] && rooms[code].chars)
+    .map(code => {
+      const r = rooms[code];
+      return {
+        code,
+        online: Object.keys(r.owners || {}).length,
+        chars: Object.keys(r.chars || {}).length,
+        createdAt: Number(r.createdAt) || 0
+      };
+    })
+    .sort((a, b) => (b.online - a.online) || (b.createdAt - a.createdAt));
+
+  if (!list.length) {
+    const d = document.createElement("div");
+    d.className = "rl-empty";
+    d.textContent = "Aucune partie pour l'instant. Crée la première !";
+    box.appendChild(d);
+    return;
+  }
+  list.forEach(r => {
+    const row = document.createElement("div");
+    row.className = "room-item";
+    const left = document.createElement("div");
+    const code = document.createElement("div");
+    code.className = "ri-code";
+    code.textContent = r.code;
+    const meta = document.createElement("div");
+    meta.className = "ri-meta";
+    const date = r.createdAt ? " · créée le " + new Date(r.createdAt).toLocaleDateString("fr-FR") : "";
+    meta.textContent = (r.online > 0 ? "🟢 " + r.online + " en ligne" : "⚪ personne en ligne") +
+      " · " + r.chars + " perso" + (r.chars > 1 ? "s" : "") + date;
+    left.appendChild(code);
+    left.appendChild(meta);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "lobby-btn secondary";
+    btn.textContent = "Rejoindre";
+    btn.addEventListener("click", () => {
+      $("joinCode").value = r.code;
+      joinRoom();
+    });
+    row.appendChild(left);
+    row.appendChild(btn);
+    box.appendChild(row);
+  });
+}
+
+async function startRoomList() {
+  const box = $("roomListItems");
+  if (!CONFIGURED) { $("roomList").style.display = "none"; return; }
+  try {
+    const db = await connectDb();
+    state.listRef = db.ref("rooms");
+    state.listRef.on("value", snap => renderRoomList(snap.val()), err => {
+      const m = (err && (err.message || err.code)) || "";
+      box.innerHTML = "";
+      const d = document.createElement("div");
+      d.className = "rl-empty";
+      d.textContent = /permission/i.test(m)
+        ? "Liste indisponible : mets à jour les règles Firebase (lecture sur « rooms »)."
+        : "Liste indisponible : " + m;
+      box.appendChild(d);
+    });
+  } catch (e) {
+    box.innerHTML = "";
+    const d = document.createElement("div");
+    d.className = "rl-empty";
+    d.textContent = "Liste indisponible : " + (e.message || e);
+    box.appendChild(d);
+  }
+}
+
 function openRoom(code) {
+  stopRoomList();
   state.roomCode = code;
   state.mode = "multi";
   state.firstSnapshot = true;
@@ -1270,6 +1386,7 @@ $("joinCode").addEventListener("keydown", e => { if (e.key === "Enter") joinRoom
 $("btnStart").addEventListener("click", enterGame);
 
 $("btnSolo").addEventListener("click", () => {
+  stopRoomList();
   state.mode = "solo";
   state.myChar = null;
   state.owners = {};
@@ -1412,6 +1529,7 @@ try {
 } catch (e) {}
 
 updateCharPickUI();
+startRoomList();
 </script>
 </body>
 </html>
