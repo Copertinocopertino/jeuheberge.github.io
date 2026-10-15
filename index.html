@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Corporate Motivation — Multi</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<style>
+  html, body {
+    margin: 0; height: 100%;
+    background: #111;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    overflow-x: hidden;
+  }
+  body {
+    background:
+      radial-gradient(circle at 50% 25%, rgba(255,255,255,.10), transparent 42%),
+      linear-gradient(180deg, #15192b, #090b14);
+    min-height: 100vh;
+  }
+
+  /* ---------- Lobby ---------- */
+  #lobby {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    background:
+      radial-gradient(circle at 50% 35%, rgba(255,255,255,.12), transparent 45%),
+      linear-gradient(180deg, #15192b, #090b14);
+  }
+  #lobby.hidden { display: none; }
+  .lobby-card {
+    width: min(440px, calc(100% - 32px));
+    box-sizing: border-box;
+    padding: 28px 24px;
+    border: 4px solid #fff;
+    background: #20263a;
+    box-shadow: 10px 10px 0 #080a10;
+    text-align: center;
+  }
+  .lobby-card h1 {
+    margin: 0 0 6px;
+    font-size: clamp(24px, 5vw, 34px);
+    text-transform: uppercase;
+  }
+  .lobby-card .kicker {
+    font-size: 13px; letter-spacing: 3px; opacity: .7; margin-bottom: 4px;
+  }
+  .lobby-card p { opacity: .8; font-size: 14px; margin: 0 0 18px; }
+  .lobby-row {
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px;
+  }
+  .lobby-card input[type="text"] {
+    width: 140px;
+    background: #151a2a;
+    border: 3px solid #58617d;
+    color: #ffd447;
+    font-size: 20px;
+    font-weight: 900;
+    text-align: center;
+    padding: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-family: inherit;
+  }
+  .lobby-card input:focus { outline: 2px solid #ffd447; border-color: #ffd447; }
+  .lobby-btn {
+    border: 3px solid #fff;
+    background: #e9edf7;
+    color: #121522;
+    font-size: 16px;
+    font-weight: 900;
+    padding: 12px 20px;
+    cursor: pointer;
+    box-shadow: 5px 5px 0 #080a10;
+    font-family: inherit;
+  }
+  .lobby-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 #080a10; }
+  .lobby-btn.secondary { background: #ffd447; }
+  .lobby-btn:disabled { opacity: .45; cursor: not-allowed; }
+  #lobbyStatus {
+    min-height: 20px;
+    font-size: 13px;
+    opacity: .85;
+    margin-top: 12px;
+  }
+  .char-pick {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 16px 0 8px;
+  }
+  .char-pick button {
+    appearance: none;
+    border: 3px solid #58617d;
+    background: #151a2a;
+    color: #fff;
+    padding: 12px 6px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: .12s;
+  }
+  .char-pick button:hover:not(:disabled),
+  .char-pick button.selected {
+    border-color: #fff;
+    background: #2a324c;
+    transform: translateY(-2px);
+  }
+  .char-pick button:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+  }
+  .char-pick .mini-sprite {
+    width: 48px; height: 48px;
+    margin: 0 auto 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 22px;
+    border: 3px solid #080a10;
+    box-shadow: 3px 3px 0 #080a10;
+    color: #111;
+  }
+  .tristan-preview { background: #9b6545; }
+  .ines-preview    { background: #e4c77a; }
+  .tam-preview     { background: #4d7a8c; }
+
+  /* ---------- Header ---------- */
+  #topBar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px 8px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  #dateBox {
+    background: #20263a;
+    border: 3px solid #fff;
+    box-shadow: 5px 5px 0 #080a10;
+    padding: 8px 14px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  #weekTrack {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #20263a;
+    border: 3px solid #fff;
+    box-shadow: 5px 5px 0 #080a10;
+    padding: 6px 12px;
+  }
+  .day {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 15px;
+    border: 2px solid #58617d;
+    background: #151a2a;
+    position: relative;
+  }
+  .day.today {
+    border-color: #ffd447;
+    background: #2a324c;
+    color: #ffd447;
+  }
+  .day .arrow {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #ffd447;
+    line-height: 1;
+  }
+  #roomInfo {
+    font-size: 12px;
+    opacity: .8;
+    background: #20263a;
+    border: 2px solid #58617d;
+    padding: 6px 10px;
+  }
+  #soundButton {
+    width: 42px; height: 42px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.45);
+    border: 2px solid rgba(255,255,255,.7);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    user-select: none;
+  }
+
+  .kicker {
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 4px;
+    opacity: .7;
+    margin: 6px 0 2px;
+  }
+  h1.main-title {
+    text-align: center;
+    margin: 0 0 6px;
+    font-size: clamp(22px, 4.5vw, 36px);
+    text-transform: uppercase;
+  }
+  .subtitle {
+    text-align: center;
+    opacity: .75;
+    font-size: 14px;
+    margin: 0 auto 18px;
+    max-width: 640px;
+    padding: 0 12px;
+  }
+
+  /* ---------- Characters ---------- */
+  #characters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    max-width: 920px;
+    margin: 0 auto 12px;
+    padding: 0 12px;
+  }
+  #addCharRow {
+    max-width: 920px;
+    margin: 0 auto 22px;
+    padding: 0 12px;
+    text-align: center;
+  }
+  #addCharBtn {
+    border: 3px solid #fff;
+    background: #2a324c;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 900;
+    padding: 10px 18px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #080a10;
+    font-family: inherit;
+  }
+  #addCharBtn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 #080a10; }
+  #addCharBtn:disabled { opacity: .45; cursor: not-allowed; }
+  .char-card {
+    background: #20263a;
+    border: 4px solid #58617d;
+    box-shadow: 8px 8px 0 #080a10;
+    padding: 14px 10px 12px;
+    text-align: center;
+    position: relative;
+    transition: .15s border-color, .15s background;
+  }
+  .char-card.mine {
+    border-color: #ffd447;
+    background: #2a324c;
+  }
+  .char-card .owner-tag {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffd447;
+    color: #121522;
+    font-size: 10px;
+    font-weight: 900;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+  .motivation-wrap { margin-bottom: 10px; }
+  .motivation-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    opacity: .85;
+  }
+  .bar-bg {
+    height: 14px;
+    background: #151a2a;
+    border: 2px solid #080a10;
+    position: relative;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    width: 80%;
+    transition: width .25s ease, background .25s;
+  }
+  .bar-fill.high { background: #4cc46a; }
+  .bar-fill.mid  { background: #f0b429; }
+  .bar-fill.low  { background: #e0453a; }
+  .bar-text {
+    position: absolute;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 900;
+    color: #fff;
+    text-shadow: 0 1px 2px #000;
+    pointer-events: none;
+  }
+  .char-sprite {
+    width: 72px; height: 72px;
+    margin: 8px auto 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 34px;
+    border: 4px solid #080a10;
+    box-shadow: 5px 5px 0 #080a10;
+    color: #111;
+  }
+  .char-card strong { display: block; font-size: 18px; margin-top: 4px; }
+  .char-card span   { display: block; font-size: 13px; opacity: .8; margin-top: 2px; }
+  .char-card small  { display: block; font-size: 11px; opacity: .6; margin-top: 4px; }
+
+  /* ---------- Actions ---------- */
+  .section {
+    max-width: 920px;
+    margin: 0 auto 18px;
+    padding: 0 12px;
+  }
+  .section-title {
+    font-size: 13px;
+    letter-spacing: 2px;
+    opacity: .75;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  .add-action-btn {
+    margin: 0 0 10px;
+    border: 3px solid #fff;
+    background: #2a324c;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 900;
+    padding: 7px 12px;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 #080a10;
+    font-family: inherit;
+  }
+  .add-action-btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #080a10; }
+  .add-action-btn.bonus-add { border-color: #4cc46a; }
+  .add-action-btn.malus-add { border-color: #e0453a; }
+  .action-card {
+    background: #151a2a;
+    border: 3px solid #58617d;
+    padding: 10px 8px;
+    text-align: center;
+    transition: .12s border-color, .12s background;
+  }
+  .action-card:hover { border-color: #fff; background: #1e2438; }
+  .action-card button {
+    appearance: none;
+    width: 100%;
+    border: 3px solid #fff;
+    background: #e9edf7;
+    color: #121522;
+    font-size: 13px;
+    font-weight: 900;
+    padding: 8px 6px;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 #080a10;
+    font-family: inherit;
+    line-height: 1.25;
+  }
+  .action-card button:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 #080a10;
+  }
+  .action-card button:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .action-card.attack button { background: #3a2530; color: #fff; border-color: #e0453a; }
+  .action-card.bonus button  { background: #1f3d2a; color: #fff; border-color: #4cc46a; }
+  .points-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 8px;
+    font-size: 12px;
+  }
+  .points-row input {
+    width: 52px;
+    background: #0d1018;
+    border: 2px solid #58617d;
+    color: #ffd447;
+    font-weight: 700;
+    font-size: 13px;
+    text-align: center;
+    padding: 3px 2px;
+    font-family: inherit;
+  }
+  .points-row input:focus { outline: 2px solid #ffd447; border-color: #ffd447; }
+
+  #statusBar {
+    max-width: 920px;
+    margin: 8px auto 24px;
+    padding: 0 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  #toast {
+    min-height: 22px;
+    font-size: 14px;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  #toast.show { opacity: 1; }
+  #resetBtn {
+    border: 3px solid #fff;
+    background: #e9edf7;
+    color: #121522;
+    font-size: 14px;
+    font-weight: 900;
+    padding: 8px 16px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #080a10;
+    font-family: inherit;
+  }
+  #resetBtn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #080a10; }
+
+  #burnoutScreen {
+    position: fixed; inset: 0; z-index: 50;
+    display: none;
+    align-items: center; justify-content: center;
+    background: rgba(9,11,20,.82);
+  }
+  #burnoutScreen.show { display: flex; }
+  .burnout-card {
+    background: #20263a;
+    border: 4px solid #fff;
+    box-shadow: 10px 10px 0 #080a10;
+    padding: 28px 24px;
+    text-align: center;
+    max-width: 420px;
+    width: calc(100% - 32px);
+  }
+  .burnout-card h2 {
+    margin: 0 0 8px;
+    font-size: 32px;
+    color: #e0453a;
+  }
+  .burnout-card p { opacity: .85; margin: 0 0 18px; }
+  .burnout-card button {
+    border: 3px solid #fff;
+    background: #e9edf7;
+    color: #121522;
+    font-size: 16px;
+    font-weight: 900;
+    padding: 10px 22px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #080a10;
+    font-family: inherit;
+  }
+
+  #gameUI { display: none; }
+  #gameUI.visible { display: block; }
+
+  @media (max-width: 700px) {
+    #characters { gap: 8px; }
+    .char-sprite { width: 54px; height: 54px; font-size: 26px; }
+    .char-card strong { font-size: 14px; }
+    .char-card span, .char-card small { font-size: 11px; }
+    .day { width: 30px; height: 30px; font-size: 13px; }
+    .actions-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ========== LOBBY ========== -->
+  <div id="lobby">
+    <div class="lobby-card">
+      <div class="kicker">CORPORATE MOTIVATION</div>
+      <h1>Partie multi</h1>
+      <p>Chacun contrôle son personnage.<br>Les autres voient les barres évoluer en direct.</p>
+
+      <div id="lobbyStep1">
+        <div class="lobby-row">
+          <button class="lobby-btn" id="btnCreate">Créer une partie</button>
+        </div>
+        <div class="lobby-row">
+          <input type="text" id="joinCode" placeholder="CODE" maxlength="4" autocomplete="off">
+          <button class="lobby-btn secondary" id="btnJoin">Rejoindre</button>
+        </div>
+        <div class="lobby-row">
+          <button class="lobby-btn" id="btnSolo" style="background:#2a324c;color:#fff;border-color:#58617d">Jouer solo</button>
+        </div>
+      </div>
+
+      <div id="lobbyStep2" style="display:none">
+        <p style="margin-bottom:8px">Code de la partie :</p>
+        <div style="font-size:32px;font-weight:900;letter-spacing:8px;color:#ffd447;margin-bottom:12px" id="displayCode">----</div>
+        <p style="font-size:13px;opacity:.75;margin-bottom:12px">Partie hébergée en ligne en permanence : le code reste valable même si personne n'est connecté.</p>
+        <p style="font-size:13px;margin-bottom:8px">Choisis ton personnage :</p>
+        <div class="char-pick" id="charPick">
+          <button data-char="tristan">
+            <div class="mini-sprite tristan-preview">T</div>
+            <strong>Tristan</strong>
+          </button>
+          <button data-char="ines">
+            <div class="mini-sprite ines-preview">I</div>
+            <strong>Inès</strong>
+          </button>
+          <button data-char="tam">
+            <div class="mini-sprite tam-preview">T</div>
+            <strong>Tam</strong>
+          </button>
+        </div>
+        <button class="lobby-btn" id="btnStart" disabled style="margin-top:12px">Entrer dans le bureau</button>
+      </div>
+
+      <div id="lobbyStatus"></div>
+    </div>
+  </div>
+
+  <!-- ========== GAME UI ========== -->
+  <div id="gameUI">
+    <div id="topBar">
+      <div id="dateBox">—</div>
+      <div id="weekTrack" aria-label="Progression de la semaine">
+        <div class="day" data-day="1">L</div>
+        <div class="day" data-day="2">M</div>
+        <div class="day" data-day="3">M</div>
+        <div class="day" data-day="4">J</div>
+        <div class="day" data-day="5">V</div>
+      </div>
+      <div id="roomInfo" style="display:none"></div>
+      <div id="soundButton" title="Activer / couper le son">🔊</div>
+    </div>
+
+    <div class="kicker">CORPORATE MOTIVATION</div>
+    <h1 class="main-title">Gère l'équipe</h1>
+    <p class="subtitle" id="gameSubtitle">Tu contrôles ton personnage. La motivation part à 100 % le lundi et baisse de 10 % chaque jour. Les collègues voient tout en direct.</p>
+
+    <div id="characters">
+      <div class="char-card" data-id="tristan" id="card-tristan">
+        <div class="owner-tag" id="owner-tristan" style="display:none"></div>
+        <div class="motivation-wrap">
+          <div class="motivation-label">MOTIVATION</div>
+          <div class="bar-bg">
+            <div class="bar-fill high" id="bar-tristan"></div>
+            <div class="bar-text" id="val-tristan">100</div>
+          </div>
+        </div>
+        <div class="char-sprite tristan-preview">T</div>
+        <strong>TRISTAN</strong>
+      </div>
+
+      <div class="char-card" data-id="ines" id="card-ines">
+        <div class="owner-tag" id="owner-ines" style="display:none"></div>
+        <div class="motivation-wrap">
+          <div class="motivation-label">MOTIVATION</div>
+          <div class="bar-bg">
+            <div class="bar-fill high" id="bar-ines"></div>
+            <div class="bar-text" id="val-ines">100</div>
+          </div>
+        </div>
+        <div class="char-sprite ines-preview">I</div>
+        <strong>INÈS</strong>
+      </div>
+
+      <div class="char-card" data-id="tam" id="card-tam">
+        <div class="owner-tag" id="owner-tam" style="display:none"></div>
+        <div class="motivation-wrap">
+          <div class="motivation-label">MOTIVATION</div>
+          <div class="bar-bg">
+            <div class="bar-fill high" id="bar-tam"></div>
+            <div class="bar-text" id="val-tam">100</div>
+          </div>
+        </div>
+        <div class="char-sprite tam-preview">T</div>
+        <strong>TAM</strong>
+      </div>
+    </div>
+
+    <div id="addCharRow">
+      <button type="button" id="addCharBtn">＋ Ajouter un personnage</button>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Malus — baissent ta motivation</div>
+      <button type="button" class="add-action-btn malus-add" id="addMalusBtn">＋ Ajouter un malus</button>
+      <div class="actions-grid" id="attacksGrid"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Bonus — remontent ta motivation</div>
+      <button type="button" class="add-action-btn bonus-add" id="addBonusBtn">＋ Ajouter un bonus</button>
+      <div class="actions-grid" id="bonusesGrid"></div>
+    </div>
+
+    <div id="statusBar">
+      <div id="toast"></div>
+      <button id="resetBtn">↺ RECOMMENCER LA SEMAINE</button>
+    </div>
+  </div>
+
+  <div id="burnoutScreen">
+    <div class="burnout-card">
+      <div class="kicker">ALERTE</div>
+      <h2>BURN-OUT !</h2>
+      <p id="burnoutText">Un membre de l'équipe a atteint 0 de motivation.</p>
+      <button id="burnoutOk">RECOMMENCER</button>
+    </div>
+  </div>
+
+<script>
+"use strict";
+
+// ============================================================
+//  CORPORATE MOTIVATION — Multi en ligne (Firebase Realtime Database)
+//  La partie vit dans la base de données : plus besoin d'hôte connecté.
+//
+//  ⚠️ À CONFIGURER : colle ci-dessous l'URL de ta base Firebase
+//  (console Firebase → Realtime Database → onglet "Données", l'URL en haut).
+// ============================================================
+const FIREBASE_CONFIG = {
+  databaseURL: "https://motivation-corpo-default-rtdb.firebaseio.com"
+};
+// Au cas où ta base serait dans une autre région, ces adresses sont testées automatiquement
+const DB_URL_CANDIDATES = [
+  "https://motivation-corpo-default-rtdb.firebaseio.com",
+  "https://motivation-corpo-default-rtdb.europe-west1.firebasedatabase.app",
+  "https://motivation-corpo-default-rtdb.asia-southeast1.firebasedatabase.app"
+];
+const CONFIGURED = !/REMPLACE-MOI/.test(FIREBASE_CONFIG.databaseURL);
+
+const ATTACKS = [
+  { id: "deadline",  label: "Deadline proche",          default: -15 },
+  { id: "kaizen",    label: "Kaizen obligatoire",       default: -10 },
+  { id: "reunion",   label: "Réunion improvisée",       default: -12 },
+  { id: "mail",      label: "Mail en copie à tous",     default: -8  },
+  { id: "audit",     label: "Audit surprise",           default: -18 },
+  { id: "pptx",      label: "PowerPoint 87 slides",     default: -14 }
+];
+
+const BONUSES = [
+  { id: "cafe",      label: "Café",                     default: 12 },
+  { id: "pause",     label: "Pause décompressante",     default: 10 },
+  { id: "dej",       label: "Déjeuner",                 default: 15 },
+  { id: "reussite",  label: "Réussite au boulot",       default: 20 }
+];
+
+const DAYS_FR = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+const MONTHS_FR = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+const CHAR_COLORS = ["#9b6545", "#e4c77a", "#4d7a8c", "#c2547a", "#3f8f7b", "#7a4fa3", "#e8873a", "#3f6fc4"];
+const DEFAULT_CHARS = {
+  tristan: { name: "Tristan", color: "#9b6545", letter: "T" },
+  ines:    { name: "Inès",    color: "#e4c77a", letter: "I" },
+  tam:     { name: "Tam",     color: "#4d7a8c", letter: "T" }
+};
+
+function getClientId() {
+  try {
+    let id = sessionStorage.getItem("cm_client");
+    if (!id) {
+      id = "c" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+      sessionStorage.setItem("cm_client", id);
+    }
+    return id;
+  } catch (e) {
+    return "c" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  }
+}
+
+const state = {
+  mode: "lobby",          // lobby | solo | multi
+  roomCode: null,
+  myChar: null,
+  clientId: getClientId(),
+  db: null,
+  roomRef: null,
+  connected: false,
+  firstSnapshot: true,
+  actionsSig: "",
+  chars: JSON.parse(JSON.stringify(DEFAULT_CHARS)),
+  owners: {},
+  motivation: { tristan: 100, ines: 100, tam: 100 },
+  customActions: { attacks: [], bonuses: [] },
+  soundOn: true
+};
+
+const isOnline = () => state.mode === "multi" && !!state.roomRef;
+const R = path => state.roomRef.child(path);
+
+function charName(id) {
+  return (state.chars[id] && state.chars[id].name) || id;
+}
+
+// Motivation de base selon le jour : Lundi = 100, puis -10 par jour
+function baseMotivationForToday() {
+  const d = new Date().getDay();
+  if (d === 0 || d === 6) return 60;
+  return Math.max(0, 100 - (d - 1) * 10);
+}
+
+const clamp100 = v => Math.max(0, Math.min(100, Math.round(v)));
+
+function slugify(name) {
+  return name
+    .toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 20) || "perso";
+}
+
+function uniqueId(base) {
+  let id = base;
+  let n = 2;
+  while (state.chars[id]) {
+    id = base + n;
+    n++;
+  }
+  return id;
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+}
+
+const $ = id => document.getElementById(id);
+const toastEl = $("toast");
+let toastTimer = null;
+
+function showToast(msg, ms = 1800) {
+  toastEl.textContent = msg;
+  toastEl.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove("show"), ms);
+}
+
+function setLobbyStatus(msg) {
+  $("lobbyStatus").textContent = msg || "";
+}
+
+// ---------- Date & week ----------
+function updateDateAndWeek() {
+  const now = new Date();
+  const dayName = DAYS_FR[now.getDay()];
+  $("dateBox").textContent = `${dayName} ${now.getDate()} ${MONTHS_FR[now.getMonth()]} ${now.getFullYear()}`;
+
+  let wd = now.getDay();
+  if (wd === 0) wd = 7;
+  document.querySelectorAll("#weekTrack .day").forEach(d => {
+    d.classList.remove("today");
+    const arrow = d.querySelector(".arrow");
+    if (arrow) arrow.remove();
+    if (+d.dataset.day === wd) {
+      d.classList.add("today");
+      const a = document.createElement("div");
+      a.className = "arrow";
+      a.textContent = "▼";
+      d.appendChild(a);
+    }
+  });
+}
+
+// ---------- Motivation (affichage) ----------
+function setMotivation(id, value) {
+  value = clamp100(value);
+  state.motivation[id] = value;
+  const bar = $("bar-" + id);
+  const val = $("val-" + id);
+  if (bar && val) {
+    bar.style.width = value + "%";
+    val.textContent = value;
+    bar.classList.remove("high", "mid", "low");
+    if (value > 60) bar.classList.add("high");
+    else if (value > 30) bar.classList.add("mid");
+    else bar.classList.add("low");
+  }
+}
+
+// Affiche / masque l'écran de burn-out selon l'état courant
+function checkBurnout() {
+  const dead = Object.keys(state.chars).find(id => state.motivation[id] <= 0);
+  const screen = $("burnoutScreen");
+  const shown = screen.classList.contains("show");
+  if (dead && !shown) {
+    $("burnoutText").textContent = `${charName(dead)} a atteint 0 de motivation. Burn-out déclaré.`;
+    screen.classList.add("show");
+    sfx("over");
+    stopMusic();
+  } else if (!dead && shown) {
+    screen.classList.remove("show");
+    if (state.soundOn) startMusic();
+  }
+}
+
+function applyDelta(delta) {
+  if (!state.myChar) return;
+  const id = state.myChar;
+  const name = charName(id);
+  if (delta < 0) {
+    showToast(`${name} : ${delta} motivation`);
+    sfx("hit");
+  } else {
+    showToast(`${name} : +${Math.abs(delta)} motivation`);
+    sfx("heal");
+  }
+  if (isOnline()) {
+    // Transaction : plusieurs joueurs peuvent agir en même temps sans écraser les autres
+    R("motivation/" + id).transaction(cur => {
+      const v = typeof cur === "number" ? cur : baseMotivationForToday();
+      return clamp100(v + delta);
+    });
+  } else {
+    setMotivation(id, state.motivation[id] + delta);
+    checkBurnout();
+  }
+}
+
+// ---------- Propriétaires de personnages ----------
+function updateRoomInfo() {
+  const el = $("roomInfo");
+  if (state.mode !== "multi") { el.style.display = "none"; return; }
+  el.style.display = "";
+  el.textContent = (state.connected ? "🟢 " : "🔴 ") + "Salle " + state.roomCode +
+    (state.myChar ? " · Tu es " + charName(state.myChar) : "");
+}
+
+function updateOwnerTags() {
+  Object.keys(state.chars).forEach(id => {
+    const card = $("card-" + id);
+    const tag = $("owner-" + id);
+    if (!card || !tag) return;
+    const mine = state.myChar === id;
+    card.classList.toggle("mine", mine);
+    if (mine) {
+      tag.style.display = "";
+      tag.textContent = "TOI";
+    } else if (state.mode === "multi" && state.owners[id]) {
+      tag.style.display = "";
+      tag.textContent = "collègue";
+    } else {
+      tag.style.display = "none";
+    }
+  });
+  updateRoomInfo();
+}
+
+// (Ré)enregistre mon personnage dans la base + libération automatique à la déconnexion
+function registerOwner(id) {
+  const ref = R("owners/" + id);
+  return ref.transaction(cur => (cur === null || cur === state.clientId) ? state.clientId : undefined)
+    .then(res => {
+      if (res.committed) ref.onDisconnect().remove();
+      return res.committed;
+    });
+}
+
+function claimChar(id) {
+  if (state.myChar === id) return Promise.resolve(true);
+  if (!isOnline()) {
+    state.myChar = id;
+    state.owners = {};
+    updateOwnerTags();
+    updateCharPickUI();
+    return Promise.resolve(true);
+  }
+  const prev = state.myChar;
+  return registerOwner(id).then(ok => {
+    if (!ok) {
+      showToast("Déjà pris par un collègue");
+      return false;
+    }
+    if (prev && prev !== id) {
+      const pr = R("owners/" + prev);
+      pr.onDisconnect().cancel();
+      pr.remove();
+    }
+    state.myChar = id;
+    updateOwnerTags();
+    updateCharPickUI();
+    return true;
+  }).catch(err => {
+    showToast("Erreur réseau : " + (err.message || err));
+    return false;
+  });
+}
+
+function bindCardClick(card, id) {
+  card.style.cursor = "pointer";
+  card.title = "Cliquer pour contrôler ce personnage";
+  card.addEventListener("click", () => {
+    if (!$("gameUI").classList.contains("visible")) return;
+    if (state.myChar === id) return;
+    claimChar(id).then(ok => {
+      if (ok) {
+        showToast("Tu contrôles maintenant " + charName(id));
+        sfx("select");
+      }
+    });
+  });
+}
+
+// ---------- Cartes personnages ----------
+function createCharCard(id, name, color, letter) {
+  const base = baseMotivationForToday();
+  const safeColor = /^#[0-9a-f]{6}$/i.test(color) ? color : "#58617d";
+  const card = document.createElement("div");
+  card.className = "char-card";
+  card.dataset.id = id;
+  card.id = "card-" + id;
+  card.innerHTML = `
+    <div class="owner-tag" id="owner-${id}" style="display:none"></div>
+    <div class="motivation-wrap">
+      <div class="motivation-label">MOTIVATION</div>
+      <div class="bar-bg">
+        <div class="bar-fill high" id="bar-${id}" style="width:${base}%"></div>
+        <div class="bar-text" id="val-${id}">${base}</div>
+      </div>
+    </div>
+    <div class="char-sprite" style="background:${safeColor}">${escapeHtml(letter)}</div>
+    <strong>${escapeHtml(name.toUpperCase())}</strong>`;
+  bindCardClick(card, id);
+  $("characters").appendChild(card);
+  state.chars[id] = { name, color: safeColor, letter };
+  setMotivation(id, base);
+  return card;
+}
+
+function addCharacter(name) {
+  name = (name || "").trim().slice(0, 20);
+  if (!name) return;
+  const id = uniqueId(slugify(name));
+  const letter = name.charAt(0).toUpperCase();
+  const color = CHAR_COLORS[Object.keys(state.chars).length % CHAR_COLORS.length];
+  if (isOnline()) {
+    R("chars/" + id).transaction(cur => cur === null ? { name, color, letter } : undefined)
+      .then(res => {
+        if (!res.committed) { showToast("Ce personnage existe déjà"); return; }
+        R("motivation/" + id).set(baseMotivationForToday());
+        showToast(name + " a rejoint l'équipe");
+        sfx("select");
+      })
+      .catch(err => showToast("Erreur réseau : " + (err.message || err)));
+  } else {
+    createCharCard(id, name, color, letter);
+    updateOwnerTags();
+    updateCharPickUI();
+    showToast(name + " a rejoint l'équipe");
+    sfx("select");
+  }
+}
+
+function setActionsEnabled(enabled) {
+  document.querySelectorAll(".action-card button").forEach(b => b.disabled = !enabled);
+}
+
+// ---------- Actions (bonus / malus) ----------
+function buildActions() {
+  const atkGrid = $("attacksGrid");
+  const bonGrid = $("bonusesGrid");
+  atkGrid.innerHTML = "";
+  bonGrid.innerHTML = "";
+
+  ATTACKS.forEach(a => renderActionCard(a, "attack", atkGrid, false));
+  BONUSES.forEach(b => renderActionCard(b, "bonus", bonGrid, false));
+  (state.customActions.attacks || []).forEach(a => renderActionCard(a, "attack", atkGrid, true));
+  (state.customActions.bonuses || []).forEach(b => renderActionCard(b, "bonus", bonGrid, true));
+}
+
+function renderActionCard(action, kind, grid, isCustom) {
+  const isBonus = kind === "bonus";
+  const points = Math.abs(parseInt(action.points ?? action.default, 10) || 0);
+  const card = document.createElement("div");
+  card.className = "action-card " + kind;
+  if (isCustom) card.dataset.customAction = action.id;
+  card.innerHTML = `
+    <button type="button"></button>
+    <div class="points-row">
+      <span>pts</span>
+      <input type="number" id="pts-${action.id}" value="${points}" min="0" step="1" aria-label="Points pour ${escapeHtml(action.label)}">
+    </div>`;
+  card.querySelector("button").textContent = action.label;
+  grid.appendChild(card);
+  card.querySelector("button").addEventListener("click", () => {
+    if (!state.myChar) {
+      showToast("Choisis d'abord ton personnage");
+      return;
+    }
+    let value = parseInt($("pts-" + action.id).value, 10);
+    if (!Number.isFinite(value) || value < 0) {
+      showToast("Saisis un nombre de points positif ou nul");
+      return;
+    }
+    applyDelta(isBonus ? Math.abs(value) : -Math.abs(value));
+  });
+}
+
+function addCustomAction(kind) {
+  const isBonus = kind === "bonus";
+  const label = prompt(isBonus ? "Nom du bonus :" : "Nom du malus :");
+  if (label === null) return;
+  const cleanLabel = label.trim();
+  if (!cleanLabel) {
+    showToast("Le nom ne peut pas être vide");
+    return;
+  }
+  if (cleanLabel.length > 48) {
+    showToast("Nom trop long (48 caractères maximum)");
+    return;
+  }
+  const rawPoints = prompt("Nombre de points " + (isBonus ? "à ajouter" : "à retirer") + " :", "10");
+  if (rawPoints === null) return;
+  const points = Number(rawPoints);
+  if (!Number.isInteger(points) || points < 0 || points > 100) {
+    showToast("Indique un nombre entier entre 0 et 100");
+    return;
+  }
+  const id = "custom-" + kind + "-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 7);
+  const action = { id, label: cleanLabel, points, ts: Date.now() };
+  if (isOnline()) {
+    R("customActions/" + (isBonus ? "bonuses" : "attacks") + "/" + id).set(action)
+      .catch(err => showToast("Erreur réseau : " + (err.message || err)));
+  } else {
+    (isBonus ? state.customActions.bonuses : state.customActions.attacks).push(action);
+    buildActions();
+  }
+  showToast((isBonus ? "Bonus " : "Malus ") + "« " + cleanLabel + " » ajouté");
+  sfx("select");
+}
+
+$("addBonusBtn").addEventListener("click", () => addCustomAction("bonus"));
+$("addMalusBtn").addEventListener("click", () => addCustomAction("attack"));
+
+// ---------- Reset ----------
+function resetAll() {
+  const base = baseMotivationForToday();
+  if (isOnline()) {
+    const upd = {};
+    Object.keys(state.chars).forEach(id => { upd["motivation/" + id] = base; });
+    state.roomRef.update(upd).catch(err => showToast("Erreur réseau : " + (err.message || err)));
+  } else {
+    Object.keys(state.chars).forEach(id => setMotivation(id, base));
+    checkBurnout();
+  }
+  showToast("Motivation du jour : " + base + "% (Lundi 100 %, −10 % par jour)");
+  sfx("win");
+}
+
+$("resetBtn").addEventListener("click", resetAll);
+$("burnoutOk").addEventListener("click", resetAll);
+
+// ============================================================
+//  RÉSEAU (Firebase Realtime Database)
+//  Structure : rooms/CODE/{ chars, motivation, owners, customActions }
+// ============================================================
+function randomCode() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let s = "";
+  for (let i = 0; i < 4; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
+
+async function findDatabaseURL() {
+  for (const url of DB_URL_CANDIDATES) {
+    try {
+      const res = await fetch(url + "/rooms/ping.json");
+      if (res.ok || res.status === 401) return url;
+    } catch (e) { /* mauvaise région : on essaie la suivante */ }
+  }
+  return FIREBASE_CONFIG.databaseURL;
+}
+
+async function connectDb() {
+  if (state.db) return state.db;
+  if (typeof firebase === "undefined") throw new Error("Firebase n'a pas pu être chargé (connexion internet ?)");
+  firebase.initializeApp({ databaseURL: await findDatabaseURL() });
+  state.db = firebase.database();
+  state.db.ref(".info/connected").on("value", snap => {
+    state.connected = !!snap.val();
+    updateRoomInfo();
+    // Après une coupure réseau, on reprend possession de son personnage
+    if (state.connected && state.myChar && state.roomRef) {
+      registerOwner(state.myChar).catch(() => {});
+    }
+  });
+  return state.db;
+}
+
+function ensureConfigured() {
+  if (!CONFIGURED) {
+    setLobbyStatus("Firebase n'est pas configuré : colle l'URL de ta base dans FIREBASE_CONFIG (début du script).");
+    return false;
+  }
+  return true;
+}
+
+function explainError(err) {
+  const m = (err && (err.message || err.code)) || String(err);
+  if (/permission/i.test(m)) return "Accès refusé par Firebase : vérifie les règles de la base (voir les instructions).";
+  return "Erreur : " + m;
+}
+
+// Applique l'état distant (source de vérité) à l'interface
+function applyRemote(data) {
+  if (!data) {
+    showToast("Cette partie n'existe plus");
+    return;
+  }
+  const first = state.firstSnapshot;
+  state.firstSnapshot = false;
+
+  // Personnages
+  const chars = data.chars || {};
+  Object.keys(chars).forEach(id => {
+    const c = chars[id];
+    if (!/^[a-z0-9-]{1,24}$/.test(id) || !c || !String(c.name || "").trim()) return;
+    if (!$("card-" + id)) {
+      createCharCard(id, String(c.name).slice(0, 20), String(c.color || ""), String(c.letter || c.name.charAt(0)).slice(0, 2));
+      if (!first) showToast(c.name + " a rejoint l'équipe");
+    }
+    state.chars[id] = { name: String(c.name).slice(0, 20), color: state.chars[id] ? state.chars[id].color : "#58617d", letter: String(c.letter || c.name.charAt(0)).slice(0, 2) };
+  });
+
+  // Motivations
+  const mot = data.motivation || {};
+  Object.keys(state.chars).forEach(id => {
+    const v = typeof mot[id] === "number" ? clamp100(mot[id]) : baseMotivationForToday();
+    const old = state.motivation[id];
+    if (!first && v !== old && id !== state.myChar) {
+      const d = v - old;
+      showToast(`${charName(id)} : ${d > 0 ? "+" : ""}${d} motivation`);
+    }
+    setMotivation(id, v);
+  });
+
+  // Propriétaires
+  state.owners = data.owners || {};
+  // Si mon personnage a été pris par quelqu'un d'autre, je le perds
+  if (state.myChar && state.owners[state.myChar] && state.owners[state.myChar] !== state.clientId) {
+    state.myChar = null;
+    showToast("Ton personnage a été pris par un collègue");
+  }
+
+  // Actions personnalisées
+  const toArr = o => Object.values(o || {})
+    .filter(a => a && /^[A-Za-z0-9-]{1,60}$/.test(String(a.id)) && String(a.label || "").trim())
+    .map(a => ({ id: String(a.id), label: String(a.label).slice(0, 48), points: clamp100(Number(a.points) || 0), ts: Number(a.ts) || 0 }))
+    .sort((x, y) => x.ts - y.ts);
+  const atk = toArr(data.customActions && data.customActions.attacks);
+  const bon = toArr(data.customActions && data.customActions.bonuses);
+  const sig = JSON.stringify([atk.map(a => a.id), bon.map(a => a.id)]);
+  if (sig !== state.actionsSig) {
+    state.actionsSig = sig;
+    state.customActions = { attacks: atk, bonuses: bon };
+    buildActions();
+    setActionsEnabled(true);
+  }
+
+  updateOwnerTags();
+  updateCharPickUI();
+  checkBurnout();
+}
+
+function openRoom(code) {
+  state.roomCode = code;
+  state.mode = "multi";
+  state.firstSnapshot = true;
+  state.roomRef = state.db.ref("rooms/" + code);
+  state.roomRef.on("value", snap => applyRemote(snap.val()), err => setLobbyStatus(explainError(err)));
+  try { localStorage.setItem("cm_last_room", code); } catch (e) {}
+  $("displayCode").textContent = code;
+  $("lobbyStep1").style.display = "none";
+  $("lobbyStep2").style.display = "block";
+  setLobbyStatus("Connecté ! Choisis ton personnage.");
+  updateCharPickUI();
+}
+
+async function createRoom() {
+  if (!ensureConfigured()) return;
+  setLobbyStatus("Création de la partie…");
+  $("btnCreate").disabled = true;
+  try {
+    await connectDb();
+    let code = null;
+    for (let i = 0; i < 10; i++) {
+      const c = randomCode();
+      const snap = await state.db.ref("rooms/" + c).get();
+      if (!snap.exists()) { code = c; break; }
+    }
+    if (!code) throw new Error("Impossible de trouver un code libre, réessaie.");
+    const base = baseMotivationForToday();
+    const motivation = {};
+    Object.keys(DEFAULT_CHARS).forEach(id => { motivation[id] = base; });
+    await state.db.ref("rooms/" + code).set({
+      chars: DEFAULT_CHARS,
+      motivation,
+      createdAt: firebase.database.ServerValue.TIMESTAMP
+    });
+    openRoom(code);
+  } catch (e) {
+    console.error(e);
+    $("btnCreate").disabled = false;
+    setLobbyStatus(explainError(e));
+  }
+}
+
+async function joinRoom() {
+  if (!ensureConfigured()) return;
+  const code = ($("joinCode").value || "").trim().toUpperCase();
+  if (code.length < 3) {
+    setLobbyStatus("Entre le code à 4 caractères.");
+    return;
+  }
+  setLobbyStatus("Connexion…");
+  $("btnJoin").disabled = true;
+  try {
+    await connectDb();
+    const snap = await state.db.ref("rooms/" + code).get();
+    if (!snap.exists()) {
+      setLobbyStatus("Partie introuvable : vérifie le code.");
+      $("btnJoin").disabled = false;
+      return;
+    }
+    openRoom(code);
+  } catch (e) {
+    console.error(e);
+    $("btnJoin").disabled = false;
+    setLobbyStatus(explainError(e));
+  }
+}
+
+function updateCharPickUI() {
+  const pick = $("charPick");
+  pick.innerHTML = "";
+  Object.keys(state.chars).forEach(id => {
+    const c = state.chars[id];
+    const btn = document.createElement("button");
+    btn.dataset.char = id;
+    const owner = state.owners[id];
+    btn.disabled = !!(owner && owner !== state.clientId);
+    if (state.myChar === id) btn.classList.add("selected");
+    btn.innerHTML = `<div class="mini-sprite" style="background:${/^#[0-9a-f]{6}$/i.test(c.color) ? c.color : "#58617d"}">${escapeHtml(c.letter)}</div><strong>${escapeHtml(c.name)}</strong>`;
+    btn.addEventListener("click", () => { claimChar(id); });
+    pick.appendChild(btn);
+  });
+  $("btnStart").disabled = !state.myChar;
+}
+
+function enterGame() {
+  if (!state.myChar) return;
+  $("lobby").classList.add("hidden");
+  $("gameUI").classList.add("visible");
+  updateOwnerTags();
+  setActionsEnabled(true);
+  if (state.soundOn) startMusic();
+  showToast("Bienvenue " + charName(state.myChar) + " !");
+}
+
+$("btnCreate").addEventListener("click", createRoom);
+$("btnJoin").addEventListener("click", joinRoom);
+$("joinCode").addEventListener("keydown", e => { if (e.key === "Enter") joinRoom(); });
+$("btnStart").addEventListener("click", enterGame);
+
+$("btnSolo").addEventListener("click", () => {
+  state.mode = "solo";
+  state.myChar = null;
+  state.owners = {};
+  $("lobbyStep1").style.display = "none";
+  $("lobbyStep2").style.display = "block";
+  $("displayCode").textContent = "SOLO";
+  setLobbyStatus("Mode solo — choisis ton personnage.");
+  updateCharPickUI();
+});
+
+$("addCharBtn").addEventListener("click", () => {
+  const name = prompt("Prénom du nouveau collègue :");
+  if (name && name.trim()) addCharacter(name.trim());
+});
+
+// ============================================================
+//  AUDIO
+// ============================================================
+let audioCtx = null, master = null, noiseBuf = null;
+let musicTimer = null, nextNoteTime = 0, step = 0;
+
+const midi = n => 440 * Math.pow(2, (n - 69) / 12);
+const MELODY = [72,0,76,0,79,0,84,0, 83,0,79,0,76,0,72,0, 74,0,77,0,81,0,86,0, 84,0,81,0,77,0,74,0];
+const BASS   = [48,0,48,0,55,0,55,0, 50,0,50,0,57,0,57,0, 48,0,48,0,55,0,55,0, 43,0,43,0,50,0,50,0];
+const BPM = 148;
+
+function ensureAudio() {
+  if (!audioCtx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return false;
+    audioCtx = new AC();
+    master = audioCtx.createGain();
+    master.gain.value = 0.5;
+    master.connect(audioCtx.destination);
+    noiseBuf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.2, audioCtx.sampleRate);
+    const d = noiseBuf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  }
+  if (audioCtx.state === "suspended") audioCtx.resume();
+  return true;
+}
+
+function tone(freq, t, dur, type, vol, slideTo) {
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type;
+  o.frequency.setValueAtTime(freq, t);
+  if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(master);
+  o.start(t); o.stop(t + dur + 0.02);
+}
+function hat(t, vol) {
+  const s = audioCtx.createBufferSource(), g = audioCtx.createGain(), f = audioCtx.createBiquadFilter();
+  s.buffer = noiseBuf; f.type = "highpass"; f.frequency.value = 7500;
+  g.gain.setValueAtTime(vol, t);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.04);
+  s.connect(f); f.connect(g); g.connect(master);
+  s.start(t); s.stop(t + 0.05);
+}
+
+function scheduleStep(i, t, spb) {
+  const m = MELODY[i % 32], b = BASS[i % 32];
+  if (m) tone(midi(m), t, spb * 0.85, "square", 0.065);
+  if (b) tone(midi(b), t, spb * 1.5, "triangle", 0.16);
+  if (i % 4 === 0) tone(160, t, 0.1, "sine", 0.22, 45);
+  if (i % 2 === 1) hat(t, 0.05);
+  if (i % 8 === 4) hat(t, 0.1);
+}
+
+function scheduler() {
+  if (!audioCtx || !state.soundOn) return;
+  const spb = 60 / BPM / 2;
+  while (nextNoteTime < audioCtx.currentTime + 0.12) {
+    scheduleStep(step, nextNoteTime, spb);
+    nextNoteTime += spb;
+    step++;
+  }
+}
+
+function startMusic() {
+  if (!state.soundOn || !ensureAudio()) return;
+  if (musicTimer) return;
+  nextNoteTime = audioCtx.currentTime + 0.06;
+  step = 0;
+  musicTimer = setInterval(scheduler, 25);
+}
+function stopMusic() {
+  if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
+}
+
+function sfx(kind) {
+  if (!state.soundOn || !audioCtx) return;
+  const t = audioCtx.currentTime;
+  switch (kind) {
+    case "select": tone(520, t, 0.08, "square", 0.08); break;
+    case "hit":    tone(240, t, 0.22, "sawtooth", 0.14, 55); break;
+    case "heal":   [523, 659, 784].forEach((f, i) => tone(f, t + i * 0.06, 0.1, "triangle", 0.12)); break;
+    case "win":    [523, 659, 784, 1047].forEach((f, i) => tone(f, t + i * 0.09, 0.16, "square", 0.1)); break;
+    case "over":   [392, 330, 262, 196].forEach((f, i) => tone(f, t + i * 0.14, 0.22, "sawtooth", 0.12)); break;
+  }
+}
+
+function firstGesture() {
+  if (state.soundOn) startMusic();
+}
+window.addEventListener("pointerdown", firstGesture, { passive: true });
+window.addEventListener("keydown", firstGesture);
+
+$("soundButton").addEventListener("click", () => {
+  state.soundOn = !state.soundOn;
+  $("soundButton").textContent = state.soundOn ? "🔊" : "🔇";
+  if (state.soundOn) startMusic(); else stopMusic();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (!audioCtx) return;
+  if (document.hidden) audioCtx.suspend();
+  else if (state.soundOn) audioCtx.resume();
+});
+
+// ---------- Init ----------
+updateDateAndWeek();
+setInterval(updateDateAndWeek, 60_000);
+buildActions();
+const startMot = baseMotivationForToday();
+Object.keys(state.chars).forEach(id => setMotivation(id, startMot));
+
+// Cartes initiales (déjà dans le HTML) : clic pour changer de personnage en jeu
+["tristan", "ines", "tam"].forEach(id => {
+  const card = $("card-" + id);
+  if (card) bindCardClick(card, id);
+});
+
+// Pré-remplit le dernier code de partie utilisé
+try {
+  const last = localStorage.getItem("cm_last_room");
+  if (last) $("joinCode").value = last;
+} catch (e) {}
+
+updateCharPickUI();
+</script>
+</body>
+</html>
