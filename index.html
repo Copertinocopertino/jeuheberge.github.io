@@ -151,6 +151,41 @@
   .room-item .lobby-btn { padding: 6px 12px; font-size: 13px; box-shadow: 3px 3px 0 #080a10; }
   .rl-empty { font-size: 13px; opacity: .7; text-align: center; padding: 8px 0; }
 
+  /* ---------- Suppression & courbes ---------- */
+  .char-card { position: relative; }
+  .action-card { position: relative; }
+  .char-card .char-del,
+  .actions-grid .action-card button.act-del {
+    position: absolute; top: -9px; right: -9px;
+    width: 22px; height: 22px; min-width: 0; padding: 0; margin: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: #20263a; color: #fff;
+    border: 2px solid #58617d; border-radius: 50%;
+    font-size: 11px; font-weight: 900; line-height: 1; cursor: pointer;
+    box-shadow: none; opacity: .8; font-family: inherit; z-index: 2;
+  }
+  .char-card .char-del:hover,
+  .actions-grid .action-card button.act-del:hover { background: #e0453a; border-color: #fff; opacity: 1; }
+  .char-chart { margin-top: 10px; }
+  .char-chart svg { display: block; width: 100%; height: auto; }
+
+  /* ---------- Sous-marins & mer ---------- */
+  .char-sprite.sub {
+    width: 100%; height: 54px; margin: 8px auto 4px;
+    background: none !important; border: 0; box-shadow: none;
+  }
+  .char-sprite.sub svg { height: 100%; width: auto; display: block; }
+  .char-pick .mini-sprite.sub {
+    width: auto; height: 34px; margin: 0 auto 6px;
+    background: none !important; border: 0; box-shadow: none;
+  }
+  .char-pick .mini-sprite.sub svg { height: 100%; width: auto; display: block; }
+  @keyframes sub-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.3px); } }
+  @keyframes bubble-up { 0% { transform: translateY(0); opacity: .9; } 100% { transform: translateY(-9px); opacity: 0; } }
+  .sub-bob { animation: sub-bob 2.6s ease-in-out infinite; }
+  .bubble { animation: bubble-up 2.4s linear infinite; }
+  @media (prefers-reduced-motion: reduce) { .sub-bob, .bubble { animation: none; } }
+
   /* ---------- Header ---------- */
   #topBar {
     display: flex;
@@ -534,7 +569,7 @@
       <div id="lobbyStep2" style="display:none">
         <p style="margin-bottom:8px">Code de la partie :</p>
         <div style="font-size:32px;font-weight:900;letter-spacing:8px;color:#ffd447;margin-bottom:12px" id="displayCode">----</div>
-        <p style="font-size:13px;opacity:.75;margin-bottom:12px">Partie hébergée en ligne en permanence : le code reste valable même si personne n'est connecté.</p>
+        <p id="onlineHint" style="font-size:13px;opacity:.75;margin-bottom:12px">Partie hébergée en ligne en permanence : le code reste valable même si personne n'est connecté.</p>
         <p style="font-size:13px;margin-bottom:8px">Choisis ton personnage :</p>
         <div class="char-pick" id="charPick">
           <button data-char="tristan">
@@ -644,7 +679,11 @@
       <div class="kicker">ALERTE</div>
       <h2>BURN-OUT !</h2>
       <p id="burnoutText">Un membre de l'équipe a atteint 0 de motivation.</p>
-      <button id="burnoutOk">RECOMMENCER</button>
+      <p id="burnoutHint" style="font-size:12px;opacity:.7;margin:-8px 0 18px"></p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button id="burnoutOk" type="button">RECOMMENCER</button>
+        <button id="burnoutContinue" type="button" style="background:#2a324c;color:#fff">CONTINUER</button>
+      </div>
     </div>
   </div>
 
@@ -721,6 +760,12 @@ const state = {
   owners: {},
   motivation: { tristan: 100, ines: 100, tam: 100 },
   customActions: { attacks: [], bonuses: [] },
+  hidden: {},      // bonus/malus par défaut supprimés
+  history: {},     // { persoId: { d1: 100, d2: 90, … } } pour la semaine en cours
+  burnoutSeen: {},  // persos au fond pour lesquels j'ai choisi « Continuer »
+  burnoutId: null,  // perso affiché dans l'écran de burn-out
+  decayChecked: "", // dernier jour pour lequel la baisse quotidienne a été vérifiée (en ligne)
+  soloStamp: null,   // idem en solo
   soundOn: true
 };
 
@@ -814,20 +859,29 @@ function setMotivation(id, value) {
     else if (value > 30) bar.classList.add("mid");
     else bar.classList.add("low");
   }
+  renderChart(id);
 }
 
 // Affiche / masque l'écran de burn-out selon l'état courant
 function checkBurnout() {
-  const dead = Object.keys(state.chars).find(id => state.motivation[id] <= 0);
+  // Un perso qui remonte au-dessus de 0 (ou qui disparaît) pourra redéclencher l'alerte plus tard
+  Object.keys(state.burnoutSeen).forEach(id => {
+    if (!state.chars[id] || state.motivation[id] > 0) delete state.burnoutSeen[id];
+  });
+  const dead = Object.keys(state.chars).find(id => state.motivation[id] <= 0 && !state.burnoutSeen[id]);
   const screen = $("burnoutScreen");
   const shown = screen.classList.contains("show");
-  if (dead && !shown) {
-    $("burnoutText").textContent = `${charName(dead)} a atteint 0 de motivation. Burn-out déclaré.`;
+  if (dead && (!shown || state.burnoutId !== dead)) {
+    state.burnoutId = dead;
+    const name = charName(dead);
+    const base = baseMotivationForToday();
+    $("burnoutText").textContent = `${name} a touché le fond ! 0 de motivation, burn-out déclaré.`;
+    $("burnoutHint").textContent = `Recommencer remet seulement ${name} à ${base} %. Continuer le laisse au fond.`;
     screen.classList.add("show");
-    sfx("over");
-    stopMusic();
+    if (!shown) { sfx("over"); stopMusic(); }
   } else if (!dead && shown) {
     screen.classList.remove("show");
+    state.burnoutId = null;
     if (state.soundOn) startMusic();
   }
 }
@@ -848,9 +902,13 @@ function applyDelta(delta) {
     R("motivation/" + id).transaction(cur => {
       const v = typeof cur === "number" ? cur : baseMotivationForToday();
       return clamp100(v + delta);
-    });
+    }).then(res => {
+      if (res.committed) recordHistory(id, res.snapshot.val());
+    }).catch(() => {});
   } else {
-    setMotivation(id, state.motivation[id] + delta);
+    const v = clamp100(state.motivation[id] + delta);
+    setMotivation(id, v);
+    recordHistory(id, v);
     checkBurnout();
   }
 }
@@ -939,6 +997,313 @@ function bindCardClick(card, id) {
   });
 }
 
+// ---------- Semaine, historique et courbes ----------
+const DAY_LETTERS = ["L", "M", "M", "J", "V"];
+
+// Clé de la semaine (date du lundi) et jour courant 1..5 (week-end = vendredi)
+function weekInfo(d = new Date()) {
+  let wd = d.getDay();
+  if (wd === 0) wd = 7;
+  const mon = new Date(d.getFullYear(), d.getMonth(), d.getDate() - (wd - 1));
+  const key = mon.getFullYear() + "-" + String(mon.getMonth() + 1).padStart(2, "0") + "-" + String(mon.getDate()).padStart(2, "0");
+  return { key, day: Math.min(wd, 5) };
+}
+
+// Enregistre la valeur de motivation du jour (la dernière valeur du jour fait foi)
+function recordHistory(id, value) {
+  const { key, day } = weekInfo();
+  value = clamp100(value);
+  if (isOnline()) {
+    R("history/" + key + "/" + id + "/d" + day).set(value).catch(() => {});
+  } else {
+    (state.history[id] = state.history[id] || {})["d" + day] = value;
+    renderChart(id);
+  }
+}
+
+// Valeur théorique : lundi 100, puis −10 par jour
+function theoreticalFor(d) { return Math.max(0, 100 - (d - 1) * 10); }
+
+// Historique théorique du lundi jusqu'au jour d (pour démarrer une courbe)
+function theoryHistory(day) {
+  const h = {};
+  for (let d = 1; d <= day; d++) h["d" + d] = theoreticalFor(d);
+  return h;
+}
+
+// 5 points (lundi → vendredi). null = jour à venir
+function seriesFor(id) {
+  const { day: today } = weekInfo();
+  const h = state.history[id] || {};
+  const pts = [];
+  for (let d = 1; d <= 5; d++) {
+    if (d > today) { pts.push(null); continue; }
+    let v;
+    if (d === today) v = state.motivation[id];
+    else if (typeof h["d" + d] === "number") v = h["d" + d];
+    else v = theoreticalFor(d);
+    pts.push(clamp100(v));
+  }
+  return pts;
+}
+
+// ---------- Baisse quotidienne : −10 par jour, retour à 100 le lundi ----------
+function computeDecay(prev, key, day) {
+  const out = { mot: {}, hist: {} };
+  Object.keys(state.chars).forEach(id => {
+    const h = {};
+    let v;
+    if (prev.wk !== key) {
+      // Nouvelle semaine : on repart de 100 le lundi et on descend jusqu'à aujourd'hui
+      Object.assign(h, theoryHistory(day));
+      v = h["d" + day];
+    } else {
+      v = clamp100(state.motivation[id]);
+      h["d" + prev.day] = v;
+      for (let d = prev.day + 1; d <= day; d++) { v = Math.max(0, v - 10); h["d" + d] = v; }
+    }
+    out.mot[id] = v;
+    out.hist[id] = h;
+  });
+  return out;
+}
+
+function checkDecay() {
+  const { key, day } = weekInfo();
+  const stamp = key + "|" + day;
+
+  if (state.mode === "multi") {
+    if (!state.roomRef || state.firstSnapshot || state.decayChecked === stamp) return;
+    state.decayChecked = stamp;
+    let prev = null;
+    // Une seule personne gagne la transaction et applique la baisse pour tout le monde
+    R("decay").transaction(cur => {
+      prev = cur;
+      if (cur && cur.wk === key && cur.day >= day) return undefined;
+      return { wk: key, day };
+    }).then(res => {
+      if (!res.committed || !prev) return; // pas de baisse la toute première fois (parties existantes)
+      const out = computeDecay(prev, key, day);
+      const upd = {};
+      Object.keys(out.mot).forEach(id => {
+        upd["motivation/" + id] = out.mot[id];
+        Object.keys(out.hist[id]).forEach(k => { upd["history/" + key + "/" + id + "/" + k] = out.hist[id][k]; });
+      });
+      state.roomRef.update(upd);
+      showToast(prev.wk === key ? "Nouveau jour : −10 de motivation pour tout le monde" : "Nouvelle semaine !");
+    }).catch(() => { state.decayChecked = ""; });
+    return;
+  }
+
+  // Solo / accueil
+  if (!state.soloStamp) { state.soloStamp = { wk: key, day }; return; }
+  const prev = state.soloStamp;
+  if (prev.wk === key && prev.day >= day) return;
+  state.soloStamp = { wk: key, day };
+  const out = computeDecay(prev, key, day);
+  Object.keys(out.mot).forEach(id => {
+    state.history[id] = Object.assign(state.history[id] || {}, out.hist[id]);
+    setMotivation(id, out.mot[id]);
+  });
+  checkBurnout();
+  showToast(prev.wk === key ? "Nouveau jour : −10 de motivation pour tout le monde" : "Nouvelle semaine !");
+}
+
+// ---------- Sous-marins pixel art ----------
+const SUB_ART = ["............ooo.........", "...........ossso........", "...........osoo.........", "....o.....ooso..........", "...obo...ollllo.........", "..oobbooobbbbbboooooo...", ".osoollllllllllllllllo..", ".osobbbbbbbbbbbbbbbbbbo.", ".osSbbbbWwbbWwbbWwbbbbo.", ".osSbbbbwwbbwwbbwwbbbbo.", ".osodddddddddddddddddbo.", ".osooddddddddddddddddo..", "..o..oooodddddddooooo...", ".........ooooooo........"];
+
+function mixColor(hex, target, a) {
+  const c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+  return "#" + c.map((v, i) => Math.round(v + (target[i] - v) * a).toString(16).padStart(2, "0")).join("");
+}
+
+function subRects(color) {
+  const safe = /^#[0-9a-f]{6}$/i.test(color) ? color : "#e4c77a";
+  const pal = {
+    o: "#10131f", b: safe,
+    l: mixColor(safe, [255, 255, 255], .38),
+    d: mixColor(safe, [0, 0, 0], .32),
+    w: "#9fdcff", W: "#ffffff", s: "#aab3c7", S: "#5d667c"
+  };
+  let out = "";
+  SUB_ART.forEach((row, y) => {
+    let x = 0;
+    while (x < row.length) {
+      const ch = row[x];
+      let n = 1;
+      while (x + n < row.length && row[x + n] === ch) n++;
+      if (ch !== ".") out += `<rect x="${x}" y="${y}" width="${n}" height="1" fill="${pal[ch]}"/>`;
+      x += n;
+    }
+  });
+  return out;
+}
+
+function subSvg(color) {
+  const w = SUB_ART[0].length, h = SUB_ART.length;
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w * 4}" height="${h * 4}" shape-rendering="crispEdges" aria-hidden="true">${subRects(color)}</svg>`;
+}
+
+// ---------- La mer : 100 = surface, 0 = le fond ----------
+function renderChart(id) {
+  const el = $("chart-" + id);
+  if (!el) return;
+  const pts = seriesFor(id);
+  const { day: today } = weekInfo();
+  const color = (state.chars[id] && state.chars[id].color) || "#e4c77a";
+
+  const W = 150, H = 100;
+  const tankL = 20, tankR = W - 2;
+  const yS = 16;                 // surface (100)
+  const yB = 76;                 // fond (0) : début du sable
+  const S = 1.05;                // taille d'un pixel du sous-marin
+  const sw = SUB_ART[0].length * S, sh = SUB_ART.length * S;
+  const yTop = yS - 5 * S + sh / 2;   // à 100, la coque affleure la surface
+  const yBot = yB - sh / 2;           // à 0, le sous-marin repose sur le sable
+  const xs = i => 36 + i * 98 / 4;
+  const cy = v => yTop + (100 - v) / 100 * (yBot - yTop);
+
+  const known = [];
+  pts.forEach((v, i) => { if (v !== null) known.push({ x: xs(i), y: cy(v), v }); });
+  const last = known[known.length - 1] || { x: xs(0), y: cy(100), v: 100 };
+  const label = "Évolution de la motivation : " +
+    pts.map((v, i) => v === null ? null : DAY_LETTERS[i] + " " + v).filter(Boolean).join(", ") +
+    (last.v === 0 ? " — a touché le fond" : "");
+  const gid = "sea-" + id;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${escapeHtml(label)}">`;
+  svg += `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">` +
+         `<stop offset="0" stop-color="#43c6e3"/><stop offset=".45" stop-color="#1d80b3"/><stop offset="1" stop-color="#0a2756"/></linearGradient></defs>`;
+  // eau
+  svg += `<rect x="${tankL}" y="${yS}" width="${tankR - tankL}" height="${yB - yS}" fill="url(#${gid})"/>`;
+  svg += `<rect x="${tankL}" y="${yS}" width="${tankR - tankL}" height="1.5" fill="#ffffff" fill-opacity=".35"/>`;
+  svg += `<line x1="${tankL}" y1="${(yS + yB) / 2}" x2="${tankR}" y2="${(yS + yB) / 2}" stroke="#ffffff" stroke-opacity=".16" stroke-dasharray="3 3"/>`;
+  // sable, algues, cailloux
+  svg += `<rect x="${tankL}" y="${yB}" width="${tankR - tankL}" height="10" fill="#c89b5b"/>`;
+  svg += `<rect x="${tankL}" y="${yB}" width="${tankR - tankL}" height="2" fill="#a67c3d"/>`;
+  [[30, 5], [47, 7], [66, 4], [88, 7], [101, 5], [126, 6], [141, 4]].forEach(([px, py]) => {
+    svg += `<rect x="${px}" y="${yB + py}" width="2" height="1.5" fill="#e2bf84"/>`;
+  });
+  [[27, 0], [117, 1]].forEach(([px, off]) => {
+    svg += `<rect x="${px}" y="${yB - 6}" width="1.6" height="6" fill="#2f9e5b"/>`;
+    svg += `<rect x="${px + 1.6}" y="${yB - 9 + off}" width="1.6" height="7" fill="#46c070"/>`;
+    svg += `<rect x="${px - 1.6}" y="${yB - 4}" width="1.6" height="4" fill="#46c070"/>`;
+  });
+  svg += `<rect x="75" y="${yB - 3}" width="5" height="3" fill="#7d8497"/><rect x="76" y="${yB - 4}" width="3" height="1" fill="#9aa2b6"/>`;
+  // cadre rétro
+  svg += `<rect x="${tankL}" y="${yS}" width="${tankR - tankL}" height="${yB + 10 - yS}" fill="none" stroke="#080a10" stroke-width="1.5"/>`;
+  // vagues (surface)
+  let wave = `M${tankL} ${yS}`;
+  for (let k = 0; k < (tankR - tankL) / 4; k++) wave += " h2 v-1.5 h2 v1.5";
+  svg += `<path d="${wave}" fill="none" stroke="#e6fbff" stroke-width="1.2" shape-rendering="crispEdges"/>`;
+  // repères 100 / 0
+  svg += `<text x="${tankL - 3}" y="${yS + 3}" text-anchor="end" font-size="7.5" fill="#8a93b0">100</text>`;
+  svg += `<text x="${tankL - 3}" y="${yB + 3}" text-anchor="end" font-size="7.5" fill="#8a93b0">0</text>`;
+  // sillage
+  if (known.length > 1) {
+    svg += `<polyline fill="none" stroke="#e8fbff" stroke-opacity=".8" stroke-width="1.2" stroke-dasharray="2 2" stroke-linejoin="round" points="${known.map(p => p.x.toFixed(1) + "," + p.y.toFixed(1)).join(" ")}"/>`;
+  }
+  known.slice(0, -1).forEach(p => {
+    svg += `<rect x="${(p.x - 1.3).toFixed(1)}" y="${(p.y - 1.3).toFixed(1)}" width="2.6" height="2.6" fill="#ffffff" stroke="#10131f" stroke-width=".6" shape-rendering="crispEdges"/>`;
+  });
+  // bulles
+  [0, 1, 2].forEach(k => {
+    svg += `<circle class="bubble" cx="${(last.x - sw / 2 - 2 - k * 2.2).toFixed(1)}" cy="${(last.y + 1 - k * 2.5).toFixed(1)}" r="${(1.1 - k * .2).toFixed(1)}" fill="none" stroke="#e8fbff" stroke-width=".7" style="animation-delay:${(k * 0.7).toFixed(1)}s"/>`;
+  });
+  // le sous-marin (penché quand il touche le fond)
+  const tx = last.x - sw / 2, ty = last.y - sh / 2;
+  const tilt = last.v === 0 ? ` rotate(-7 ${(sw / 2).toFixed(1)} ${(sh / 2).toFixed(1)})` : "";
+  svg += `<g transform="translate(${tx.toFixed(1)} ${ty.toFixed(1)})"><g class="sub-bob"><g transform="${tilt.trim()} scale(${S})">${subRects(color)}</g></g></g>`;
+  svg += `<text x="${last.x.toFixed(1)}" y="${(ty - 1.5).toFixed(1)}" text-anchor="middle" font-size="8" font-weight="900" fill="#ffffff" stroke="#10131f" stroke-width="2" paint-order="stroke" stroke-linejoin="round">${last.v}</text>`;
+  // jours
+  DAY_LETTERS.forEach((ch, i) => {
+    svg += `<text x="${xs(i).toFixed(1)}" y="${H - 3}" text-anchor="middle" font-size="9" font-weight="700" fill="${i + 1 === today ? "#ffd447" : "#8a93b0"}">${ch}</text>`;
+  });
+  svg += "</svg>";
+  el.innerHTML = svg;
+}
+
+// ---------- Suppression ----------
+function decorateCard(card, id) {
+  const sp = card.querySelector(".char-sprite");
+  if (sp && !sp.classList.contains("sub")) {
+    sp.classList.add("sub");
+    sp.innerHTML = subSvg((state.chars[id] && state.chars[id].color) || "#e4c77a");
+  }
+  if (!card.querySelector(".char-del")) {
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "char-del";
+    del.title = "Supprimer ce personnage";
+    del.setAttribute("aria-label", "Supprimer ce personnage");
+    del.textContent = "✕";
+    del.addEventListener("click", e => { e.stopPropagation(); deleteCharacter(id); });
+    card.appendChild(del);
+  }
+  if (!card.querySelector(".char-chart")) {
+    const ch = document.createElement("div");
+    ch.className = "char-chart";
+    ch.id = "chart-" + id;
+    card.appendChild(ch);
+  }
+}
+
+function removeLocalChar(id) {
+  const card = $("card-" + id);
+  if (card) card.remove();
+  delete state.chars[id];
+  delete state.motivation[id];
+  delete state.history[id];
+  if (state.myChar === id) state.myChar = null;
+}
+
+function deleteCharacter(id) {
+  const name = charName(id);
+  if (Object.keys(state.chars).length <= 1) {
+    showToast("Il faut garder au moins un personnage");
+    return;
+  }
+  if (!confirm("Supprimer " + name + (isOnline() ? " pour toute l'équipe" : "") + " ?")) return;
+  if (isOnline()) {
+    const { key } = weekInfo();
+    if (state.myChar === id) R("owners/" + id).onDisconnect().cancel();
+    const upd = {};
+    upd["chars/" + id] = null;
+    upd["motivation/" + id] = null;
+    upd["owners/" + id] = null;
+    upd["history/" + key + "/" + id] = null;
+    state.roomRef.update(upd)
+      .catch(err => showToast("Erreur réseau : " + (err.message || err)));
+  } else {
+    removeLocalChar(id);
+    updateOwnerTags();
+    updateCharPickUI();
+    checkBurnout();
+  }
+  showToast(name + " a été supprimé");
+  sfx("select");
+}
+
+function deleteAction(action, kind, isCustom) {
+  if (!confirm("Supprimer « " + action.label + " »" + (isOnline() ? " pour toute l'équipe" : "") + " ?")) return;
+  if (isOnline()) {
+    const p = isCustom
+      ? R("customActions/" + (kind === "bonus" ? "bonuses" : "attacks") + "/" + action.id).remove()
+      : R("hiddenActions/" + action.id).set(true);
+    p.catch(err => showToast("Erreur réseau : " + (err.message || err)));
+  } else {
+    if (isCustom) {
+      const key = kind === "bonus" ? "bonuses" : "attacks";
+      state.customActions[key] = state.customActions[key].filter(a => a.id !== action.id);
+    } else {
+      state.hidden[action.id] = true;
+    }
+    buildActions();
+  }
+  showToast("« " + action.label + " » supprimé");
+  sfx("select");
+}
+
 // ---------- Cartes personnages ----------
 function createCharCard(id, name, color, letter) {
   const base = baseMotivationForToday();
@@ -956,8 +1321,9 @@ function createCharCard(id, name, color, letter) {
         <div class="bar-text" id="val-${id}">${base}</div>
       </div>
     </div>
-    <div class="char-sprite" style="background:${safeColor}">${escapeHtml(letter)}</div>
+    <div class="char-sprite sub">${subSvg(safeColor)}</div>
     <strong>${escapeHtml(name.toUpperCase())}</strong>`;
+  decorateCard(card, id);
   bindCardClick(card, id);
   $("characters").appendChild(card);
   state.chars[id] = { name, color: safeColor, letter };
@@ -971,17 +1337,24 @@ function addCharacter(name) {
   const id = uniqueId(slugify(name));
   const letter = name.charAt(0).toUpperCase();
   const color = CHAR_COLORS[Object.keys(state.chars).length % CHAR_COLORS.length];
+  const { key, day } = weekInfo();
+  const base = baseMotivationForToday();
   if (isOnline()) {
     R("chars/" + id).transaction(cur => cur === null ? { name, color, letter } : undefined)
       .then(res => {
         if (!res.committed) { showToast("Ce personnage existe déjà"); return; }
-        R("motivation/" + id).set(baseMotivationForToday());
+        const upd = {};
+        upd["motivation/" + id] = base;
+        upd["history/" + key + "/" + id] = theoryHistory(day);
+        state.roomRef.update(upd);
         showToast(name + " a rejoint l'équipe");
         sfx("select");
       })
       .catch(err => showToast("Erreur réseau : " + (err.message || err)));
   } else {
     createCharCard(id, name, color, letter);
+    state.history[id] = theoryHistory(day);
+    renderChart(id);
     updateOwnerTags();
     updateCharPickUI();
     showToast(name + " a rejoint l'équipe");
@@ -995,15 +1368,21 @@ function setActionsEnabled(enabled) {
 
 // ---------- Actions (bonus / malus) ----------
 function buildActions() {
+  // On garde les points modifiés à la main pendant la reconstruction
+  const saved = {};
+  document.querySelectorAll(".action-card input[type=number]").forEach(i => { saved[i.id] = i.value; });
+
   const atkGrid = $("attacksGrid");
   const bonGrid = $("bonusesGrid");
   atkGrid.innerHTML = "";
   bonGrid.innerHTML = "";
 
-  ATTACKS.forEach(a => renderActionCard(a, "attack", atkGrid, false));
-  BONUSES.forEach(b => renderActionCard(b, "bonus", bonGrid, false));
+  ATTACKS.filter(a => !state.hidden[a.id]).forEach(a => renderActionCard(a, "attack", atkGrid, false));
+  BONUSES.filter(b => !state.hidden[b.id]).forEach(b => renderActionCard(b, "bonus", bonGrid, false));
   (state.customActions.attacks || []).forEach(a => renderActionCard(a, "attack", atkGrid, true));
   (state.customActions.bonuses || []).forEach(b => renderActionCard(b, "bonus", bonGrid, true));
+
+  Object.keys(saved).forEach(id => { const el = $(id); if (el) el.value = saved[id]; });
 }
 
 function renderActionCard(action, kind, grid, isCustom) {
@@ -1013,14 +1392,19 @@ function renderActionCard(action, kind, grid, isCustom) {
   card.className = "action-card " + kind;
   if (isCustom) card.dataset.customAction = action.id;
   card.innerHTML = `
-    <button type="button"></button>
+    <button type="button" class="act-main"></button>
     <div class="points-row">
       <span>pts</span>
       <input type="number" id="pts-${action.id}" value="${points}" min="0" step="1" aria-label="Points pour ${escapeHtml(action.label)}">
-    </div>`;
-  card.querySelector("button").textContent = action.label;
+    </div>
+    <button type="button" class="act-del" title="Supprimer" aria-label="Supprimer">✕</button>`;
+  card.querySelector(".act-main").textContent = action.label;
   grid.appendChild(card);
-  card.querySelector("button").addEventListener("click", () => {
+  card.querySelector(".act-del").addEventListener("click", e => {
+    e.stopPropagation();
+    deleteAction(action, kind, isCustom);
+  });
+  card.querySelector(".act-main").addEventListener("click", () => {
     if (!state.myChar) {
       showToast("Choisis d'abord ton personnage");
       return;
@@ -1071,22 +1455,51 @@ $("addBonusBtn").addEventListener("click", () => addCustomAction("bonus"));
 $("addMalusBtn").addEventListener("click", () => addCustomAction("attack"));
 
 // ---------- Reset ----------
-function resetAll() {
+// Remet un seul personnage à la motivation du jour (les autres ne bougent pas)
+function restartChar(id) {
+  if (!id || !state.chars[id]) return;
   const base = baseMotivationForToday();
+  const { key, day } = weekInfo();
   if (isOnline()) {
     const upd = {};
-    Object.keys(state.chars).forEach(id => { upd["motivation/" + id] = base; });
+    upd["motivation/" + id] = base;
+    upd["history/" + key + "/" + id + "/d" + day] = base;
     state.roomRef.update(upd).catch(err => showToast("Erreur réseau : " + (err.message || err)));
   } else {
-    Object.keys(state.chars).forEach(id => setMotivation(id, base));
+    setMotivation(id, base);
+    recordHistory(id, base);
+    checkBurnout();
+  }
+  showToast(charName(id) + " repart à " + base + " %");
+  sfx("win");
+}
+
+function resetAll() {
+  const base = baseMotivationForToday();
+  const { key, day } = weekInfo();
+  if (isOnline()) {
+    const upd = {};
+    Object.keys(state.chars).forEach(id => {
+      upd["motivation/" + id] = base;
+      upd["history/" + key + "/" + id + "/d" + day] = base;
+    });
+    state.roomRef.update(upd).catch(err => showToast("Erreur réseau : " + (err.message || err)));
+  } else {
+    Object.keys(state.chars).forEach(id => { setMotivation(id, base); recordHistory(id, base); });
     checkBurnout();
   }
   showToast("Motivation du jour : " + base + "% (Lundi 100 %, −10 % par jour)");
   sfx("win");
 }
 
-$("resetBtn").addEventListener("click", resetAll);
-$("burnoutOk").addEventListener("click", resetAll);
+$("resetBtn").addEventListener("click", () => {
+  if (confirm("Remettre TOUT LE MONDE à la motivation du jour ?")) resetAll();
+});
+$("burnoutOk").addEventListener("click", () => restartChar(state.burnoutId));
+$("burnoutContinue").addEventListener("click", () => {
+  if (state.burnoutId) state.burnoutSeen[state.burnoutId] = true;
+  checkBurnout();
+});
 
 // ============================================================
 //  RÉSEAU (Firebase Realtime Database)
@@ -1148,8 +1561,22 @@ function applyRemote(data) {
   const first = state.firstSnapshot;
   state.firstSnapshot = false;
 
-  // Personnages
+  // Historique de la semaine en cours
+  state.history = (data.history && data.history[weekInfo().key]) || {};
+
+  // Personnages supprimés par quelqu'un
   const chars = data.chars || {};
+  if (data.chars) {
+    Object.keys(state.chars).forEach(id => {
+      if (!chars[id]) {
+        if (state.myChar === id) showToast("Ton personnage a été supprimé");
+        else if (!first) showToast(charName(id) + " a été supprimé");
+        removeLocalChar(id);
+      }
+    });
+  }
+
+  // Personnages ajoutés / mis à jour
   Object.keys(chars).forEach(id => {
     const c = chars[id];
     if (!/^[a-z0-9-]{1,24}$/.test(id) || !c || !String(c.name || "").trim()) return;
@@ -1157,7 +1584,11 @@ function applyRemote(data) {
       createCharCard(id, String(c.name).slice(0, 20), String(c.color || ""), String(c.letter || c.name.charAt(0)).slice(0, 2));
       if (!first) showToast(c.name + " a rejoint l'équipe");
     }
-    state.chars[id] = { name: String(c.name).slice(0, 20), color: state.chars[id] ? state.chars[id].color : "#58617d", letter: String(c.letter || c.name.charAt(0)).slice(0, 2) };
+    state.chars[id] = {
+      name: String(c.name).slice(0, 20),
+      color: state.chars[id] ? state.chars[id].color : "#58617d",
+      letter: String(c.letter || c.name.charAt(0)).slice(0, 2)
+    };
   });
 
   // Motivations
@@ -1180,24 +1611,31 @@ function applyRemote(data) {
     showToast("Ton personnage a été pris par un collègue");
   }
 
-  // Actions personnalisées
+  // Bonus / malus : personnalisés + par défaut supprimés
   const toArr = o => Object.values(o || {})
     .filter(a => a && /^[A-Za-z0-9-]{1,60}$/.test(String(a.id)) && String(a.label || "").trim())
     .map(a => ({ id: String(a.id), label: String(a.label).slice(0, 48), points: clamp100(Number(a.points) || 0), ts: Number(a.ts) || 0 }))
     .sort((x, y) => x.ts - y.ts);
   const atk = toArr(data.customActions && data.customActions.attacks);
   const bon = toArr(data.customActions && data.customActions.bonuses);
-  const sig = JSON.stringify([atk.map(a => a.id), bon.map(a => a.id)]);
+  const hid = {};
+  Object.keys(data.hiddenActions || {}).forEach(k => {
+    if (/^[A-Za-z0-9-]{1,60}$/.test(k) && data.hiddenActions[k]) hid[k] = true;
+  });
+  const sig = JSON.stringify([atk.map(a => a.id), bon.map(a => a.id), Object.keys(hid).sort()]);
   if (sig !== state.actionsSig) {
     state.actionsSig = sig;
     state.customActions = { attacks: atk, bonuses: bon };
+    state.hidden = hid;
     buildActions();
     setActionsEnabled(true);
   }
 
+  Object.keys(state.chars).forEach(renderChart);
   updateOwnerTags();
   updateCharPickUI();
   checkBurnout();
+  checkDecay();
 }
 
 // ---------- Liste des parties (écran d'accueil) ----------
@@ -1315,9 +1753,14 @@ async function createRoom() {
     const base = baseMotivationForToday();
     const motivation = {};
     Object.keys(DEFAULT_CHARS).forEach(id => { motivation[id] = base; });
+    const { key, day } = weekInfo();
+    const history = { [key]: {} };
+    Object.keys(DEFAULT_CHARS).forEach(id => { history[key][id] = theoryHistory(day); });
     await state.db.ref("rooms/" + code).set({
       chars: DEFAULT_CHARS,
       motivation,
+      history,
+      decay: { wk: key, day },
       createdAt: firebase.database.ServerValue.TIMESTAMP
     });
     openRoom(code);
@@ -1363,7 +1806,7 @@ function updateCharPickUI() {
     const owner = state.owners[id];
     btn.disabled = !!(owner && owner !== state.clientId);
     if (state.myChar === id) btn.classList.add("selected");
-    btn.innerHTML = `<div class="mini-sprite" style="background:${/^#[0-9a-f]{6}$/i.test(c.color) ? c.color : "#58617d"}">${escapeHtml(c.letter)}</div><strong>${escapeHtml(c.name)}</strong>`;
+    btn.innerHTML = `<div class="mini-sprite sub">${subSvg(c.color)}</div><strong>${escapeHtml(c.name)}</strong>`;
     btn.addEventListener("click", () => { claimChar(id); });
     pick.appendChild(btn);
   });
@@ -1386,6 +1829,7 @@ $("joinCode").addEventListener("keydown", e => { if (e.key === "Enter") joinRoom
 $("btnStart").addEventListener("click", enterGame);
 
 $("btnSolo").addEventListener("click", () => {
+  $("onlineHint").style.display = "none";
   stopRoomList();
   state.mode = "solo";
   state.myChar = null;
@@ -1511,16 +1955,19 @@ document.addEventListener("visibilitychange", () => {
 
 // ---------- Init ----------
 updateDateAndWeek();
-setInterval(updateDateAndWeek, 60_000);
+setInterval(() => { updateDateAndWeek(); checkDecay(); Object.keys(state.chars).forEach(renderChart); }, 60_000);
 buildActions();
 const startMot = baseMotivationForToday();
 Object.keys(state.chars).forEach(id => setMotivation(id, startMot));
+Object.keys(state.chars).forEach(id => { state.history[id] = theoryHistory(weekInfo().day); });
+state.soloStamp = { wk: weekInfo().key, day: weekInfo().day };
 
 // Cartes initiales (déjà dans le HTML) : clic pour changer de personnage en jeu
 ["tristan", "ines", "tam"].forEach(id => {
   const card = $("card-" + id);
-  if (card) bindCardClick(card, id);
+  if (card) { bindCardClick(card, id); decorateCard(card, id); }
 });
+Object.keys(state.chars).forEach(renderChart);
 
 // Pré-remplit le dernier code de partie utilisé
 try {
