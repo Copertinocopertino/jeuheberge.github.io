@@ -584,19 +584,110 @@
   .mrank .nm { letter-spacing: 3px; font-weight: 900; flex: 1; }
   .mrank .sc { font-weight: 900; }
   .mrank .lv { opacity: .6; font-size: 11px; align-self: center; }
+  /* Compte joueur + modes + exploration */
+  #mAccount .mhow, #mModes .mhow { max-width: 340px; }
+  .acct-row { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin: 8px 0 12px; }
+  .acct-block { text-align: center; }
+  .acct-block .albl { font-size: 11px; letter-spacing: 2px; opacity: .7; margin-bottom: 6px; text-transform: uppercase; }
+  #mAcctLetters, #mAcctPin { display: flex; gap: 8px; justify-content: center; }
+  #mAcctLetters .nl, #mAcctPin .nl { min-width: 42px; }
+  #mAcctErr { min-height: 18px; color: #ff6b6b; font-size: 13px; font-weight: 700; margin: 4px 0; }
+  .mode-cards { display: flex; flex-direction: column; gap: 10px; width: min(360px, 100%); margin: 8px auto 12px; }
+  .mode-card {
+    appearance: none; width: 100%; text-align: left;
+    background: #151a2a; border: 3px solid #58617d; color: #fff;
+    padding: 12px 14px; cursor: pointer; font-family: inherit;
+    box-shadow: 4px 4px 0 #080a10;
+  }
+  .mode-card:hover { border-color: #ffd447; background: #1e2438; }
+  .mode-card strong { display: block; font-size: 16px; margin-bottom: 4px; color: #ffd447; }
+  .mode-card small { opacity: .8; font-size: 12px; line-height: 1.35; }
+  #mWorkshop {
+    overflow-y: auto; justify-content: flex-start !important;
+    padding-top: 10px !important;
+  }
+  .ws-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: min(420px, 100%); margin: 8px auto; text-align: left; }
+  .ws-item {
+    background: #151a2a; border: 2px solid #58617d; padding: 8px 10px; font-size: 12px;
+  }
+  .ws-item.owned { border-color: #4cc46a; }
+  .ws-item button {
+    margin-top: 6px; width: 100%; border: 2px solid #fff; background: #e9edf7; color: #121522;
+    font-weight: 900; font-size: 12px; padding: 6px; cursor: pointer; font-family: inherit;
+  }
+  .ws-item button:disabled { opacity: .4; cursor: not-allowed; }
+  .ws-coins { color: #ffd447; font-weight: 900; font-size: 18px; margin: 4px 0 8px; }
+  #mControls.explore-mode #mCtrlArcade { display: none; }
+  #mControls:not(.explore-mode) #mCtrlExplore { display: none; }
+  #mCtrlArcade { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; width: 100%; }
+  #mCtrlExplore {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1.15fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 6px; width: 100%;
+  }
+  #mCtrlExplore .mctl { min-height: 48px; height: clamp(48px, 10vh, 72px); font-size: 18px; }
+  #mExpUp { grid-column: 2; grid-row: 1; background: #1d80b3; }
+  #mExpLeft { grid-column: 1; grid-row: 2; background: #1d80b3; }
+  #mExpDown { grid-column: 2; grid-row: 2; background: #1d80b3; }
+  #mExpRight { grid-column: 3; grid-row: 2; background: #1d80b3; }
+  #mExpFire { grid-column: 4; grid-row: 1 / span 2; background: #8b3a2a; font-size: 13px; }
+  #mExpFire.cool { filter: grayscale(.65) brightness(.75); }
+  #mExpSonar { grid-column: 5; grid-row: 1 / span 2; background: #c2452d; font-size: 13px; }
+  #mExpSonar.cool { filter: grayscale(.65) brightness(.75); }
+  #mReloadFire { position: absolute; left: 0; bottom: 0; height: 6px; width: 100%; background: #ff8a5c; }
+  .ws-preview {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    margin: 4px auto 10px; padding: 10px 14px;
+    background: #0d1528; border: 3px solid #58617d; border-radius: 8px;
+    width: min(300px, 100%); box-sizing: border-box;
+    flex-shrink: 0;
+  }
+  .ws-preview canvas {
+    image-rendering: pixelated; image-rendering: crisp-edges;
+    width: 240px; height: 140px; background: #061018;
+    border: 2px solid #243048;
+    display: block;
+  }
+  .ws-badges { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; min-height: 22px; }
+  .ws-badge {
+    font-size: 10px; font-weight: 900; letter-spacing: .5px;
+    padding: 2px 7px; border: 2px solid #58617d; background: #151a2a; color: #8a93a8;
+  }
+  .ws-badge.on { color: #fff; border-color: #fff; }
+  .ws-badge.hull.on { background: #2a4a6a; border-color: #5ec8ff; color: #9fdcff; }
+  .ws-badge.sonar.on { background: #2a3a2a; border-color: #4cc46a; color: #8dffb0; }
+  .ws-badge.lamp.on { background: #4a4020; border-color: #ffd447; color: #ffe9a0; }
+  .ws-badge.tank.on { background: #3a2a4a; border-color: #b794f4; color: #d6bcfa; }
+  .ws-item[data-focus="1"] { border-color: #ffd447; box-shadow: 0 0 0 1px #ffd447; }
+  .ws-depth { font-size: 12px; opacity: .85; margin-top: 2px; }
+  .ws-depth b { color: #43c6e3; }
+  #mMiniMap {
+    position: absolute; right: 8px; top: 8px; width: 72px; height: 72px;
+    border: 2px solid #fff; background: rgba(8,12,24,.75); image-rendering: pixelated;
+    display: none; z-index: 5; pointer-events: none;
+  }
+  #mMiniMap.on { display: block; }
+  #mDepthBar {
+    position: absolute; left: 8px; top: 8px; bottom: 8px; width: 10px;
+    background: #0d1018; border: 2px solid #58617d; display: none; z-index: 5;
+  }
+  #mDepthBar.on { display: block; }
+  #mDepthBar i { position: absolute; left: 0; right: 0; height: 4px; background: #43c6e3; }
+
   #mLetters { display: flex; gap: 12px; justify-content: center; margin: 4px 0 10px; }
   .nl { display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .nl button { width: 46px; height: 28px; border: 3px solid #58617d; background: #2a324c; color: #fff; font-weight: 900; cursor: pointer; font-family: inherit; }
   .nl .ch { width: 46px; height: 56px; display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 900; color: #ffd447; background: #151a2a; border: 3px solid #58617d; cursor: pointer; }
   .nl.on .ch { border-color: #ffd447; box-shadow: 0 0 0 2px #ffd447; }
-  #mControls { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; flex: none; }
+  #mControls { display: block; flex: none; }
   .mctl { height: clamp(54px, 11vh, 84px); font-size: 17px; font-weight: 900; border: 4px solid #fff; color: #fff; cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; box-shadow: 5px 5px 0 #080a10; position: relative; overflow: hidden; font-family: inherit; }
   .mctl small { display: block; font-size: 10px; opacity: .8; font-weight: 700; margin-top: 2px; }
   .mctl.up { background: #1d80b3; }
   .mctl.fire { background: #c2452d; }
   .mctl.fire.cool { filter: grayscale(.65) brightness(.75); }
   .mctl.on { transform: translate(3px,3px); box-shadow: 2px 2px 0 #080a10; }
-  #mReload { position: absolute; left: 0; bottom: 0; height: 6px; width: 100%; background: #ffd447; }
+  #mReload, #mReloadExp { position: absolute; left: 0; bottom: 0; height: 6px; width: 100%; background: #ffd447; }
   #mSkinBox { display: flex; align-items: center; justify-content: center; gap: 10px; }
   .skinview { text-align: center; min-width: 190px; max-width: 230px; }
   #mSkinCv { width: 96px; height: 56px; image-rendering: pixelated; display: block; margin: 0 auto 2px; }
@@ -691,8 +782,76 @@
       <div id="mProg"><i id="mProgBar"></i></div>
       <div id="mStage">
         <canvas id="mCanvas" width="320" height="180"></canvas>
+        <canvas id="mMiniMap" width="72" height="72"></canvas>
+        <div id="mDepthBar"><i id="mDepthNeedle"></i></div>
 
-        <div id="mStart" class="mpanel">
+        <!-- Compte joueur -->
+        <div id="mAccount" class="mpanel">
+          <div class="kicker">MINI-JEU</div>
+          <h2 class="mtitle">COMPTE PILOTE</h2>
+          <p class="mhow">Choisis ton trigramme (3 lettres) et ton code secret (3 chiffres).<br>
+            Nouveau compte = création automatique. Compte existant = saisie du code.</p>
+          <div class="acct-row">
+            <div class="acct-block">
+              <div class="albl">Trigramme</div>
+              <div id="mAcctLetters"></div>
+            </div>
+            <div class="acct-block">
+              <div class="albl">Code</div>
+              <div id="mAcctPin"></div>
+            </div>
+          </div>
+          <div id="mAcctErr"></div>
+          <button class="lobby-btn secondary" id="mAcctGo" type="button">CONNEXION</button>
+          <p class="mhow" style="font-size:11px;opacity:.65;margin-top:10px">Admin : en cas d’oubli, ouvre Firebase → Realtime Database → <b>minigame/accounts/XXX</b> (le champ <b>pin</b>).</p>
+        </div>
+
+        <!-- Sélection du mode -->
+        <div id="mModes" class="mpanel off">
+          <div class="kicker">MINI-JEU</div>
+          <h2 class="mtitle">MODE DE JEU</h2>
+          <p class="mhow" id="mModesHello">Bienvenue, pilote.</p>
+          <div class="mode-cards">
+            <button type="button" class="mode-card" id="mModeArcade">
+              <strong>▶ TOUCHER LE FOND</strong>
+              <small>Arcade classique — défilement, ennemis, torpilles, boss. Le jeu d’origine.</small>
+            </button>
+            <button type="button" class="mode-card" id="mModeExplore">
+              <strong>◈ EXPLORATION</strong>
+              <small>Monde libre — profondeur, pression, sonar, atelier d’améliorations. (nouveau)</small>
+            </button>
+          </div>
+          <button class="lobby-btn" id="mModesBack" type="button" style="background:#2a324c;color:#fff;border-color:#58617d">Changer de compte</button>
+        </div>
+
+        <!-- Atelier exploration -->
+        <div id="mWorkshop" class="mpanel off">
+          <div class="kicker">EXPLORATION</div>
+          <h2 class="mtitle" style="font-size:clamp(20px,5vw,32px)">ATELIER</h2>
+          <div class="ws-coins">⚙ <span id="wsCoins">0</span> pièces</div>
+          <div class="ws-preview">
+            <canvas id="wsSubCv" width="120" height="70"></canvas>
+            <div class="ws-badges" id="wsBadges"></div>
+            <div class="ws-depth">Profondeur max : <b id="wsMaxDepth">20</b> m</div>
+          </div>
+          <p class="mhow" style="font-size:12px">Améliore ton sub, craft, et consulte les contrats de la plateforme.</p>
+          <div id="wsContract" style="width:min(420px,100%);margin:6px auto;padding:8px 10px;background:#151a2a;border:2px solid #58617d;font-size:12px;text-align:left"></div>
+          <div id="wsDaily" style="width:min(420px,100%);margin:6px auto;padding:8px 10px;background:#1a2030;border:2px solid #4cc46a;font-size:12px;text-align:left"></div>
+          <div id="wsMarket" style="width:min(420px,100%);margin:6px auto;padding:8px 10px;background:#201a18;border:2px solid #c4a040;font-size:12px;text-align:left"></div>
+          <div class="ws-grid" id="wsUpgrades"></div>
+          <div class="section-title" style="margin-top:8px">Craft (ferraille d’épaves)</div>
+          <div class="ws-grid" id="wsCraft"></div>
+          <div class="section-title" style="margin-top:8px">Base & zones</div>
+          <div class="ws-grid" id="wsBase"></div>
+          <div class="section-title" style="margin-top:8px">Skins débloqués</div>
+          <div id="wsSkins" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:min(420px,100%);margin:6px auto"></div>
+          <div style="margin:10px 0 6px">
+            <button class="lobby-btn secondary" id="wsSail" type="button">À L’AVENTURE →</button>
+          </div>
+          <button class="lobby-btn" id="wsBack" type="button" style="background:#2a324c;color:#fff;border-color:#58617d">← Modes</button>
+        </div>
+
+        <div id="mStart" class="mpanel off">
           <div class="kicker">MINI-JEU</div>
           <h2 class="mtitle">TOUCHER LE FOND</h2>
           <p class="mhow">Évite les mines et les bestioles, et ne touche surtout pas le fond.<br>
@@ -737,8 +896,18 @@
         </div>
       </div>
       <div id="mControls">
-        <button class="mctl up" id="mUp" type="button">▲ REMONTER<small>espace · appui long</small></button>
-        <button class="mctl fire" id="mFire" type="button">TORPILLE<small id="mFireTxt">PRÊTE</small><i id="mReload"></i></button>
+        <div id="mCtrlArcade">
+          <button class="mctl up" id="mUp" type="button">▲ REMONTER<small>espace · appui long</small></button>
+          <button class="mctl fire" id="mFire" type="button">TORPILLE<small id="mFireTxt">PRÊTE</small><i id="mReload"></i></button>
+        </div>
+        <div id="mCtrlExplore">
+          <button class="mctl" id="mExpUp" type="button">▲</button>
+          <button class="mctl" id="mExpLeft" type="button">◀</button>
+          <button class="mctl" id="mExpDown" type="button">▼</button>
+          <button class="mctl" id="mExpRight" type="button">▶</button>
+          <button class="mctl" id="mExpFire" type="button">TORPILLE<small id="mFireTxtTorp">PRÊTE</small><i id="mReloadFire"></i></button>
+          <button class="mctl" id="mExpSonar" type="button">SONAR<small id="mFireTxtExp">IMPULSION</small><i id="mReloadExp"></i></button>
+        </div>
       </div>
     </div>
   </div>
@@ -2435,7 +2604,7 @@ startRoomList();
 
   // ---------- État du jeu ----------
   let G = null, open = false, raf = 0, last = 0, spriteColor = "#e4c77a", recCache = 0;
-  const inputs = { kbd: false, btn: false, cv: false };
+  const inputs = { kbd: false, btn: false, cv: false, left: false, right: false, down: false, sonarHold: false };
   const deco = [], ambient = [];
   let decoLeft = 20;
 
@@ -3087,7 +3256,7 @@ startRoomList();
   }
 
   function panel(id) {
-    ["mStart", "mPauseP", "mOver", "mPerk"].forEach(p => $(p).classList.toggle("off", p !== id));
+    ["mAccount", "mModes", "mWorkshop", "mStart", "mPauseP", "mOver", "mPerk"].forEach(p => $(p).classList.toggle("off", p !== id));
   }
 
   // ---- Classement ----
@@ -3261,13 +3430,61 @@ startRoomList();
     if (t >= mSonarAt) { mNote(mBus, 1480, t, 1.1, "sine", 0.05, 0.005); mSonarAt = t + rnd(14, 24); }
     if (t >= mWhaleAt) { whale(t + 0.2); mWhaleAt = t + rnd(24, 45); }
   }
+  // Exploration chords: chill near surface, tense in the deep
+  const EXP_CHILL = [
+    { r: 48, n: [55, 59, 62, 67] },  // Cmaj7 soft
+    { r: 45, n: [52, 57, 60, 64] },  // Am add9
+    { r: 50, n: [57, 60, 64, 67] },  // Dm9-ish
+    { r: 43, n: [50, 55, 59, 62] }
+  ];
+  const EXP_DARK = [
+    { r: 36, n: [39, 43, 46, 51] },  // low dissonant
+    { r: 34, n: [37, 41, 44, 49] },
+    { r: 38, n: [41, 44, 48, 53] },
+    { r: 33, n: [36, 40, 43, 48] }
+  ];
+  function exploreDepth01() {
+    if (!EX) return 0;
+    try { return Math.min(1, depthMeters() / 150); } catch (e) { return 0; }
+  }
+  function mStepPlayExplore(i, t, spb) {
+    const deep = exploreDepth01();
+    const chill = EXP_CHILL[Math.floor(i / 16) % EXP_CHILL.length];
+    const dark = EXP_DARK[Math.floor(i / 16) % EXP_DARK.length];
+    // blend: surface = chill pads, deep = dark drones
+    const ch = deep < 0.45 ? chill : dark;
+    const padVol = 0.04 + deep * 0.03;
+    if (i % 16 === 0) ch.n.forEach((n, k) => mNote(mBus, midi(n - (k > 1 ? 12 : 0)), t, spb * 18, k % 2 ? "sine" : "triangle", padVol, 1.4));
+    // soft root
+    if (i % 8 === 0) mNote(master, midi(ch.r), t, spb * 4, "sine", 0.12 + deep * 0.08, 0.05);
+    // bubble arpeggio (less when deep)
+    const a = ARP[i % 16];
+    if (a >= 0 && deep < 0.7) mNote(mBus, midi(chill.n[a % chill.n.length] + 12), t, spb * 1.5, "triangle", 0.04 * (1 - deep), 0.02);
+    // deep tension: low pulse + sparse dissonance
+    if (deep > 0.5 && i % 4 === 0) mNote(master, midi(dark.r - 12), t, spb * 2.2, "sine", 0.08 + deep * 0.1, 0.04);
+    if (deep > 0.65 && i % 8 === 4) mNote(mBus, midi(dark.n[2]), t, spb * 1.2, "sawtooth", 0.025 * deep, 0.03);
+    if (deep > 0.8 && i % 16 === 8) mNote(mBus, 55 + deep * 20, t, spb * 3, "sine", 0.04, 0.2);
+    // occasional distant sonar / whale (rarer deep = more ominous)
+    if (t >= mSonarAt) {
+      mNote(mBus, deep > 0.6 ? 420 : 980, t, deep > 0.6 ? 1.6 : 1.0, "sine", 0.035, 0.008);
+      mSonarAt = t + rnd(deep > 0.6 ? 8 : 16, deep > 0.6 ? 14 : 28);
+    }
+    if (t >= mWhaleAt && deep < 0.55) { whale(t + 0.2); mWhaleAt = t + rnd(28, 50); }
+  }
   function mScheduler() {
     if (!audioCtx || !state.soundOn || !open) return;
-    const target = Math.min(150, 84 + 6 * ((G ? G.level : 1) - 1)) + (G && G.boss ? 10 : 0);
+    let target;
+    if (gameMode === "explore" && EX) {
+      const deep = exploreDepth01();
+      target = 62 + deep * 48; // 62 chill → ~110 angoissant
+    } else {
+      target = Math.min(150, 84 + 6 * ((G ? G.level : 1) - 1)) + (G && G.boss ? 10 : 0);
+    }
     while (mNext < audioCtx.currentTime + 0.15) {
-      mBpm += (target - mBpm) * 0.04;
+      mBpm += (target - mBpm) * 0.035;
       const spb = 60 / mBpm / 2;
-      mStepPlay(mStep, mNext, spb);
+      if (gameMode === "explore" && EX) mStepPlayExplore(mStep, mNext, spb);
+      else mStepPlay(mStep, mNext, spb);
       mNext += spb; mStep++;
     }
   }
@@ -3329,15 +3546,2074 @@ startRoomList();
   $("mSkinL").addEventListener("click", () => stepSkin(-1));
   $("mSkinR").addEventListener("click", () => stepSkin(1));
 
+
+  // ========== COMPTE PILOTE (3 lettres + code 3 chiffres) ==========
+  const LS_ACCOUNTS = "cm_mini_accounts";
+  let account = null; // { id, pin, coins, upgrades, skin }
+  let gameMode = null; // "arcade" | "explore"
+  const DIGITS = "0123456789";
+  let acctLetters = ["A", "A", "A"], acctPin = ["0", "0", "0"], acctSel = 0, acctFocus = "letters"; // letters | pin
+
+  function loadAccounts() {
+    try { return JSON.parse(localStorage.getItem(LS_ACCOUNTS) || "{}") || {}; } catch (e) { return {}; }
+  }
+  function saveAccounts(map) {
+    try { localStorage.setItem(LS_ACCOUNTS, JSON.stringify(map)); } catch (e) {}
+  }
+  async function syncAccountRemote(acc) {
+    try {
+      const db = await withTimeout(connectDb(), 4000);
+      await withTimeout(db.ref("minigame/accounts/" + acc.id).set({
+        pin: acc.pin, coins: acc.coins, upgrades: acc.upgrades || {}, skin: acc.skin || "classic",
+        scrap: acc.scrap||0, samples: acc.samples||0, sealed: acc.sealed||0, contractsDone: acc.contractsDone||{},
+        skins: acc.skins||{}, sorties: acc.sorties||0, daily: acc.daily||{},
+        beacons: acc.beacons||[], zones: acc.zones||{center:true}, base: acc.base||{}, droneLoot: acc.droneLoot||0,
+        updatedAt: firebase.database.ServerValue.TIMESTAMP
+      }), 4000);
+    } catch (e) { /* offline ok */ }
+  }
+  async function fetchAccountRemote(id) {
+    try {
+      const db = await withTimeout(connectDb(), 4000);
+      const snap = await withTimeout(db.ref("minigame/accounts/" + id).once("value"), 4000);
+      return snap.val();
+    } catch (e) { return null; }
+  }
+
+  function renderAcctLetters() {
+    $("mAcctLetters").innerHTML = acctLetters.map((c, i) =>
+      '<div class="nl' + (acctFocus === "letters" && i === acctSel ? " on" : "") + '" data-kind="L" data-i="' + i + '">' +
+      '<button type="button" data-d="1">▲</button><div class="ch">' + c + '</div><button type="button" data-d="-1">▼</button></div>'
+    ).join("");
+  }
+  function renderAcctPin() {
+    $("mAcctPin").innerHTML = acctPin.map((c, i) =>
+      '<div class="nl' + (acctFocus === "pin" && i === acctSel ? " on" : "") + '" data-kind="P" data-i="' + i + '">' +
+      '<button type="button" data-d="1">▲</button><div class="ch">' + c + '</div><button type="button" data-d="-1">▼</button></div>'
+    ).join("");
+  }
+  function renderAcct() { renderAcctLetters(); renderAcctPin(); }
+
+  function bumpAcct(kind, i, d) {
+    if (kind === "L") {
+      acctLetters[i] = ABC[(ABC.indexOf(acctLetters[i]) + d + 26) % 26];
+    } else {
+      acctPin[i] = DIGITS[(DIGITS.indexOf(acctPin[i]) + d + 10) % 10];
+    }
+    renderAcct(); sfx("select");
+  }
+
+  $("mAcctLetters").addEventListener("click", e => {
+    const col = e.target.closest(".nl"); if (!col) return;
+    acctFocus = "letters"; acctSel = +col.dataset.i;
+    const b = e.target.closest("button[data-d]");
+    if (b) bumpAcct("L", acctSel, +b.dataset.d); else renderAcct();
+  });
+  $("mAcctPin").addEventListener("click", e => {
+    const col = e.target.closest(".nl"); if (!col) return;
+    acctFocus = "pin"; acctSel = +col.dataset.i;
+    const b = e.target.closest("button[data-d]");
+    if (b) bumpAcct("P", acctSel, +b.dataset.d); else renderAcct();
+  });
+
+  async function tryLoginAccount() {
+    const id = acctLetters.join("");
+    const pin = acctPin.join("");
+    $("mAcctErr").textContent = "";
+    const local = loadAccounts();
+    let remote = await fetchAccountRemote(id);
+    // priorité remote si dispo
+    if (remote && remote.pin) {
+      if (String(remote.pin) !== pin) {
+        $("mAcctErr").textContent = "Code incorrect pour " + id;
+        sfx("hit"); return;
+      }
+      account = {
+        id, pin,
+        coins: typeof remote.coins === "number" ? remote.coins : 50,
+        upgrades: remote.upgrades || {},
+        skin: remote.skin || "classic",
+        scrap: remote.scrap || 0, samples: remote.samples || 0, sealed: remote.sealed || 0,
+        contractsDone: remote.contractsDone || {},
+        skins: remote.skins || { classic: true }, sorties: remote.sorties || 0, daily: remote.daily || {},
+        beacons: remote.beacons || [], zones: remote.zones || { center: true },
+        base: remote.base || {}, droneLoot: remote.droneLoot || 0
+      };
+    } else if (local[id]) {
+      if (String(local[id].pin) !== pin) {
+        $("mAcctErr").textContent = "Code incorrect pour " + id;
+        sfx("hit"); return;
+      }
+      account = { id, pin, coins: local[id].coins || 50, upgrades: local[id].upgrades || {}, skin: local[id].skin || "classic",
+        scrap: local[id].scrap || 0, samples: local[id].samples || 0, sealed: local[id].sealed || 0, contractsDone: local[id].contractsDone || {},
+        skins: local[id].skins || { classic: true }, sorties: local[id].sorties || 0, daily: local[id].daily || {},
+        beacons: local[id].beacons || [], zones: local[id].zones || { center: true },
+        base: local[id].base || {}, droneLoot: local[id].droneLoot || 0 };
+    } else {
+      // création
+      account = { id, pin, coins: 80, upgrades: {}, skin: "classic", scrap: 0, samples: 0, sealed: 0, contractsDone: {},
+        skins: { classic: true }, sorties: 0, daily: {}, beacons: [], zones: { center: true }, base: {}, droneLoot: 0 };
+      local[id] = { pin, coins: 80, upgrades: {}, skin: "classic", scrap: 0, samples: 0, sealed: 0, contractsDone: {},
+        skins: { classic: true }, sorties: 0, daily: {}, beacons: [], zones: { center: true }, base: {}, droneLoot: 0 };
+      saveAccounts(local);
+      await syncAccountRemote(account);
+      $("mAcctErr").textContent = "";
+    }
+    // merge local
+    const map = loadAccounts();
+    map[id] = { pin: account.pin, coins: account.coins, upgrades: account.upgrades, skin: account.skin, scrap: account.scrap||0, samples: account.samples||0, sealed: account.sealed||0, contractsDone: account.contractsDone||{} };
+    saveAccounts(map);
+    await syncAccountRemote(account);
+    try { localStorage.setItem(LS_NAME, id); } catch (e) {}
+    $("mModesHello").textContent = "Bienvenue, " + id + " · " + account.coins + " pièces";
+    panel("mModes");
+    sfx("win");
+  }
+  $("mAcctGo").addEventListener("click", () => tryLoginAccount());
+
+  function persistAccount() {
+    if (!account) return;
+    const map = loadAccounts();
+    map[account.id] = { pin: account.pin, coins: account.coins, upgrades: account.upgrades, skin: account.skin,
+      scrap: account.scrap||0, samples: account.samples||0, sealed: account.sealed||0, contractsDone: account.contractsDone||{},
+      skins: account.skins||{}, sorties: account.sorties||0, daily: account.daily||{},
+      beacons: account.beacons||[], zones: account.zones||{center:true}, base: account.base||{}, droneLoot: account.droneLoot||0 };
+    saveAccounts(map);
+    syncAccountRemote(account);
+  }
+
+  // ========== EXPLORATION ==========
+  const EXP_UPGRADES = [
+    { id: "hull1", name: "Coque renforcée I", desc: "Profondeur max 40 m", cost: 40, req: null, tier: 1 },
+    { id: "hull2", name: "Coque renforcée II", desc: "Profondeur max 80 m", cost: 90, req: "hull1", tier: 2 },
+    { id: "hull3", name: "Coque abyssale", desc: "Profondeur max 150 m", cost: 180, req: "hull2", tier: 3 },
+    { id: "sonar1", name: "Sonar pulse", desc: "Impulsion de repérage", cost: 35, req: null, tier: 1 },
+    { id: "sonar2", name: "Sonar silencieux", desc: "Moins d’aggro créatures", cost: 70, req: "sonar1", tier: 2 },
+    { id: "lamp1", name: "Projecteur", desc: "Meilleure visibilité", cost: 30, req: null, tier: 1 },
+    { id: "tank1", name: "Ballast amélioré", desc: "Descente / remontée plus rapide", cost: 45, req: null, tier: 1 },
+    { id: "radar1", name: "Radar zones", desc: "Minimap : zones riches (flou)", cost: 50, req: null, tier: 1 },
+    { id: "radar2", name: "Radar pièces", desc: "Minimap : petites pièces", cost: 75, req: "radar1", tier: 2 },
+    { id: "radar3", name: "Radar trésors", desc: "Minimap : grosses pièces & coffres", cost: 110, req: "radar2", tier: 3 },
+  ];
+  function emptyMapState() {
+    return { drones: 0, droneLoot: 0, beacons: [], base: {}, lastTick: Date.now() };
+  }
+  function ensureAccountMeta() {
+    if (!account) return;
+    account.scrap = account.scrap || 0;
+    account.samples = account.samples || 0;
+    account.sealed = account.sealed || 0;
+    account.contractsDone = account.contractsDone || {};
+    account.upgrades = account.upgrades || {};
+    account.skins = account.skins || { classic: true };
+    account.skin = account.skin || "classic";
+    account.sorties = account.sorties || 0;
+    account.daily = account.daily || {};
+    // migration anciens comptes
+    if (!account.maps) {
+      account.maps = {
+        storm: emptyMapState(),
+        volcanic: emptyMapState(),
+        glacial: emptyMapState()
+      };
+      account.maps.storm.unlocked = true;
+      account.maps.volcanic.unlocked = false;
+      account.maps.glacial.unlocked = false;
+      // migrer anciennes données vers storm
+      if (account.beacons) account.maps.storm.beacons = account.beacons;
+      if (account.base) account.maps.storm.base = account.base;
+      if (account.droneLoot) account.maps.storm.droneLoot = account.droneLoot;
+      if (account.base && account.base.base_drone) account.maps.storm.drones = 1;
+    }
+    if (!account.maps.storm) account.maps.storm = emptyMapState();
+    if (!account.maps.volcanic) account.maps.volcanic = emptyMapState();
+    if (!account.maps.glacial) account.maps.glacial = emptyMapState();
+    account.maps.storm.unlocked = true;
+    account.maps.volcanic.unlocked = !!account.maps.volcanic.unlocked;
+    account.maps.glacial.unlocked = !!account.maps.glacial.unlocked;
+    account.currentMap = account.currentMap || "storm";
+    if (!account.maps[account.currentMap]) account.currentMap = "storm";
+  }
+  function curMap() {
+    ensureAccountMeta();
+    return account.maps[account.currentMap];
+  }
+  const MAP_DEFS = {
+    storm: {
+      id: "storm", name: "Mer de la Tempête",
+      skyTop: "#1a1e28", skyMid: "#2a3040", skyBot: "#3a4558",
+      waterTop: "#0a4a7a", waterBot: "#021018",
+      enemyBias: "normal", music: "chill",
+      blurb: "Orages, vagues, exploration classique"
+    },
+    volcanic: {
+      id: "volcanic", name: "Fosse Volcanique", cost: 400,
+      skyTop: "#2a1510", skyMid: "#3a2018", skyBot: "#4a3020",
+      waterTop: "#3a1810", waterBot: "#120808",
+      enemyBias: "hot", music: "tense",
+      blurb: "Cendres, plus de drones et requins"
+    },
+    glacial: {
+      id: "glacial", name: "Détroit Glacial", cost: 550,
+      skyTop: "#0e1a28", skyMid: "#1a3048", skyBot: "#2a4860",
+      waterTop: "#1a4060", waterBot: "#061018",
+      enemyBias: "cold", music: "deep",
+      blurb: "Glace, méduses, faible visibilité"
+    }
+  };
+  const BASE_UPGRADES = [
+    { id: "base_drone", name: "Drone de forage", desc: "Farm auto (max 3 / map)", cost: 150, repeatable: true, max: 3 },
+    { id: "base_heli", name: "Hélicoptère", desc: "Hélitreuillage en surface (maintenir ▲)", cost: 200 },
+    { id: "base_repair", name: "Baie de réparation", desc: "PV max +1", cost: 100 },
+    { id: "base_radar", name: "Radar de base", desc: "Balises sur minimap", cost: 80 },
+    { id: "base_crane", name: "Grue renforcée", desc: "Banque +10 % pièces", cost: 90 },
+  ];
+  // Tick drones de TOUTES les maps (persistance hors session)
+  function tickAllMapDrones() {
+    if (!account) return;
+    ensureAccountMeta();
+    const now = Date.now();
+    Object.keys(account.maps).forEach(mid => {
+      const m = account.maps[mid];
+      if (!m || !m.drones) return;
+      const last = m.lastTick || now;
+      const elapsed = Math.min(3600, (now - last) / 1000); // max 1h offline
+      if (elapsed < 5) { m.lastTick = now; return; }
+      // ~1 pièce / 8s / drone
+      const gain = Math.floor(elapsed / 8 * m.drones * (0.8 + Math.random() * 0.4));
+      if (gain > 0) m.droneLoot = (m.droneLoot || 0) + gain;
+      m.lastTick = now;
+    });
+    persistAccount();
+  }
+  const EXP_SKINS = [
+    { id: "classic", name: "Classique", color: null, req: null },
+    { id: "gold", name: "Doré", color: "#e8c84a", req: "c_chests3" },
+    { id: "abyss", name: "Abyssal", color: "#3a6a9a", req: "c_depth60" },
+    { id: "bio", name: "Biolum", color: "#5eead4", req: "c_samples2" },
+    { id: "eco", name: "Écologiste", color: "#4cc46a", req: "c_seal2" },
+    { id: "rust", name: "Ferraille", color: "#a07050", req: "c_wreck2" },
+    { id: "cargo", name: "Cargo", color: "#c4a040", req: "c_coins80" },
+  ];
+  const EXP_CRAFT = [
+    { id: "mod_armor", name: "Plaques renfort", desc: "−30% dégâts créatures", costScrap: 3, costCoins: 40, tier: 1 },
+    { id: "mod_scoop", name: "Aimant à pièces", desc: "Rayon de collecte +40%", costScrap: 2, costCoins: 35, tier: 1 },
+    { id: "mod_scan", name: "Scanner bio", desc: "Scan échantillons plus large", costScrap: 2, costCoins: 30, tier: 1 },
+    { id: "mod_stealth", name: "Revêtement furtif", desc: "Sonar aggro −50%", costScrap: 4, costCoins: 55, tier: 2 },
+    { id: "mod_insurance", name: "Assurance cargo", desc: "−50% pertes au contact", costScrap: 3, costCoins: 50, tier: 2 },
+    { id: "mod_silence", name: "Mode silence", desc: "V : moins d’aggro, pas d’onde", costScrap: 3, costCoins: 45, tier: 2 },
+    { id: "mod_homing", name: "Torpilles chercheuses", desc: "Tir à tête chercheuse", costScrap: 5, costCoins: 70, tier: 3 },
+    { id: "mod_mine", name: "Mines déployables", desc: "Pose mine (M / long TORP)", costScrap: 4, costCoins: 55, tier: 3 },
+  ];
+  const CONTRACT_DEFS = [
+    { id: "c_chests3", title: "Récupération coffres", desc: "Ouvre 3 coffres en une sortie", check: s => s.chests >= 3, reward: 50 },
+    { id: "c_depth60", title: "Plongée d’essai", desc: "Atteins 60 m de profondeur", check: s => s.maxDepth >= 60, reward: 40 },
+    { id: "c_samples2", title: "Mission science", desc: "Scanne 2 échantillons bio", check: s => s.samples >= 2, reward: 45 },
+    { id: "c_seal2", title: "Urgence écologique", desc: "Scelle 2 fuites de pétrole", check: s => s.sealed >= 2, reward: 55 },
+    { id: "c_wreck2", title: "Ferrailleur", desc: "Fouille 2 épaves", check: s => s.wrecks >= 2, reward: 40 },
+    { id: "c_coins80", title: "Cargaison", desc: "Ramène 80 ⚙ en une sortie", check: s => s.coinsBanked >= 80, reward: 60 },
+  ];
+  const DAILY_DEFS = [
+    { id: "d_seal3", title: "Scelle 3 fuites", check: s => s.sealed >= 3, reward: 35 },
+    { id: "d_noshot", title: "0 tir · 40 ⚙ en banque", check: s => s.shots === 0 && s.coinsBanked >= 40, reward: 40 },
+    { id: "d_boss", title: "Vaincs un boss", check: s => s.bossKills >= 1, reward: 50 },
+    { id: "d_cave", title: "Explore une grotte", check: s => s.caveVisit, reward: 30 },
+    { id: "d_puzzle", title: "Épave à valves", check: s => s.puzzleDone, reward: 45 },
+    { id: "d_contra", title: "Contrebande livrée", check: s => s.contrabandIn, reward: 55 },
+  ];
+  function todayKey() {
+    const d = new Date();
+    return d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+  }
+  function todayDaily() {
+    const key = todayKey();
+    const idx = Math.abs(key.split("").reduce((a,c) => a + c.charCodeAt(0), 0)) % DAILY_DEFS.length;
+    return DAILY_DEFS[idx];
+  }
+  function marketRates() {
+    // météo simulée à l'atelier : basée sur heure
+    const h = new Date().getHours();
+    const storm = 0.3 + 0.5 * Math.abs(Math.sin(h / 24 * Math.PI * 2));
+    return {
+      scrap: Math.round(8 + storm * 10),
+      samples: Math.round(12 + (1-storm) * 14),
+      storm
+    };
+  }
+  function maxDepthM() {
+    if (!account) return 20;
+    if (account.upgrades.hull3) return 150;
+    if (account.upgrades.hull2) return 80;
+    if (account.upgrades.hull1) return 40;
+    return 20;
+  }
+  function activeContract() {
+    ensureAccountMeta();
+    for (const c of CONTRACT_DEFS) {
+      if (!account.contractsDone[c.id]) return c;
+    }
+    return null;
+  }
+  function upgradeColor() {
+    if (!account) return spriteColor || "#e4c77a";
+    ensureAccountMeta();
+    const sk = EXP_SKINS.find(s => s.id === account.skin);
+    if (sk && sk.color) return sk.color;
+    if (account.upgrades.hull3) return "#5ec8ff";
+    if (account.upgrades.hull2) return "#7eb8e8";
+    if (account.upgrades.hull1) return "#9bc4d8";
+    return spriteColor || "#e4c77a";
+  }
+  function drawWsSub() {
+    const c = $("wsSubCv"); if (!c || !account) return;
+    const x = c.getContext("2d");
+    const CW = c.width, CH = c.height;
+    x.imageSmoothingEnabled = false;
+    x.clearRect(0, 0, CW, CH);
+    // fond eau
+    const bg = x.createLinearGradient(0, 0, 0, CH);
+    bg.addColorStop(0, "#0a2038"); bg.addColorStop(1, "#041018");
+    x.fillStyle = bg; x.fillRect(0, 0, CW, CH);
+    // surface
+    x.fillStyle = "rgba(100,180,255,0.12)"; x.fillRect(0, 0, CW, 12);
+    x.strokeStyle = "rgba(150,210,255,0.35)"; x.beginPath(); x.moveTo(0, 12); x.lineTo(CW, 12); x.stroke();
+    // bulles
+    x.fillStyle = "rgba(160,220,255,0.4)";
+    [[18, 50], [90, 42], [55, 58], [105, 52], [30, 38]].forEach(([bx, by]) => {
+      x.beginPath(); x.arc(bx, by, 2, 0, Math.PI * 2); x.fill();
+    });
+    const col = upgradeColor();
+    let spr;
+    try { spr = subSprite(col); } catch (e) { spr = null; }
+    const scale = 4;
+    const sw = 24 * scale, sh = 14 * scale;
+    const sx = Math.floor((CW - sw) / 2), sy = Math.floor((CH - sh) / 2) + 4;
+    if (spr) {
+      x.drawImage(spr, sx, sy, sw, sh);
+    } else {
+      // fallback rectangle sub
+      x.fillStyle = col; x.fillRect(sx, sy + 8, sw, sh - 10);
+      x.fillStyle = "#9fdcff"; x.fillRect(sx + sw - 10, sy + 12, 6, 6);
+    }
+    const u = account.upgrades || {};
+    const cx = sx + sw * 0.55, cy = sy + sh * 0.45;
+    if (u.lamp1) {
+      const grd = x.createRadialGradient(sx + sw - 4, cy, 2, sx + sw + 40, cy, 50);
+      grd.addColorStop(0, "rgba(255,230,120,0.65)");
+      grd.addColorStop(1, "rgba(255,200,50,0)");
+      x.fillStyle = grd;
+      x.beginPath(); x.moveTo(sx + sw - 6, cy); x.lineTo(CW, cy - 22); x.lineTo(CW, cy + 22); x.closePath(); x.fill();
+      x.fillStyle = "#ffd447"; x.fillRect(sx + sw - 8, cy - 3, 5, 5);
+    }
+    if (u.sonar1 || u.sonar2) {
+      x.strokeStyle = u.sonar2 ? "rgba(100,255,160,0.85)" : "rgba(67,198,227,0.85)";
+      x.lineWidth = 2;
+      x.beginPath(); x.arc(cx, cy, 28, 0, Math.PI * 2); x.stroke();
+      if (u.sonar2) { x.beginPath(); x.arc(cx, cy, 36, 0, Math.PI * 2); x.stroke(); }
+    }
+    if (u.tank1) {
+      x.fillStyle = "#b794f4";
+      x.fillRect(sx - 2, cy - 6, 6, 4);
+      x.fillRect(sx - 2, cy + 4, 6, 4);
+      x.fillStyle = "rgba(183,148,244,0.45)";
+      x.fillRect(sx - 10, cy - 6, 8, 4);
+      x.fillRect(sx - 10, cy + 4, 8, 4);
+    }
+    if (u.hull3) {
+      x.strokeStyle = "#5ec8ff"; x.lineWidth = 2;
+      x.strokeRect(sx - 2, sy - 2, sw + 4, sh + 4);
+    } else if (u.hull2) {
+      x.strokeStyle = "rgba(126,184,232,0.9)"; x.lineWidth = 2;
+      x.strokeRect(sx - 1, sy - 1, sw + 2, sh + 2);
+    } else if (u.hull1) {
+      x.strokeStyle = "rgba(155,196,216,0.7)"; x.lineWidth = 1;
+      x.strokeRect(sx, sy, sw, sh);
+    }
+    // label
+    x.fillStyle = "#9fdcff"; x.font = "bold 9px sans-serif"; x.textAlign = "center";
+    x.fillText("TON SOUS-MARIN", CW / 2, CH - 4);
+  }
+  function unlockSkinsFromContracts() {
+    ensureAccountMeta();
+    EXP_SKINS.forEach(sk => {
+      if (sk.req && account.contractsDone[sk.req]) account.skins[sk.id] = true;
+    });
+  }
+  function renderWorkshop() {
+    if (!account) return;
+    ensureAccountMeta();
+    unlockSkinsFromContracts();
+    $("wsCoins").textContent = fr(account.coins) + " · 🔩 " + (account.scrap||0) + " · 🔬 " + (account.samples||0);
+    $("wsMaxDepth").textContent = String(maxDepthM());
+    const u = account.upgrades || {};
+    $("wsBadges").innerHTML = [
+      ['hull', u.hull3 ? 'COQUE III' : u.hull2 ? 'COQUE II' : u.hull1 ? 'COQUE I' : 'COQUE —', !!(u.hull1 || u.hull2 || u.hull3)],
+      ['sonar', u.sonar2 ? 'SONAR II' : u.sonar1 ? 'SONAR I' : 'SONAR —', !!(u.sonar1 || u.sonar2)],
+      ['lamp', u.lamp1 ? 'PHARE' : 'PHARE —', !!u.lamp1],
+      ['tank', u.tank1 ? 'BALLAST' : 'BALLAST —', !!u.tank1],
+      ['sonar', u.radar3 ? 'RADAR III' : u.radar2 ? 'RADAR II' : u.radar1 ? 'RADAR I' : 'RADAR —', !!(u.radar1 || u.radar2 || u.radar3)],
+    ].map(([cls, label, on]) => '<span class="ws-badge ' + cls + (on ? ' on' : '') + '">' + label + '</span>').join("");
+    const ct = activeContract();
+    const doneN = CONTRACT_DEFS.filter(c => account.contractsDone[c.id]).length;
+    $("wsContract").innerHTML = ct
+      ? "<b>📋 Contrat actif</b><br>" + ct.title + " — " + ct.desc + "<br><span style='color:#ffd447'>Récompense : " + ct.reward + " ⚙</span><br><span style='opacity:.65'>" + doneN + "/" + CONTRACT_DEFS.length + " contrats terminés</span>"
+      : "<b>📋 Contrats</b><br>Tous terminés 🎉 · " + doneN + "/" + CONTRACT_DEFS.length;
+    const day = todayDaily();
+    const dk = todayKey();
+    const dailyDone = account.daily[dk] && account.daily[dk][day.id];
+    $("wsDaily").innerHTML = "<b>🎯 Défi du jour</b><br>" + day.title +
+      (dailyDone ? "<br><span style='color:#4cc46a'>✓ Terminé (+" + day.reward + " ⚙ déjà perçus)</span>" :
+        "<br><span style='color:#ffd447'>Récompense : " + day.reward + " ⚙ · se valide à la plateforme</span>");
+    const rates = marketRates();
+    $("wsMarket").innerHTML = "<b>🏪 Marché plateforme</b> <span style='opacity:.7'>(météo " + (rates.storm > 0.55 ? "tempête" : "calme") + ")</span><br>" +
+      "🔩 Ferraille → " + rates.scrap + " ⚙/u · 🔬 Échantillons → " + rates.samples + " ⚙/u<br>" +
+      "<button type='button' class='lobby-btn' id='wsSellScrap' style='margin:6px 4px 0 0;padding:6px 10px;font-size:12px'>Vendre ferraille</button>" +
+      "<button type='button' class='lobby-btn' id='wsSellSamples' style='margin:6px 4px 0 0;padding:6px 10px;font-size:12px'>Vendre échantillons</button>";
+    $("wsUpgrades").innerHTML = EXP_UPGRADES.map(up => {
+      const owned = !!account.upgrades[up.id];
+      const locked = up.req && !account.upgrades[up.req];
+      const can = !owned && !locked && account.coins >= up.cost;
+      const tLabel = "T" + (up.tier || 1);
+      return '<div class="ws-item' + (owned ? " owned" : "") + '"><strong>[' + tLabel + '] ' + up.name + '</strong><br><span style="opacity:.75">' + up.desc +
+        '</span><br><button type="button" data-up="' + up.id + '"' + (can ? "" : " disabled") + '>' +
+        (owned ? "POSSEDÉ" : locked ? "VERROUILLÉ" : up.cost + " ⚙") + "</button></div>";
+    }).join("");
+    $("wsCraft").innerHTML = EXP_CRAFT.map(cr => {
+      const owned = !!account.upgrades[cr.id];
+      const tierOk = (cr.tier || 1) <= 1 || account.upgrades.hull1 || (cr.tier === 3 && account.upgrades.hull2);
+      const can = !owned && tierOk && account.scrap >= cr.costScrap && account.coins >= cr.costCoins;
+      const tLabel = "T" + (cr.tier || 1);
+      return '<div class="ws-item' + (owned ? " owned" : "") + '"><strong>[' + tLabel + '] ' + cr.name + '</strong><br><span style="opacity:.75">' + cr.desc +
+        (cr.tier === 2 ? " · req coque I" : cr.tier === 3 ? " · req coque II" : "") +
+        '</span><br><button type="button" data-craft="' + cr.id + '"' + (can ? "" : " disabled") + '>' +
+        (owned ? "INSTALLÉ" : !tierOk ? "TIER VERROUILLÉ" : cr.costScrap + " 🔩 + " + cr.costCoins + " ⚙") + "</button></div>";
+    }).join("");
+    $("wsSkins").innerHTML = EXP_SKINS.map(sk => {
+      const ok = !!account.skins[sk.id];
+      const sel = account.skin === sk.id;
+      return '<button type="button" data-skin="' + sk.id + '" style="padding:6px 8px;border:2px solid ' + (sel ? "#ffd447" : "#58617d") +
+        ";background:" + (ok ? (sk.color || "#9b6545") : "#222") + ";color:#fff;font-size:11px;font-weight:900;opacity:" + (ok ? 1 : 0.35) +
+        '" ' + (ok ? "" : "disabled") + ">" + sk.name + (sel ? " ✓" : "") + "</button>";
+    }).join("");
+    tickAllMapDrones();
+    let baseHtml = "";
+    // sélecteur de map
+    Object.keys(MAP_DEFS).forEach(mid => {
+      const def = MAP_DEFS[mid];
+      const m = account.maps[mid];
+      const unlocked = mid === "storm" || !!m.unlocked;
+      const sel = account.currentMap === mid;
+      if (!unlocked) {
+        baseHtml += '<div class="ws-item"><strong>🗺 ' + def.name + '</strong><br><span style="opacity:.75">' + (def.blurb||"") + '</span><br>' +
+          '<button type="button" data-buymap="' + mid + '"' + (account.coins >= def.cost ? "" : " disabled") + ">Acheter " + def.cost + " ⚙</button></div>";
+      } else {
+        baseHtml += '<div class="ws-item' + (sel ? " owned" : "") + '"><strong>🗺 ' + def.name + '</strong><br><span style="opacity:.75">' + (def.blurb||"") +
+          '<br>Drones: ' + (m.drones||0) + '/3 · Loot: ' + (m.droneLoot||0) + ' · Balises: ' + ((m.beacons||[]).length) +
+          '</span><br><button type="button" data-selmap="' + mid + '">' + (sel ? "MAP ACTIVE" : "Jouer ici") + "</button></div>";
+      }
+    });
+    const cm = curMap();
+    BASE_UPGRADES.forEach(u => {
+      if (u.repeatable) {
+        const n = cm.drones || 0;
+        const can = n < (u.max||3) && account.coins >= u.cost;
+        baseHtml += '<div class="ws-item"><strong>' + u.name + ' (' + n + '/' + (u.max||3) + ')</strong><br><span style="opacity:.75">' + u.desc +
+          '</span><br><button type="button" data-base="' + u.id + '"' + (can ? "" : " disabled") + ">" +
+          (n >= (u.max||3) ? "MAX" : u.cost + " ⚙") + "</button></div>";
+      } else {
+        const owned = !!(cm.base && cm.base[u.id]);
+        const can = !owned && account.coins >= u.cost;
+        baseHtml += '<div class="ws-item' + (owned ? " owned" : "") + '"><strong>' + u.name + '</strong><br><span style="opacity:.75">' + u.desc +
+          '</span><br><button type="button" data-base="' + u.id + '"' + (can ? "" : " disabled") + ">" +
+          (owned ? "INSTALLÉ" : u.cost + " ⚙") + "</button></div>";
+      }
+    });
+    // loot toutes maps
+    Object.keys(account.maps).forEach(mid => {
+      const loot = account.maps[mid].droneLoot || 0;
+      if (loot > 0)
+        baseHtml += '<div class="ws-item"><strong>Loot drones · ' + MAP_DEFS[mid].name + '</strong><br><span style="opacity:.75">' +
+          loot + ' ⚙</span><br><button type="button" data-claimdrone="' + mid + '">Réclamer</button></div>';
+    });
+    if ((cm.beacons || []).length)
+      baseHtml += '<div class="ws-item"><strong>⚠ Balises (map active)</strong><br><span style="opacity:.75">' +
+        cm.beacons.length + " butin(s) à repêcher</span></div>";
+    $("wsBase").innerHTML = baseHtml;
+    requestAnimationFrame(() => { drawWsSub(); requestAnimationFrame(drawWsSub); });
+  }
+  document.addEventListener("click", e => {
+    if (!account) return;
+    if (e.target.id === "wsSellScrap" && account.scrap > 0) {
+      const r = marketRates();
+      const n = account.scrap; account.coins += n * r.scrap; account.scrap = 0;
+      persistAccount(); renderWorkshop(); sfx("win");
+    }
+    if (e.target.id === "wsSellSamples" && account.samples > 0) {
+      const r = marketRates();
+      const n = account.samples; account.coins += n * r.samples; account.samples = 0;
+      persistAccount(); renderWorkshop(); sfx("win");
+    }
+    const claim = e.target.closest("[data-claimdrone]");
+    if (claim) {
+      const mid = claim.dataset.claimdrone;
+      const loot = account.maps[mid] && account.maps[mid].droneLoot || 0;
+      if (loot > 0) {
+        account.coins += loot; account.maps[mid].droneLoot = 0;
+        persistAccount(); renderWorkshop(); sfx("win");
+      }
+    }
+    const buyM = e.target.closest("[data-buymap]");
+    if (buyM) {
+      const mid = buyM.dataset.buymap;
+      const def = MAP_DEFS[mid];
+      if (def && !account.maps[mid].unlocked && account.coins >= def.cost) {
+        account.coins -= def.cost;
+        account.maps[mid].unlocked = true;
+        persistAccount(); renderWorkshop(); sfx("win");
+      }
+    }
+    const selM = e.target.closest("[data-selmap]");
+    if (selM) {
+      const mid = selM.dataset.selmap;
+      if (account.maps[mid] && (mid === "storm" || account.maps[mid].unlocked)) {
+        account.currentMap = mid;
+        persistAccount(); renderWorkshop(); sfx("select");
+      }
+    }
+    const bab = e.target.closest("[data-base]");
+    if (bab) {
+      const u = BASE_UPGRADES.find(x => x.id === bab.dataset.base);
+      const m = curMap();
+      if (!u) return;
+      if (u.repeatable) {
+        if ((m.drones || 0) < (u.max || 3) && account.coins >= u.cost) {
+          account.coins -= u.cost; m.drones = (m.drones || 0) + 1;
+          persistAccount(); renderWorkshop(); sfx("win");
+        }
+      } else if (!(m.base && m.base[u.id]) && account.coins >= u.cost) {
+        account.coins -= u.cost;
+        m.base = m.base || {};
+        m.base[u.id] = 1;
+        persistAccount(); renderWorkshop(); sfx("win");
+      }
+    }
+    const sb = e.target.closest("[data-skin]");
+    if (sb && account.skins[sb.dataset.skin]) {
+      account.skin = sb.dataset.skin; persistAccount(); renderWorkshop(); sfx("select");
+    }
+  });
+  $("wsCraft").addEventListener("click", e => {
+    const b = e.target.closest("[data-craft]"); if (!b || !account) return;
+    const cr = EXP_CRAFT.find(x => x.id === b.dataset.craft); if (!cr) return;
+    ensureAccountMeta();
+    if (account.upgrades[cr.id] || account.scrap < cr.costScrap || account.coins < cr.costCoins) return;
+    account.scrap -= cr.costScrap; account.coins -= cr.costCoins;
+    account.upgrades[cr.id] = 1;
+    persistAccount(); renderWorkshop(); sfx("win");
+  });
+  $("wsUpgrades").addEventListener("click", e => {
+    const b = e.target.closest("[data-up]"); if (!b || !account) return;
+    const u = EXP_UPGRADES.find(x => x.id === b.dataset.up); if (!u) return;
+    if (account.upgrades[u.id] || (u.req && !account.upgrades[u.req]) || account.coins < u.cost) return;
+    account.coins -= u.cost;
+    account.upgrades[u.id] = 1;
+    persistAccount();
+    renderWorkshop();
+    sfx("pop");
+  });
+
+  // État exploration (séparé de G arcade)
+  let EX = null;
+  const WORLD_W = 3200, WORLD_H = 1800;
+  const WORLD_DEPTH_M = 150;
+  const SURF_Y = 100; // ligne d'eau
+  const BASE = { x: WORLD_W / 2, y: SURF_Y - 28, w: 120, h: 40 }; // centre map, pont au-dessus de l'eau
+
+  function freshExplore() {
+    return {
+      state: "explore",
+      x: BASE.x, y: SURF_Y + 18, vx: 0, vy: 0, facing: 1, frame: 0,
+      coins: 0,
+      sonarT: 0, sonarCd: 0, aggro: 0,
+      creatures: [], pickups: [], deco: [], bubbles: [], particles: [],
+      chests: [], currents: [], wrecks: [], sonarBlips: [],
+      leaks: [], drones: [], samples: [], caves: [], mines: [], bosses: [],
+      camX: 0, camY: 0,
+      time: 0, shake: 0, flash: 0,
+      dead: false, msg: null, msgT: 0, coinFlash: 0,
+      atBase: true,
+      holdT: 0, holdTarget: null,
+      baseHold: 0,
+      weather: 0.6, weatherT: 0,
+      torps: [], torpCd: 0, mineCd: 0,
+      silence: false, contraband: 0,
+      hp: 3, maxHp: 3, iFrames: 0,
+      heliCharge: 0,
+      heli: null, // { t, phase: "winch"|"fly"|"done" }
+      farmDrone: null,
+      session: { chests: 0, wrecks: 0, samples: 0, sealed: 0, maxDepth: 0, coinsBanked: 0, kills: 0, shots: 0, bossKills: 0, caveVisit: false, puzzleDone: false, contrabandIn: false }
+    };
+  }
+  function nearBase() {
+    if (!EX) return false;
+    return Math.abs(EX.x - BASE.x) < BASE.w * 0.6 && EX.y < SURF_Y + 45 && EX.y > SURF_Y - 10;
+  }
+  function playerMaxHp() {
+    let h = 3;
+    const m = account && curMap();
+    if (m && m.base && m.base.base_repair) h += 1;
+    if (account && account.upgrades && account.upgrades.mod_armor) h += 1;
+    return h;
+  }
+  function dropBeaconAndDie() {
+    if (!EX || !account) return;
+    ensureAccountMeta();
+    const loot = EX.coins || 0;
+    const contra = EX.contraband || 0;
+    if (loot > 0 || contra > 0) {
+      const m = curMap();
+      m.beacons = m.beacons || [];
+      m.beacons.push({
+        id: "b" + Date.now(),
+        x: EX.x, y: EX.y,
+        coins: loot, contraband: contra,
+        created: Date.now()
+      });
+      if (m.beacons.length > 5) m.beacons.shift();
+    }
+    EX.coins = 0; EX.contraband = 0;
+    EX.dead = true;
+    EX.msg = loot || contra ? "Épave balisée — repêche ton butin !" : "Sub détruit…";
+    EX.msgT = 3;
+    persistAccount();
+    sfx("die");
+    setTimeout(() => {
+      if (!EX) return;
+      EX = null;
+      $("mControls").classList.remove("explore-mode");
+      $("mMiniMap").classList.remove("on");
+      $("mDepthBar").classList.remove("on");
+      panel("mWorkshop");
+      renderWorkshop();
+    }, 2200);
+  }
+  function takeDamage(amount, label) {
+    if (!EX || EX.dead || EX.iFrames > 0 || EX.heli) return;
+    let dmg = amount;
+    if (account.upgrades && account.upgrades.mod_armor) dmg = Math.max(1, dmg - 0.25);
+    EX.hp -= dmg;
+    EX.iFrames = 1.1;
+    EX.shake = 0.45;
+    EX.msg = label || "Touché !"; EX.msgT = 1;
+    // pertes de cargaison proportionnelles
+    if (EX.coins > 0) {
+      let lost = Math.ceil(EX.coins * 0.12 * amount);
+      if (account.upgrades && account.upgrades.mod_insurance) lost = Math.ceil(lost * 0.5);
+      EX.coins = Math.max(0, EX.coins - lost);
+    }
+    if (EX.hp <= 0) dropBeaconAndDie();
+  }
+  function callHelicopter() {
+    if (!EX || EX.dead || EX.heli) return;
+    const m = curMap();
+    if (!m.base || !m.base.base_heli) {
+      EX.msg = "Hélico non installé — achète-le pour cette map"; EX.msgT = 2; return;
+    }
+    if (EX.y > SURF_Y + 25) {
+      EX.msg = "Remonte en surface pour l’hélitreuillage"; EX.msgT = 2; return;
+    }
+    if (nearBase()) {
+      EX.msg = "Tu es déjà à la base"; EX.msgT = 1.5; return;
+    }
+    EX.heli = { t: 0, phase: "approach", fromX: EX.x };
+    EX.msg = "Hélicoptère en approche…"; EX.msgT = 2;
+    sfx("select");
+  }
+  function recoverBeacon(b) {
+    if (!EX || !account) return;
+    EX.coins += b.coins || 0;
+    EX.contraband += b.contraband || 0;
+    EX.coinFlash = 0.8;
+    EX.msg = "Balise récupérée ! +" + (b.coins || 0) + " ⚙"; EX.msgT = 2.5;
+    const m = curMap();
+    m.beacons = (m.beacons || []).filter(x => x.id !== b.id);
+    persistAccount();
+    sfx("win");
+  }
+  function evaluateContracts() {
+    if (!account || !EX) return [];
+    ensureAccountMeta();
+    const s = {
+      chests: EX.session.chests, wrecks: EX.session.wrecks,
+      samples: EX.session.samples, sealed: EX.session.sealed,
+      maxDepth: EX.session.maxDepth, coinsBanked: EX.session.coinsBanked
+    };
+    const done = [];
+    CONTRACT_DEFS.forEach(c => {
+      if (account.contractsDone[c.id]) return;
+      if (c.check(s)) {
+        account.contractsDone[c.id] = Date.now();
+        account.coins += c.reward;
+        done.push(c);
+      }
+    });
+    if (done.length) persistAccount();
+    return done;
+  }
+  function evaluateDaily() {
+    if (!account || !EX) return null;
+    ensureAccountMeta();
+    const day = todayDaily();
+    const dk = todayKey();
+    if (!account.daily[dk]) account.daily[dk] = {};
+    if (account.daily[dk][day.id]) return null;
+    if (day.check(EX.session)) {
+      account.daily[dk][day.id] = true;
+      account.coins += day.reward;
+      persistAccount();
+      return day;
+    }
+    return null;
+  }
+  function bankSessionCoins() {
+    if (!account || !EX) return 0;
+    const n = EX.coins || 0;
+    if (n > 0) {
+      let gain = n;
+      if (curMap().base && curMap().base.base_crane) gain = Math.ceil(n * 1.1);
+      account.coins += gain;
+      EX.session.coinsBanked += n;
+      EX.coins = 0;
+      EX.coinFlash = 0.8;
+      EX.msg = "Pièces sécurisées ! +" + n + " ⚙";
+      EX.msgT = 2.5;
+      sfx("win");
+    }
+    if (EX.contraband > 0) {
+      const bonus = EX.contraband * 80;
+      account.coins += bonus;
+      EX.session.contrabandIn = true;
+      EX.contraband = 0;
+      EX.msg = "Contrebande livrée ! +" + bonus + " ⚙"; EX.msgT = 2.8;
+      sfx("win");
+    }
+    const finished = evaluateContracts();
+    if (finished.length) {
+      unlockSkinsFromContracts();
+      EX.msg = "Contrat réussi : " + finished.map(c => c.title + " (+" + c.reward + ")").join(", ");
+      EX.msgT = 3.5;
+      sfx("win");
+    }
+    const day = evaluateDaily();
+    if (day) {
+      EX.msg = "Défi du jour : " + day.title + " +" + day.reward + " ⚙"; EX.msgT = 3.5;
+      sfx("win");
+    }
+    persistAccount();
+    return n;
+  }
+  function respawnAllResources() {
+    if (!EX) return;
+    // Régénère tout le contenu collectable / interactif (nouvelle "vague")
+    const keepX = EX.x, keepY = EX.y, keepFacing = EX.facing;
+    const weather = EX.weather, weatherT = EX.weatherT;
+    spawnExploreWorld();
+    EX.x = keepX; EX.y = keepY; EX.facing = keepFacing;
+    EX.weather = weather; EX.weatherT = weatherT;
+    EX.session = { chests: 0, wrecks: 0, samples: 0, sealed: 0, maxDepth: 0, coinsBanked: 0 };
+    EX.sonarBlips = [];
+    EX.holdT = 0; EX.holdTarget = null;
+  }
+  function returnToWorkshop() {
+    if (!EX) return;
+    bankSessionCoins();
+    // prépare déjà une carte fraîche au cas où — puis atelier
+    respawnAllResources();
+    EX = null;
+    $("mControls").classList.remove("explore-mode");
+    $("mMiniMap").classList.remove("on");
+    $("mDepthBar").classList.remove("on");
+    panel("mWorkshop");
+    renderWorkshop();
+  }
+  // À la plateforme : sécuriser + régénérer la carte et rester en plongée (farm)
+  function dockAndRestock() {
+    if (!EX || !nearBase()) return;
+    bankSessionCoins();
+    respawnAllResources();
+    EX.x = BASE.x;
+    EX.y = SURF_Y + 18;
+    EX.vx = 0; EX.vy = 0;
+    EX.msg = "Pièces en banque · carte régénérée — repart où tu veux";
+    EX.msgT = 3;
+    sfx("win");
+  }
+  function depthMeters() {
+    if (!EX) return 0;
+    return Math.max(0, (EX.y - SURF_Y) / (WORLD_H - SURF_Y - 40) * WORLD_DEPTH_M);
+  }
+  function yForDepth(m) {
+    return SURF_Y + (m / WORLD_DEPTH_M) * (WORLD_H - SURF_Y - 40);
+  }
+  function visibilityRadius() {
+    const d = depthMeters() / WORLD_DEPTH_M;
+    let r = 150 - d * 110;
+    if (account && account.upgrades.lamp1) r += 40;
+    if (EX.sonarT > 0) r += 90;
+    if (EX && EX.weather != null) r += (0.5 - EX.weather) * 30;
+    if (account && account.currentMap === "glacial") r *= 0.75;
+    if (account && account.currentMap === "volcanic") r *= 0.9;
+    // grottes : très sombre sans phare
+    if (EX && EX.caves) {
+      EX.caves.forEach(cv => {
+        if (EX.x > cv.x - cv.w/2 && EX.x < cv.x + cv.w/2 && EX.y > cv.y - cv.h/2 && EX.y < cv.y + cv.h/2) {
+          r = (account && account.upgrades.lamp1) ? Math.min(r, 70) : Math.min(r, 28);
+        }
+      });
+    }
+    return Math.max(22, r);
+  }
+
+  // Sprites pixel ennemis / pièces
+  const coinSpr = mk(7, 7, x => {
+    const p = [[2,0],[3,0],[4,0],[1,1],[5,1],[0,2],[6,2],[0,3],[6,3],[0,4],[6,4],[1,5],[5,5],[2,6],[3,6],[4,6],
+      [2,1],[3,1],[4,1],[1,2],[5,2],[1,3],[5,3],[1,4],[5,4],[2,5],[3,5],[4,5],[3,2],[3,3],[3,4]];
+    p.forEach(([i,j], n) => { x.fillStyle = n < 16 ? "#b8860b" : (n < 28 ? "#ffd447" : "#fff3a0"); x.fillRect(i,j,1,1); });
+  });
+  const coinBigSpr = mk(9, 9, x => {
+    for (let j = 0; j < 9; j++) for (let i = 0; i < 9; i++) {
+      const dx = i - 4, dy = j - 4, d = Math.sqrt(dx*dx+dy*dy);
+      if (d <= 3.6) { x.fillStyle = d > 3 ? "#a67c00" : (dx+dy < 0 ? "#ffe566" : "#e6b800"); x.fillRect(i,j,1,1); }
+    }
+    x.fillStyle = "#fff8c0"; x.fillRect(3,2,2,1); x.fillRect(4,3,1,2);
+  });
+  function expFishSpr(kind, flip) {
+    return mk(14, 8, x => {
+      // body
+      const body = kind === 0 ? "#6ec6ff" : kind === 1 ? "#c47aff" : "#ff7a9a";
+      const edge = kind === 0 ? "#2a6a9a" : kind === 1 ? "#6a2a8a" : "#9a2a4a";
+      const cells = [
+        [2,3],[3,2],[3,3],[3,4],[4,1],[4,2],[4,3],[4,4],[4,5],
+        [5,1],[5,2],[5,3],[5,4],[5,5],[6,1],[6,2],[6,3],[6,4],[6,5],
+        [7,2],[7,3],[7,4],[8,2],[8,3],[8,4],[9,3]
+      ];
+      cells.forEach(([i,j]) => { x.fillStyle = body; x.fillRect(i,j,1,1); });
+      // outline dark
+      [[2,2],[2,4],[3,1],[3,5],[9,2],[9,4],[10,3]].forEach(([i,j]) => { x.fillStyle = edge; x.fillRect(i,j,1,1); });
+      // eye
+      x.fillStyle = "#10131f"; x.fillRect(4, 2, 1, 1);
+      x.fillStyle = "#fff"; x.fillRect(4, 2, 1, 0.5);
+      // tail
+      x.fillStyle = body; x.fillRect(10, 2, 1, 1); x.fillRect(10, 4, 1, 1); x.fillRect(11, 1, 1, 1); x.fillRect(11, 5, 1, 1); x.fillRect(12, 2, 1, 3);
+      if (flip) {
+        // mirrored by drawImage scale later
+      }
+    });
+  }
+  const EXP_FISH = [expFishSpr(0), expFishSpr(1), expFishSpr(2)];
+  const expJellySpr = mk(10, 12, x => {
+    for (let j = 0; j < 5; j++) for (let i = 0; i < 10; i++) {
+      const dx = (i-4.5)/4.5, dy = (j-2.5)/2.8;
+      if (dx*dx+dy*dy <= 1 && j <= 4) {
+        x.fillStyle = j < 2 ? "#ffb8e8" : "#e060c0"; x.fillRect(i,j,1,1);
+      }
+    }
+    for (let k = 0; k < 4; k++) {
+      x.fillStyle = "#d050b0";
+      for (let r = 0; r < 7; r++) x.fillRect(1+k*2 + (r%2), 5+r, 1, 1);
+    }
+  });
+  const expSharkSpr = mk(20, 10, x => {
+    for (let i = 2; i < 16; i++) for (let j = 3; j < 7; j++) {
+      x.fillStyle = j === 3 ? "#8a9bb0" : "#5a6a7a"; x.fillRect(i,j,1,1);
+    }
+    // snout
+    x.fillStyle = "#5a6a7a"; x.fillRect(16,4,2,2); x.fillRect(18,4,1,1);
+    // fin
+    x.fillStyle = "#4a5a6a"; x.fillRect(8,1,3,2); x.fillRect(9,0,1,1);
+    // tail
+    x.fillStyle = "#5a6a7a"; x.fillRect(0,2,2,1); x.fillRect(0,6,2,1); x.fillRect(1,3,2,3);
+    // eye / teeth
+    x.fillStyle = "#fff"; x.fillRect(15,4,1,1);
+    x.fillStyle = "#10131f"; x.fillRect(15,4,1,1);
+  });
+
+  function spawnExploreWorld() {
+    EX.creatures = []; EX.pickups = []; EX.deco = []; EX.bubbles = []; EX.particles = [];
+    EX.chests = []; EX.currents = []; EX.wrecks = []; EX.sonarBlips = [];
+    EX.leaks = []; EX.drones = []; EX.samples = [];
+    EX.caves = []; EX.bosses = []; EX.mines = [];
+    for (let i = 0; i < 70; i++) {
+      const kind = Math.random() < 0.45 ? "weed" : (Math.random() < 0.7 ? "rock" : "ruin");
+      EX.deco.push({
+        kind, x: rnd(40, WORLD_W - 40), y: rnd(SURF_Y + 80, WORLD_H - 30),
+        w: kind === "ruin" ? rnd(20, 40) : rnd(8, 18),
+        h: kind === "weed" ? rnd(16, 36) : rnd(8, 22), ph: rnd(0, 6.28)
+      });
+    }
+    for (let i = 0; i < 36; i++) {
+      const mid = account && account.currentMap;
+      const hot = mid === "volcanic", cold = mid === "glacial";
+      const kind = Math.random() < (hot ? 0.22 : cold ? 0.08 : 0.12) ? "shark"
+        : (Math.random() < (cold ? 0.5 : hot ? 0.25 : 0.35) ? "jelly" : "fish");
+      let x = rnd(80, WORLD_W - 80);
+      if (Math.abs(x - BASE.x) < 200) x += (x < BASE.x ? -220 : 220);
+      EX.creatures.push({
+        kind, type: kind === "fish" ? (i % 3) : 0, x, y: rnd(SURF_Y + 60, WORLD_H - 80),
+        vx: rnd(-22, 22), vy: rnd(-12, 12),
+        r: kind === "shark" ? 14 : kind === "jelly" ? 9 : 7, angry: false, life: 1, ph: rnd(0, 6.28)
+      });
+    }
+    for (let i = 0; i < 55; i++) {
+      let x = rnd(60, WORLD_W - 60);
+      if (Math.abs(x - BASE.x) < 120) x += 150;
+      EX.pickups.push({ x, y: rnd(SURF_Y + 40, WORLD_H - 60), v: Math.random() < 0.16 ? 15 : 5, taken: false, ph: rnd(0, 6.28) });
+    }
+    for (let i = 0; i < 8; i++) {
+      let x = rnd(150, WORLD_W - 150);
+      if (Math.abs(x - BASE.x) < 180) x = BASE.x + (i % 2 ? 280 : -280);
+      EX.chests.push({ x, y: rnd(SURF_Y + 100, WORLD_H - 100), open: false, loot: 25 + Math.floor(rnd(0, 40)) });
+    }
+    for (let i = 0; i < 6; i++) {
+      EX.currents.push({
+        x: rnd(200, WORLD_W - 200), y: rnd(SURF_Y + 80, WORLD_H - 120),
+        w: rnd(80, 140), h: rnd(40, 70), dirX: Math.random() < 0.5 ? -1 : 1, dirY: rnd(-0.3, 0.3)
+      });
+    }
+    for (let i = 0; i < 5; i++) {
+      EX.wrecks.push({ x: rnd(200, WORLD_W - 200), y: rnd(SURF_Y + 200, WORLD_H - 80), searched: false, loot: 20 + Math.floor(rnd(0, 35)), scrap: 1 + Math.floor(rnd(0, 2)) });
+    }
+    // fuites de pétrole
+    for (let i = 0; i < 6; i++) {
+      let x = rnd(200, WORLD_W - 200);
+      if (Math.abs(x - BASE.x) < 200) x += 250;
+      EX.leaks.push({ x, y: rnd(SURF_Y + 60, WORLD_H - 150), sealed: false, r: 22 });
+    }
+    // drones / sous-marins fantômes
+    for (let i = 0; i < 4; i++) {
+      EX.drones.push({
+        x: rnd(300, WORLD_W - 300), y: rnd(SURF_Y + 100, WORLD_H - 120),
+        vx: rnd(-30, 30), vy: rnd(-12, 12), patrol: rnd(0, 6.28), r: 12
+      });
+    }
+    // échantillons bio
+    for (let i = 0; i < 7; i++) {
+      EX.samples.push({
+        x: rnd(150, WORLD_W - 150), y: rnd(SURF_Y + 80, WORLD_H - 100),
+        scanned: false, ph: rnd(0, 6.28), kind: i % 2 ? "jelly" : "fish"
+      });
+    }
+    // grottes sombres (besoin phare)
+    for (let i = 0; i < 3; i++) {
+      EX.caves.push({
+        x: rnd(250, WORLD_W - 250), y: rnd(SURF_Y + 250, WORLD_H - 120),
+        w: rnd(100, 160), h: rnd(70, 110),
+        loot: false
+      });
+    }
+    // épave puzzle (3 valves)
+    EX.wrecks.push({
+      x: rnd(400, WORLD_W - 400), y: rnd(SURF_Y + 300, WORLD_H - 100),
+      searched: false, loot: 50, scrap: 3, puzzle: true, valves: [false, false, false], valveI: 0
+    });
+    // contrebande (1 objet)
+    EX.pickups.push({
+      x: rnd(200, WORLD_W - 200), y: rnd(SURF_Y + 150, WORLD_H - 100),
+      v: 0, taken: false, ph: rnd(0, 6.28), contraband: true
+    });
+    // courants saisonniers (direction liée à la météo / sortie)
+    const season = ((account && account.sorties) || 0) % 4;
+    const dirs = [[1, 0], [-1, 0], [0.5, 0.4], [-0.5, -0.3]];
+    EX.currents.forEach((cu, i) => {
+      const d = dirs[(season + i) % 4];
+      cu.dirX = d[0]; cu.dirY = d[1];
+      cu.w *= 1.1; cu.h *= 1.05;
+    });
+    // boss tous les 3 sorties
+    const sortie = (account && account.sorties) || 0;
+    if (sortie > 0 && sortie % 3 === 0) {
+      const isShark = sortie % 6 !== 0;
+      EX.bosses.push({
+        kind: isShark ? "alpha" : "mothership",
+        x: rnd(500, WORLD_W - 500), y: rnd(SURF_Y + 200, WORLD_H - 150),
+        vx: 0, vy: 0, hp: isShark ? 12 : 16, r: isShark ? 22 : 26, ph: 0
+      });
+    }
+  }
+
+  function startExplorePlay() {
+    gameMode = "explore";
+    ensureAccountMeta();
+    account.sorties = (account.sorties || 0) + 1;
+    persistAccount();
+    EX = freshExplore();
+    EX.maxHp = playerMaxHp();
+    EX.hp = EX.maxHp;
+    spawnExploreWorld();
+    // reposer balises persistantes
+    ensureAccountMeta();
+    tickAllMapDrones();
+    const m = curMap();
+    (m.beacons || []).forEach(b => {
+      EX.pickups.push({ x: b.x, y: b.y, v: b.coins || 0, taken: false, ph: 0, beacon: true, beaconId: b.id, contraband: !!b.contraband });
+    });
+    EX.farmDrones = [];
+    const nDrone = Math.min(3, m.drones || 0);
+    for (let i = 0; i < nDrone; i++) {
+      EX.farmDrones.push({ x: BASE.x + 60 + i * 50, y: SURF_Y + 40 + i * 8, vx: 14 + i * 3, loot: 0, t: i * 2 });
+    }
+    EX.mapId = account.currentMap;
+    panel(null);
+    $("mControls").classList.add("explore-mode");
+    $("mMiniMap").classList.add("on");
+    $("mDepthBar").classList.add("on");
+    EX.msg = "Nouvelle sortie — ressources régénérées";
+    EX.msgT = 2.2;
+    setText("mScore", fr(account.coins));
+    setText("mLevel", "0 m");
+    setText("mMult", "max " + maxDepthM() + " m");
+    setText("mRec", "+0");
+    try {
+      const keys = document.querySelectorAll("#mHud .mstat .k");
+      if (keys[0]) keys[0].textContent = "PIÈCES";
+      if (keys[3]) keys[3].textContent = "SESSION";
+    } catch (e) {}
+    inputs.kbd = inputs.btn = inputs.cv = false;
+    inputs.left = inputs.right = inputs.down = false;
+    // musique : repartir plus lent (chill)
+    if (mTimer) { mBpm = 64; }
+    last = performance.now();
+    sfx("select");
+  }
+
+  function findInteractTarget() {
+    if (!EX || nearBase()) return null;
+    const scanR = (account.upgrades && account.upgrades.mod_scan) ? 36 : 26;
+    for (const c of EX.chests) {
+      if (!c.open && Math.hypot(c.x - EX.x, c.y - EX.y) < 24) return { type: "chest", ref: c };
+    }
+    for (const w of EX.wrecks) {
+      if (w.puzzle && !w.searched && Math.hypot(w.x - EX.x, w.y - EX.y) < 32)
+        return { type: "puzzle", ref: w };
+      if (!w.puzzle && !w.searched && Math.hypot(w.x - EX.x, w.y - EX.y) < 30) return { type: "wreck", ref: w };
+    }
+    for (const L of EX.leaks) {
+      if (!L.sealed && Math.hypot(L.x - EX.x, L.y - EX.y) < L.r + 8) return { type: "leak", ref: L };
+    }
+    for (const s of EX.samples) {
+      if (!s.scanned && Math.hypot(s.x - EX.x, s.y - EX.y) < scanR) return { type: "sample", ref: s };
+    }
+    return null;
+  }
+  function completeInteract(t) {
+    if (!t) return;
+    const r = t.ref;
+    if (t.type === "chest") {
+      r.open = true; EX.coins += r.loot; EX.session.chests++; EX.coinFlash = 0.8;
+      EX.msg = "Coffre ouvert ! +" + r.loot + " ⚙"; EX.msgT = 2.2;
+      for (let k = 0; k < 10; k++) EX.particles.push({ x: r.x, y: r.y, vx: rnd(-50, 50), vy: rnd(-60, -10), life: rnd(0.4, 0.9), col: "#ffd447" });
+      sfx("win");
+    } else if (t.type === "wreck") {
+      r.searched = true; EX.coins += r.loot; EX.session.wrecks++;
+      account.scrap = (account.scrap || 0) + (r.scrap || 1); EX.coinFlash = 0.8;
+      EX.msg = "Épave fouillée ! +" + r.loot + " ⚙ · +" + (r.scrap || 1) + " ferraille"; EX.msgT = 2.4;
+      sfx("pop");
+    } else if (t.type === "leak") {
+      r.sealed = true; EX.session.sealed++; account.sealed = (account.sealed || 0) + 1;
+      EX.coins += 18; EX.coinFlash = 0.8;
+      EX.msg = "Fuite scellée ! +18 ⚙"; EX.msgT = 2.2;
+      sfx("win");
+    } else if (t.type === "sample") {
+      r.scanned = true; EX.session.samples++; account.samples = (account.samples || 0) + 1;
+      EX.coins += 22; EX.coinFlash = 0.8;
+      EX.msg = "Échantillon bio scanné ! +22 ⚙"; EX.msgT = 2.2;
+      sfx("ping");
+    } else if (t.type === "puzzle") {
+      const i = r.valveI || 0;
+      if (i < 3) {
+        r.valves[i] = true; r.valveI = i + 1;
+        EX.msg = "Valve " + (i + 1) + "/3 ouverte"; EX.msgT = 1.5;
+        sfx("pop");
+        if (r.valveI >= 3) {
+          r.searched = true; EX.session.wrecks++; EX.session.puzzleDone = true;
+          account.scrap = (account.scrap || 0) + (r.scrap || 3);
+          EX.coins += r.loot; EX.coinFlash = 0.8;
+          EX.msg = "Épave déverrouillée ! +" + r.loot + " ⚙"; EX.msgT = 2.5;
+          sfx("win");
+        }
+      }
+    }
+    persistAccount();
+  }
+  function tryInteract() {
+    const t = findInteractTarget();
+    if (!t) return false;
+    completeInteract(t);
+    return true;
+  }
+  function hurtEnemy(target, dmg, knock) {
+    if (!target) return false;
+    target.hp = (target.hp != null ? target.hp : (target.kind === "shark" ? 3 : target.r > 10 ? 2 : 1)) - dmg;
+    if (knock) {
+      const dx = target.x - EX.x, dy = target.y - EX.y, d = Math.hypot(dx, dy) || 1;
+      target.vx = (target.vx || 0) + dx / d * knock;
+      target.vy = (target.vy || 0) + dy / d * knock;
+    }
+    if (target.hp <= 0) {
+      EX.session.kills = (EX.session.kills || 0) + 1;
+      EX.coins += target.kind === "shark" ? 12 : (target.patrol != null ? 15 : 6);
+      EX.coinFlash = 0.5;
+      for (let k = 0; k < 6; k++) EX.particles.push({
+        x: target.x, y: target.y, vx: rnd(-40, 40), vy: rnd(-40, 20), life: rnd(0.3, 0.7), col: "#ff6b6b"
+      });
+      return true;
+    }
+    target.angry = true;
+    return false;
+  }
+  function fireTorpedo() {
+    if (!EX || nearBase() || EX.torpCd > 0) return;
+    EX.torpCd = (account.upgrades && account.upgrades.mod_armor) ? 1.1 : 1.6;
+    EX.session.shots = (EX.session.shots || 0) + 1;
+    const dir = EX.facing || 1;
+    const homing = !!(account.upgrades && account.upgrades.mod_homing);
+    EX.torps.push({ x: EX.x + dir * 14, y: EX.y, vx: dir * 160, vy: 0, life: homing ? 2.2 : 1.4, homing });
+    sfx("ping");
+  }
+  function deployMine() {
+    if (!EX || nearBase() || !account.upgrades || !account.upgrades.mod_mine || EX.mineCd > 0) return;
+    EX.mineCd = 4;
+    EX.mines.push({ x: EX.x, y: EX.y, life: 20, r: 28 });
+    EX.msg = "Mine déployée"; EX.msgT = 1.2;
+    sfx("pop");
+  }
+  function pulseSonar() {
+    if (!EX) return;
+    if (nearBase()) return;
+    if (findInteractTarget()) return;
+    if (EX.silence) {
+      EX.msg = "Mode silence — pas de sonar"; EX.msgT = 1.2;
+      return;
+    }
+    if (EX.sonarCd > 0) return;
+    const hasSonar = !!(account.upgrades && (account.upgrades.sonar1 || account.upgrades.sonar2));
+    EX.sonarT = hasSonar ? 2.4 : 1.2;
+    EX.sonarCd = hasSonar ? (account.upgrades.sonar2 ? 2.8 : 4.5) : 6;
+    const dmgR = hasSonar ? 90 : 55;
+    const dmg = hasSonar ? 1.2 : 0.7;
+    for (let i = EX.creatures.length - 1; i >= 0; i--) {
+      const c = EX.creatures[i];
+      if (Math.hypot(c.x - EX.x, c.y - EX.y) < dmgR) {
+        if (hurtEnemy(c, dmg, 120)) EX.creatures.splice(i, 1);
+      } else if (Math.hypot(c.x - EX.x, c.y - EX.y) < 280) c.angry = true;
+    }
+    for (let i = EX.drones.length - 1; i >= 0; i--) {
+      const d = EX.drones[i];
+      if (Math.hypot(d.x - EX.x, d.y - EX.y) < dmgR + 10) {
+        if (hurtEnemy(d, dmg + 0.5, 140)) EX.drones.splice(i, 1);
+      }
+    }
+    for (let i = EX.bosses.length - 1; i >= 0; i--) {
+      const b = EX.bosses[i];
+      if (Math.hypot(b.x - EX.x, b.y - EX.y) < dmgR + b.r) {
+        if (hurtEnemy(b, dmg, 60)) {
+          EX.session.bossKills++;
+          EX.coins += 40;
+          EX.bosses.splice(i, 1);
+          EX.msg = "BOSS VAINCU ! +40 ⚙"; EX.msgT = 2.5;
+        }
+      }
+    }
+    EX.sonarBlips = [];
+    const R = hasSonar ? 320 : 180;
+    EX.pickups.forEach(p => {
+      if (!p.taken && Math.hypot(p.x - EX.x, p.y - EX.y) < R)
+        EX.sonarBlips.push({ x: p.x + rnd(-40, 40), y: p.y + rnd(-40, 40), t: 4, kind: p.v > 10 ? "big" : "small" });
+    });
+    EX.chests.forEach(c => {
+      if (!c.open && Math.hypot(c.x - EX.x, c.y - EX.y) < R)
+        EX.sonarBlips.push({ x: c.x + rnd(-50, 50), y: c.y + rnd(-50, 50), t: 5, kind: "chest" });
+    });
+    sfx("ping");
+  }
+
+  function stepExplore(dt) {
+    if (!EX || EX.dead) return;
+    EX.time += dt;
+    EX.frame += dt;
+    if (EX.sonarT > 0) EX.sonarT -= dt;
+    if (EX.sonarCd > 0) EX.sonarCd -= dt;
+    if (EX.torpCd > 0) EX.torpCd -= dt;
+    if (EX.aggro > 0) EX.aggro = Math.max(0, EX.aggro - dt * 0.15);
+    if (EX.msgT > 0) EX.msgT -= dt;
+    if (EX.shake > 0) EX.shake -= dt;
+    if (EX.coinFlash > 0) EX.coinFlash -= dt;
+    if (EX.iFrames > 0) EX.iFrames -= dt;
+    if (EX.dead) return;
+
+    // météo dynamique (0 calme → 1 tempête)
+    EX.weatherT += dt;
+    EX.weather = 0.35 + 0.55 * (0.5 + 0.5 * Math.sin(EX.weatherT * 0.08));
+
+    // maintien sonar : interaction OU plateforme (long = atelier)
+    if (inputs.sonarHold) {
+      if (nearBase()) {
+        EX.baseHold = (EX.baseHold || 0) + dt;
+        EX.holdT = EX.baseHold;
+        if (EX.baseHold >= 0.75) {
+          inputs.sonarHold = false;
+          EX.baseHold = 0; EX.holdT = 0;
+          returnToWorkshop();
+          return;
+        }
+      } else {
+        EX.baseHold = 0;
+        const tgt = findInteractTarget();
+        if (tgt) {
+          EX.holdTarget = tgt;
+          EX.holdT += dt;
+          const need = tgt.type === "leak" ? 1.1 : 0.65;
+          if (EX.holdT >= need) {
+            completeInteract(tgt);
+            EX.holdT = 0; EX.holdTarget = null;
+            inputs.sonarHold = false;
+          }
+        } else {
+          EX.holdT = 0; EX.holdTarget = null;
+        }
+      }
+    } else {
+      EX.holdT = 0; EX.holdTarget = null; EX.baseHold = 0;
+    }
+
+    // torpilles (éventuellement chercheuses)
+    for (let i = EX.torps.length - 1; i >= 0; i--) {
+      const t = EX.torps[i];
+      if (t.homing) {
+        let best = null, bestD = 180;
+        EX.creatures.forEach(c => { const d = Math.hypot(c.x - t.x, c.y - t.y); if (d < bestD) { bestD = d; best = c; } });
+        EX.drones.forEach(d => { const dd = Math.hypot(d.x - t.x, d.y - t.y); if (dd < bestD) { bestD = dd; best = d; } });
+        EX.bosses.forEach(b => { const dd = Math.hypot(b.x - t.x, b.y - t.y); if (dd < bestD + 20) { bestD = dd; best = b; } });
+        if (best) {
+          const dx = best.x - t.x, dy = best.y - t.y, d = Math.hypot(dx, dy) || 1;
+          t.vx += dx / d * 220 * dt; t.vy = (t.vy || 0) + dy / d * 220 * dt;
+          const sp = Math.hypot(t.vx, t.vy) || 1;
+          t.vx = t.vx / sp * 160; t.vy = t.vy / sp * 160;
+        }
+      }
+      t.x += t.vx * dt; t.y += (t.vy || 0) * dt; t.life -= dt;
+      let hit = false;
+      for (let j = EX.creatures.length - 1; j >= 0; j--) {
+        const c = EX.creatures[j];
+        if (Math.hypot(c.x - t.x, c.y - t.y) < c.r + 6) {
+          if (hurtEnemy(c, 2, 80)) EX.creatures.splice(j, 1);
+          hit = true; break;
+        }
+      }
+      if (!hit) {
+        for (let j = EX.drones.length - 1; j >= 0; j--) {
+          const d = EX.drones[j];
+          if (Math.hypot(d.x - t.x, d.y - t.y) < d.r + 8) {
+            if (hurtEnemy(d, 2.5, 90)) EX.drones.splice(j, 1);
+            hit = true; break;
+          }
+        }
+      }
+      if (!hit) {
+        for (let j = EX.bosses.length - 1; j >= 0; j--) {
+          const b = EX.bosses[j];
+          if (Math.hypot(b.x - t.x, b.y - t.y) < b.r + 6) {
+            if (hurtEnemy(b, 2.5, 40)) {
+              EX.session.bossKills++; EX.coins += 40;
+              EX.bosses.splice(j, 1);
+              EX.msg = "BOSS VAINCU ! +40 ⚙"; EX.msgT = 2.5;
+            }
+            hit = true; break;
+          }
+        }
+      }
+      if (hit || t.life <= 0 || t.x < 0 || t.x > WORLD_W) EX.torps.splice(i, 1);
+    }
+    // mines
+    if (EX.mineCd > 0) EX.mineCd -= dt;
+    for (let i = EX.mines.length - 1; i >= 0; i--) {
+      const m = EX.mines[i];
+      m.life -= dt;
+      let boom = m.life <= 0;
+      const check = (arr, rExtra) => {
+        for (let j = arr.length - 1; j >= 0; j--) {
+          if (Math.hypot(arr[j].x - m.x, arr[j].y - m.y) < m.r + (arr[j].r || 8) + (rExtra || 0)) {
+            if (hurtEnemy(arr[j], 3, 100)) arr.splice(j, 1);
+            boom = true;
+          }
+        }
+      };
+      check(EX.creatures); check(EX.drones);
+      for (let j = EX.bosses.length - 1; j >= 0; j--) {
+        if (Math.hypot(EX.bosses[j].x - m.x, EX.bosses[j].y - m.y) < m.r + EX.bosses[j].r) {
+          if (hurtEnemy(EX.bosses[j], 3, 50)) {
+            EX.session.bossKills++; EX.coins += 40; EX.bosses.splice(j, 1);
+          }
+          boom = true;
+        }
+      }
+      if (boom) {
+        for (let k = 0; k < 12; k++) EX.particles.push({ x: m.x, y: m.y, vx: rnd(-60, 60), vy: rnd(-60, 60), life: 0.5, col: "#ff8a5c" });
+        EX.mines.splice(i, 1);
+      }
+    }
+    // bosses AI
+    EX.bosses.forEach(b => {
+      b.ph += dt;
+      const dx = EX.x - b.x, dy = EX.y - b.y, d = Math.hypot(dx, dy) || 1;
+      const spd = b.kind === "alpha" ? 45 : 32;
+      b.vx = dx / d * spd; b.vy = dy / d * spd;
+      b.x = cl(b.x + b.vx * dt, 40, WORLD_W - 40);
+      b.y = cl(b.y + b.vy * dt, SURF_Y + 40, WORLD_H - 40);
+      if (d < b.r + 14) {
+        takeDamage(1.5, b.kind === "alpha" ? "Requin ALPHA !" : "Drone mère !");
+        const dx2 = EX.x - b.x, dy2 = EX.y - b.y, dd = Math.hypot(dx2, dy2) || 1;
+        EX.vx += dx2 / dd * 100; EX.vy += dy2 / dd * 100;
+      }
+    });
+    // grottes
+    EX.caves.forEach(cv => {
+      if (EX.x > cv.x - cv.w/2 && EX.x < cv.x + cv.w/2 && EX.y > cv.y - cv.h/2 && EX.y < cv.y + cv.h/2) {
+        EX.session.caveVisit = true;
+        if (!cv.loot) {
+          cv.loot = true; EX.coins += 20; EX.coinFlash = 0.6;
+          EX.msg = "Cachette de grotte ! +20 ⚙"; EX.msgT = 2;
+        }
+      }
+    });
+
+    const speed = 70 * (account.upgrades.tank1 ? 1.35 : 1);
+    let ax = 0, ay = 0;
+    if (inputs.left) ax -= 1;
+    if (inputs.right) ax += 1;
+    if (inputs.up || inputs.kbd || inputs.btn) ay -= 1;
+    if (inputs.down || inputs.cv) ay += 1;
+    // Hélitreuillage : surface + maintenir ▲ → jauge
+    const wantUp = !!(inputs.up || inputs.kbd || inputs.btn);
+    const atSurf = EX.y <= SURF_Y + 22;
+    const hasHeli = !!(curMap().base && curMap().base.base_heli);
+    if (wantUp && atSurf && hasHeli && !EX.heli && !nearBase()) {
+      EX.heliCharge = (EX.heliCharge || 0) + dt;
+      if (EX.heliCharge >= 0.85) { EX.heliCharge = 0; callHelicopter(); }
+    } else if (!EX.heli) {
+      EX.heliCharge = Math.max(0, (EX.heliCharge || 0) - dt * 1.5);
+    }
+    if (ax || ay) {
+      const n = Math.hypot(ax, ay) || 1;
+      const spdMul = (EX.heliCharge > 0 && atSurf) ? 0.35 : 1;
+      EX.vx = ax / n * speed * spdMul;
+      EX.vy = ay / n * speed;
+      if (ax) EX.facing = ax > 0 ? 1 : -1;
+    } else {
+      EX.vx *= 0.88; EX.vy *= 0.88;
+    }
+    EX.currents.forEach(cu => {
+      if (EX.x > cu.x - cu.w/2 && EX.x < cu.x + cu.w/2 && EX.y > cu.y - cu.h/2 && EX.y < cu.y + cu.h/2) {
+        EX.vx += cu.dirX * 55 * dt; EX.vy += cu.dirY * 40 * dt;
+      }
+    });
+    if (!EX.heli) {
+      EX.x = cl(EX.x + EX.vx * dt, 20, WORLD_W - 20);
+      EX.y = cl(EX.y + EX.vy * dt, SURF_Y + 4, WORLD_H - 20);
+    } else {
+      EX.heli.t += dt; EX.vx = 0; EX.vy = 0;
+      if (EX.heli.phase === "approach") {
+        EX.y = Math.max(SURF_Y + 4, EX.y - 25 * dt);
+        if (EX.heli.t > 1.2) { EX.heli.phase = "winch"; EX.heli.t = 0; EX.msg = "Hélitreuillage…"; EX.msgT = 2; }
+      } else if (EX.heli.phase === "winch") {
+        EX.y = Math.max(SURF_Y - 12, EX.y - 45 * dt);
+        if (EX.heli.t > 0.9) { EX.heli.phase = "fly"; EX.heli.t = 0; }
+      } else if (EX.heli.phase === "fly") {
+        EX.x += (BASE.x - EX.x) * Math.min(1, 2.2 * dt);
+        EX.y = SURF_Y - 10;
+        if (Math.abs(EX.x - BASE.x) < 10) {
+          EX.x = BASE.x; EX.y = SURF_Y + 18; EX.heli = null;
+          EX.msg = "Déposé à la base"; EX.msgT = 2; sfx("win");
+        }
+      }
+    }
+    (EX.farmDrones || []).forEach(fd => {
+      fd.t += dt; fd.x += fd.vx * dt;
+      if (fd.x > WORLD_W - 80 || fd.x < 80) fd.vx *= -1;
+      fd.y = SURF_Y + 55 + Math.sin(fd.t) * 12;
+    });
+    if ((EX.farmDrones || []).length && Math.floor(EX.time) % 12 === 0 && EX._droneDeposit !== Math.floor(EX.time)) {
+      EX._droneDeposit = Math.floor(EX.time);
+      const m = curMap();
+      const gain = EX.farmDrones.length * (2 + Math.floor(Math.random() * 3));
+      m.droneLoot = (m.droneLoot || 0) + gain;
+      m.lastTick = Date.now();
+      if (gain > 0 && EX.msgT < 0.5) { EX.msg = "Drones : +" + gain + " ⚙ à la base"; EX.msgT = 1.5; }
+      persistAccount();
+    }
+    for (let i = EX.sonarBlips.length - 1; i >= 0; i--) {
+      EX.sonarBlips[i].t -= dt;
+      if (EX.sonarBlips[i].t <= 0) EX.sonarBlips.splice(i, 1);
+    }
+    EX.flash = Math.max(0, (EX.flash || 0) - dt);
+    const tgt = findInteractTarget();
+    if (tgt && !nearBase() && EX.msgT <= 0.05) {
+      const labels = { chest: "coffre", wreck: "épave", leak: "fuite", sample: "échantillon", puzzle: "valve épave" };
+      EX.msg = "Maintiens SONAR : " + labels[tgt.type];
+      EX.msgT = 0.2;
+    }
+    else if (!nearBase() && EX.y <= SURF_Y + 22 && curMap().base && curMap().base.base_heli && !EX.heli && EX.msgT <= 0.05) {
+      EX.msg = "Maintiens ▲ pour hélitreuillage";
+      EX.msgT = 0.15;
+    }
+
+    // limite de pression selon coque
+    const dm = depthMeters();
+    if (dm > EX.session.maxDepth) EX.session.maxDepth = dm;
+    const maxY = yForDepth(maxDepthM());
+    if (EX.y > maxY) {
+      EX.y = maxY;
+      EX.vy = Math.min(0, EX.vy);
+      EX.msg = "Pression trop forte !"; EX.msgT = 1.4;
+      EX.shake = 0.25;
+      takeDamage(0.35, "Écrasement !");
+    }
+
+    // bulles d'hélice
+    if (Math.hypot(EX.vx, EX.vy) > 12 && Math.random() < dt * 14) {
+      EX.bubbles.push({ x: EX.x - EX.facing * 10, y: EX.y + rnd(-2, 4), vy: -rnd(12, 28), life: rnd(0.4, 0.9), r: rnd(1, 2.5) });
+    }
+    // bulles ambiantes
+    if (Math.random() < dt * 3) {
+      EX.bubbles.push({ x: EX.camX + rnd(0, W), y: EX.camY + H + 4, vy: -rnd(8, 20), life: rnd(2, 4), r: rnd(1, 2) });
+    }
+    for (let i = EX.bubbles.length - 1; i >= 0; i--) {
+      const b = EX.bubbles[i];
+      b.life -= dt; b.y += b.vy * dt; b.x += Math.sin(EX.time * 3 + b.y) * 8 * dt;
+      if (b.life <= 0) EX.bubbles.splice(i, 1);
+    }
+    for (let i = EX.particles.length - 1; i >= 0; i--) {
+      const p = EX.particles[i];
+      p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 20 * dt;
+      if (p.life <= 0) EX.particles.splice(i, 1);
+    }
+
+    // créatures
+    EX.creatures.forEach(c => {
+      c.ph += dt;
+      if (c.angry || EX.aggro > 0.5) {
+        const dx = EX.x - c.x, dy = EX.y - c.y, d = Math.hypot(dx, dy) || 1;
+        const spd = c.kind === "shark" ? 55 : 38;
+        c.vx = dx / d * spd; c.vy = dy / d * spd;
+      } else if (c.kind === "jelly") {
+        c.vx = Math.sin(c.ph * 0.7) * 12;
+        c.vy = Math.cos(c.ph * 0.5) * 18;
+      } else {
+        c.vx += rnd(-25, 25) * dt; c.vy += rnd(-15, 15) * dt;
+        c.vx = cl(c.vx, -28, 28); c.vy = cl(c.vy, -18, 18);
+      }
+      c.x = cl(c.x + c.vx * dt, 10, WORLD_W - 10);
+      c.y = cl(c.y + c.vy * dt, 50, WORLD_H - 10);
+      if (Math.hypot(c.x - EX.x, c.y - EX.y) < c.r + 10) {
+        takeDamage(c.kind === "shark" ? 1 : 0.6, c.kind === "shark" ? "Requin !" : "Créature !");
+        const dx = EX.x - c.x, dy = EX.y - c.y, d = Math.hypot(dx, dy) || 1;
+        EX.vx += dx / d * 80; EX.vy += dy / d * 80;
+      }
+    });
+
+    // drones hostiles
+    EX.drones.forEach(d => {
+      d.patrol += dt;
+      d.x += d.vx * dt; d.y += d.vy * dt;
+      d.vx += Math.sin(d.patrol * 0.7) * 8 * dt;
+      d.vy += Math.cos(d.patrol * 0.5) * 5 * dt;
+      d.vx = cl(d.vx, -40, 40); d.vy = cl(d.vy, -25, 25);
+      d.x = cl(d.x, 40, WORLD_W - 40); d.y = cl(d.y, SURF_Y + 40, WORLD_H - 40);
+      if (Math.hypot(d.x - EX.x, d.y - EX.y) < d.r + 12) {
+        takeDamage(1, "Drone hostile !");
+        const dx = EX.x - d.x, dy = EX.y - d.y, dist = Math.hypot(dx, dy) || 1;
+        EX.vx += dx / dist * 100; EX.vy += dy / dist * 100;
+      }
+    });
+    // échantillons flottants
+    EX.samples.forEach(s => {
+      if (s.scanned) return;
+      s.ph += dt;
+      s.x += Math.sin(s.ph * 0.8) * 12 * dt;
+      s.y += Math.cos(s.ph * 0.6) * 8 * dt;
+    });
+
+    // pickups
+    EX.pickups.forEach(p => {
+      if (p.taken) return;
+      p.ph += dt;
+      const scoopR = (account.upgrades && account.upgrades.mod_scoop) ? 20 : 14;
+      if (Math.hypot(p.x - EX.x, p.y - EX.y) < scoopR + (p.beacon ? 10 : 0)) {
+        p.taken = true;
+        if (p.beacon) {
+          const bb = (curMap().beacons || []).find(x => x.id === p.beaconId);
+          if (bb) recoverBeacon(bb); else EX.coins += p.v || 0;
+        } else if (p.contraband) {
+          EX.contraband = (EX.contraband || 0) + 1;
+          EX.msg = "Contrebande ! Attention aux drones…"; EX.msgT = 2.5;
+          EX.drones.forEach(d => { d.vx *= 1.4; d.vy *= 1.4; });
+        } else {
+          EX.coins += p.v;
+        }
+        EX.coinFlash = 0.6;
+        for (let k = 0; k < 6; k++) {
+          EX.particles.push({ x: p.x, y: p.y, vx: rnd(-40, 40), vy: rnd(-50, -10), life: rnd(0.3, 0.7), col: p.contraband ? "#e0453a" : "#ffd447" });
+        }
+        sfx("pop");
+      }
+    });
+
+    EX.camX = cl(EX.x - W / 2, 0, WORLD_W - W);
+    EX.camY = cl(EX.y - H / 2, 0, WORLD_H - H);
+
+    EX.atBase = nearBase();
+    if (EX.atBase && EX.coins > 0 && EX.msgT <= 0) {
+      EX.msg = "Plateforme — E / SONAR long : sécuriser & atelier";
+      EX.msgT = 0.15;
+    } else if (EX.atBase && EX.coins <= 0 && EX.msgT <= 0 && Math.hypot(EX.vx, EX.vy) < 5) {
+      EX.msg = "Base plateforme — E : atelier d'améliorations";
+      EX.msgT = 0.15;
+    }
+
+    setText("mScore", fr(account.coins));
+    setText("mLevel", Math.round(dm) + " m");
+    setText("mMult", "max " + maxDepthM() + " m");
+    setText("mRec", "+" + fr(EX.coins));
+    const ready = EX.sonarCd <= 0;
+    const sonarBtn = $("mExpSonar");
+    const nearI = findInteractTarget();
+    if (sonarBtn) sonarBtn.classList.toggle("cool", !ready && !nearI && !EX.atBase);
+    const rel = $("mReloadExp");
+    if (rel) {
+      if (EX.holdT > 0 && nearI) {
+        const need = nearI.type === "leak" ? 1.1 : 0.65;
+        rel.style.width = Math.min(100, (EX.holdT / need) * 100).toFixed(1) + "%";
+      } else {
+        const cdMax = (account.upgrades && account.upgrades.sonar2) ? 2.8 : 4.5;
+        rel.style.width = (ready ? 100 : (1 - EX.sonarCd / cdMax) * 100).toFixed(1) + "%";
+      }
+    }
+    const ftx = $("mFireTxtExp");
+    if (ftx) {
+      if (EX.atBase) ftx.textContent = EX.baseHold > 0 ? "ATELIER…" : "BANQUE";
+      else if (nearI) ftx.textContent = EX.holdT > 0 ? "…" : "MAINTENIR";
+      else ftx.textContent = ready ? "IMPULSION" : "RECHARGE…";
+    }
+    if (sonarBtn && (EX.atBase || nearI)) sonarBtn.classList.remove("cool");
+    if (EX.atBase && EX.baseHold > 0 && rel) {
+      rel.style.width = Math.min(100, (EX.baseHold / 0.75) * 100).toFixed(1) + "%";
+    }
+    const fireBtn = $("mExpFire");
+    const torpReady = EX.torpCd <= 0;
+    if (fireBtn) fireBtn.classList.toggle("cool", !torpReady || EX.atBase);
+    const relF = $("mReloadFire");
+    if (relF) relF.style.width = (torpReady ? 100 : (1 - EX.torpCd / 1.6) * 100).toFixed(1) + "%";
+    const ftxT = $("mFireTxtTorp");
+    if (ftxT) ftxT.textContent = EX.atBase ? "—" : (torpReady ? "PRÊTE" : "…");
+    const pct = cl(dm / maxDepthM(), 0, 1);
+    $("mDepthNeedle").style.top = (pct * 100) + "%";
+  }
+
+  function drawExplore() {
+    if (!EX) return;
+    const ox = EX.camX, oy = EX.camY;
+    const dm = depthMeters();
+    const d01 = dm / WORLD_DEPTH_M;
+    const surfScreen = SURF_Y - oy;
+
+    if (surfScreen > 0) {
+      const skyH = Math.min(H, Math.max(0, surfScreen));
+      const sky = g.createLinearGradient(0, 0, 0, skyH);
+      sky.addColorStop(0, "#1a1e28"); sky.addColorStop(0.5, "#2a3040"); sky.addColorStop(1, "#3a4558");
+      g.fillStyle = sky; g.fillRect(0, 0, W, skyH);
+      g.fillStyle = "rgba(20,24,32,0.55)";
+      for (let i = 0; i < 6; i++) {
+        const cx = ((i * 90 + EX.time * 12) % (W + 100)) - 50;
+        g.beginPath(); g.ellipse(cx, 18 + (i % 3) * 8, 50, 12, 0, 0, Math.PI * 2); g.fill();
+      }
+      const storm = EX.weather || 0.5;
+      g.strokeStyle = "rgba(180,200,220," + (0.2 + storm * 0.35) + ")"; g.lineWidth = 1;
+      const rainN = Math.floor(20 + storm * 50);
+      for (let i = 0; i < rainN; i++) {
+        const rx = (i * 47 + EX.time * (120 + storm * 120)) % (W + 20) - 10;
+        const ry = (i * 31 + EX.time * (160 + storm * 120)) % Math.max(1, skyH);
+        g.beginPath(); g.moveTo(rx, ry); g.lineTo(rx + 4 + storm * 6, ry + 8 + storm * 6); g.stroke();
+      }
+      if (EX.flash > 0) { g.fillStyle = "rgba(200,220,255," + (EX.flash * 0.7) + ")"; g.fillRect(0, 0, W, skyH); }
+      else if (Math.random() < 0.002 + storm * 0.008) EX.flash = 0.2 + storm * 0.15;
+      if (EX.flash > 0.15) {
+        g.strokeStyle = "rgba(220,230,255,0.9)"; g.lineWidth = 2;
+        const lx = W * 0.3 + Math.sin(EX.time) * 40;
+        g.beginPath(); g.moveTo(lx, 0); g.lineTo(lx - 8, skyH * 0.4); g.lineTo(lx + 6, skyH * 0.45); g.lineTo(lx - 4, skyH); g.stroke();
+      }
+    }
+
+    if (surfScreen < H) {
+      const waterTop = Math.max(0, surfScreen);
+      const topC = d01 < 0.25 ? "#0a4a7a" : (d01 < 0.55 ? "#063050" : "#021018");
+      const botC = d01 < 0.25 ? "#042438" : (d01 < 0.55 ? "#021020" : "#01060c");
+      const grd = g.createLinearGradient(0, waterTop, 0, H);
+      grd.addColorStop(0, topC); grd.addColorStop(1, botC);
+      g.fillStyle = grd; g.fillRect(0, waterTop, W, H - waterTop);
+      if (d01 < 0.4) {
+        g.fillStyle = "rgba(120,180,255," + (0.05 * (1 - d01 * 1.5)) + ")";
+        for (let k = 0; k < 4; k++) {
+          const bx = ((k * 100 + EX.time * 8 - ox * 0.3) % (W + 80)) - 40;
+          g.beginPath(); g.moveTo(bx, waterTop); g.lineTo(bx + 16, waterTop); g.lineTo(bx + 40, H); g.lineTo(bx + 16, H); g.fill();
+        }
+      }
+    }
+
+    if (surfScreen > -20 && surfScreen < H + 20) {
+      g.strokeStyle = "rgba(200,230,255,0.75)"; g.lineWidth = 2;
+      g.beginPath();
+      for (let x = 0; x <= W; x += 6) {
+        const wx = ox + x;
+        const storm = EX.weather || 0.5;
+        const wy = SURF_Y + Math.sin(wx * 0.04 + EX.time * 3.2) * (2 + storm * 5) + Math.sin(wx * 0.09 + EX.time * 2.1) * (1 + storm * 3);
+        if (x === 0) g.moveTo(x, wy - oy); else g.lineTo(x, wy - oy);
+      }
+      g.stroke();
+      g.strokeStyle = "rgba(255,255,255,0.3)"; g.lineWidth = 1;
+      g.beginPath();
+      for (let x = 0; x <= W; x += 8) {
+        const wx = ox + x;
+        const wy = SURF_Y - 2 + Math.sin(wx * 0.05 + EX.time * 4) * 2;
+        if (x === 0) g.moveTo(x, wy - oy); else g.lineTo(x, wy - oy);
+      }
+      g.stroke();
+    }
+
+    (function drawPlatform() {
+      const px = BASE.x - ox, deckY = BASE.y - oy;
+      if (px < -140 || px > W + 140) return;
+      g.fillStyle = "#2a3038";
+      const pillarBottom = Math.min(H, SURF_Y - oy + 75);
+      const ph = Math.max(4, pillarBottom - (deckY + 10));
+      g.fillRect(px - 42, deckY + 10, 9, ph);
+      g.fillRect(px + 34, deckY + 10, 9, ph);
+      g.fillRect(px - 6, deckY + 10, 7, ph);
+      g.fillStyle = "#4a5568"; g.fillRect(px - 52, deckY, 104, 12);
+      g.fillStyle = "#6a7588"; g.fillRect(px - 52, deckY, 104, 3);
+      g.fillStyle = "#3a4555"; g.fillRect(px + 14, deckY - 34, 11, 34);
+      g.fillStyle = "#ffd447"; g.fillRect(px + 16, deckY - 38, 7, 5);
+      g.strokeStyle = "#8a95a8"; g.lineWidth = 2;
+      g.beginPath(); g.moveTo(px + 20, deckY - 28); g.lineTo(px + 48, deckY - 14); g.stroke();
+      g.fillStyle = "#3d4450"; g.fillRect(px - 48, deckY + 1, 30, 9);
+      g.strokeStyle = "#ffd447"; g.lineWidth = 1; g.strokeRect(px - 46, deckY + 2, 26, 6);
+      const blink = Math.sin(EX.time * 5) > 0;
+      g.fillStyle = blink ? "#ff3333" : "#550000"; g.fillRect(px + 16, deckY - 42, 4, 4);
+      g.fillStyle = blink ? "#33ff66" : "#005522"; g.fillRect(px - 50, deckY - 4, 4, 4);
+      if (nearBase()) {
+        g.fillStyle = "#ffd447"; g.font = "bold 9px sans-serif"; g.textAlign = "center";
+        g.fillText("▲ PLATEFORME BASE ▲", px, deckY - 48);
+        g.fillText("SONAR court: banque+regen", px, deckY - 58);
+        g.fillText("SONAR long: atelier", px, deckY - 68);
+      }
+    })();
+
+    // fond marin (silhouettes)
+    g.fillStyle = d01 > 0.5 ? "#0a1520" : "#0c2035";
+    g.beginPath();
+    g.moveTo(0, H);
+    for (let x = 0; x <= W; x += 16) {
+      const wx = ox + x;
+      const gy = WORLD_H - 40 + Math.sin(wx * 0.01) * 18 + Math.sin(wx * 0.023) * 10;
+      g.lineTo(x, gy - oy);
+    }
+    g.lineTo(W, H); g.closePath(); g.fill();
+
+    // décors
+    EX.deco.forEach(d => {
+      const sx = d.x - ox, sy = d.y - oy;
+      if (sx < -50 || sy < -50 || sx > W + 50 || sy > H + 50) return;
+      if (d.kind === "weed") {
+        g.strokeStyle = "#1a6a4a"; g.lineWidth = 2;
+        const sway = Math.sin(EX.time * 1.5 + d.ph) * 4;
+        g.beginPath(); g.moveTo(sx, sy + d.h * 0.3); g.quadraticCurveTo(sx + sway, sy - d.h * 0.3, sx + sway * 0.5, sy - d.h);
+        g.stroke();
+        g.strokeStyle = "#2a9a6a"; g.lineWidth = 1;
+        g.beginPath(); g.moveTo(sx + 3, sy + d.h * 0.2); g.quadraticCurveTo(sx + 3 - sway, sy - d.h * 0.4, sx - sway, sy - d.h * 0.85);
+        g.stroke();
+      } else if (d.kind === "rock") {
+        g.fillStyle = "#1a2838";
+        g.beginPath();
+        g.moveTo(sx - d.w * 0.5, sy); g.lineTo(sx - d.w * 0.3, sy - d.h); g.lineTo(sx + d.w * 0.2, sy - d.h * 0.7);
+        g.lineTo(sx + d.w * 0.5, sy); g.closePath(); g.fill();
+        g.fillStyle = "#243448"; g.fillRect(sx - d.w * 0.2, sy - d.h * 0.5, d.w * 0.25, d.h * 0.2);
+      } else {
+        g.fillStyle = "#1a2030"; g.fillRect(sx - d.w * 0.5, sy - d.h, d.w, d.h);
+        g.strokeStyle = "#2a3548"; g.strokeRect(sx - d.w * 0.5, sy - d.h, d.w, d.h);
+        g.fillStyle = "rgba(255,200,80,0.15)"; g.fillRect(sx - 2, sy - d.h + 4, 4, 3);
+      }
+    });
+
+    (EX.caves || []).forEach(cv => {
+      const sx = cv.x - ox, sy = cv.y - oy;
+      g.fillStyle = "rgba(0,0,0,0.55)";
+      g.beginPath(); g.ellipse(sx, sy, cv.w/2, cv.h/2, 0, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = "#1a2838"; g.lineWidth = 2; g.stroke();
+      g.fillStyle = "rgba(150,180,200,0.5)"; g.font = "bold 8px sans-serif"; g.textAlign = "center";
+      g.fillText((account && account.upgrades.lamp1) ? "GROTTE" : "GROTTE (phare !)", sx, sy - cv.h/2 - 6);
+    });
+    (EX.currents || []).forEach(cu => {
+      const sx = cu.x - ox, sy = cu.y - oy;
+      if (sx < -100 || sx > W + 100) return;
+      g.fillStyle = "rgba(80,160,220,0.12)"; g.fillRect(sx - cu.w/2, sy - cu.h/2, cu.w, cu.h);
+      g.strokeStyle = "rgba(120,190,255,0.35)";
+      for (let i = 0; i < 3; i++) {
+        const o2 = Math.sin(EX.time * 2 + i) * 6 * cu.dirX;
+        g.beginPath(); g.moveTo(sx - 20 + o2, sy - 8 + i * 8); g.lineTo(sx + 20 + o2, sy - 8 + i * 8); g.stroke();
+      }
+    });
+    (EX.wrecks || []).forEach(w => {
+      const sx = w.x - ox, sy = w.y - oy;
+      if (sx < -40 || sx > W + 40) return;
+      g.fillStyle = w.searched ? "#1a2030" : (w.puzzle ? "#3a2a48" : "#2a3548");
+      g.fillRect(sx - 18, sy - 8, 36, 14);
+      g.fillStyle = "#3a4558"; g.fillRect(sx - 10, sy - 16, 8, 10);
+      if (w.puzzle && !w.searched) {
+        for (let vi = 0; vi < 3; vi++) {
+          g.fillStyle = w.valves[vi] ? "#4cc46a" : "#58617d";
+          g.fillRect(sx - 12 + vi * 10, sy - 4, 8, 6);
+        }
+        g.fillStyle = "#d6bcfa"; g.font = "bold 8px sans-serif"; g.textAlign = "center";
+        g.fillText("VALVES", sx, sy - 20);
+      } else if (!w.searched) {
+        g.fillStyle = "#ffd447"; g.font = "bold 8px sans-serif"; g.textAlign = "center"; g.fillText("?", sx, sy - 20);
+      }
+    });
+    (EX.chests || []).forEach(c => {
+      const sx = c.x - ox, sy = c.y - oy;
+      if (sx < -20 || sx > W + 20) return;
+      g.fillStyle = c.open ? "#3a3020" : "#8a5a20"; g.fillRect(sx - 7, sy - 5, 14, 10);
+      g.fillStyle = c.open ? "#2a2010" : "#c4a040"; g.fillRect(sx - 7, sy - 5, 14, 3);
+      if (!c.open) { g.fillStyle = "#ffd447"; g.fillRect(sx - 1, sy - 1, 2, 3); }
+    });
+    // fuites pétrole
+    (EX.leaks || []).forEach(L => {
+      if (L.sealed) return;
+      const sx = L.x - ox, sy = L.y - oy;
+      if (sx < -40 || sx > W + 40) return;
+      g.fillStyle = "rgba(20,20,10,0.55)";
+      g.beginPath(); g.ellipse(sx, sy, L.r, L.r * 0.6, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "rgba(40,35,15,0.4)";
+      g.beginPath(); g.arc(sx + Math.sin(EX.time * 2) * 4, sy - 8, 4, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "#c4a040"; g.font = "bold 8px sans-serif"; g.textAlign = "center";
+      g.fillText("FUITE", sx, sy - L.r - 4);
+    });
+    // torpilles
+    (EX.torps || []).forEach(t => {
+      const sx = t.x - ox, sy = t.y - oy;
+      g.fillStyle = "#ffb347";
+      g.fillRect(sx - 4, sy - 1, 8, 3);
+      g.fillStyle = "rgba(255,180,80,0.4)";
+      g.fillRect(sx - (t.vx > 0 ? 10 : 0), sy - 2, 6, 5);
+    });
+    // drones
+    (EX.drones || []).forEach(d => {
+      const sx = d.x - ox, sy = d.y - oy;
+      if (sx < -30 || sx > W + 30) return;
+      g.fillStyle = "#5a6070"; g.fillRect(sx - 10, sy - 4, 20, 8);
+      g.fillStyle = "#e0453a"; g.fillRect(sx - 3, sy - 2, 6, 3);
+      g.strokeStyle = "rgba(224,69,58,0.5)"; g.strokeRect(sx - 12, sy - 6, 24, 12);
+    });
+    (EX.bosses || []).forEach(b => {
+      const sx = b.x - ox, sy = b.y - oy;
+      if (sx < -40 || sx > W + 40) return;
+      g.fillStyle = b.kind === "alpha" ? "#8a2030" : "#4a3a60";
+      g.beginPath(); g.arc(sx, sy, b.r, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = "#ffd447"; g.lineWidth = 2; g.stroke();
+      g.fillStyle = "#fff"; g.font = "bold 8px sans-serif"; g.textAlign = "center";
+      g.fillText(b.kind === "alpha" ? "ALPHA" : "MÈRE", sx, sy - b.r - 6);
+      const maxHp = b.kind === "alpha" ? 12 : 16;
+      g.fillStyle = "#e0453a"; g.fillRect(sx - 16, sy + b.r + 4, 32 * Math.max(0, b.hp / maxHp), 3);
+    });
+    (EX.mines || []).forEach(m => {
+      const sx = m.x - ox, sy = m.y - oy;
+      g.fillStyle = "#c2452d"; g.beginPath(); g.arc(sx, sy, 5, 0, Math.PI * 2); g.fill();
+    });
+    // échantillons bio
+    (EX.samples || []).forEach(s => {
+      if (s.scanned) return;
+      const sx = s.x - ox, sy = s.y - oy + Math.sin(s.ph * 2) * 3;
+      if (sx < -20 || sx > W + 20) return;
+      g.strokeStyle = "rgba(100,255,180,0.8)"; g.lineWidth = 1;
+      g.strokeRect(sx - 8, sy - 8, 16, 16);
+      g.fillStyle = s.kind === "jelly" ? "#ff7ac8" : "#6ec6ff";
+      g.beginPath(); g.arc(sx, sy, 5, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "#8dffb0"; g.font = "bold 7px sans-serif"; g.textAlign = "center";
+      g.fillText("BIO", sx, sy - 12);
+    });
+
+    // pièces animées
+    EX.pickups.forEach(p => {
+      if (p.taken) return;
+      const sx = p.x - ox, sy = p.y - oy + Math.sin(p.ph * 2.5) * 3;
+      if (sx < -12 || sy < -12 || sx > W + 12 || sy > H + 12) return;
+      if (p.beacon) {
+        const pulse = 0.5 + 0.5 * Math.sin(EX.time * 5);
+        g.strokeStyle = "rgba(255,180,50," + pulse + ")"; g.lineWidth = 2;
+        g.beginPath(); g.arc(sx, sy, 10 + pulse * 4, 0, Math.PI * 2); g.stroke();
+        g.fillStyle = "#ffaa00"; g.fillRect(sx - 3, sy - 8, 6, 12);
+        g.fillStyle = "#ffd447"; g.font = "bold 8px sans-serif"; g.textAlign = "center";
+        g.fillText("BALISE", sx, sy - 14);
+      } else if (p.contraband) {
+        g.fillStyle = "#e0453a"; g.fillRect(sx - 4, sy - 4, 8, 8);
+        g.fillStyle = "#ffd447"; g.font = "bold 7px sans-serif"; g.textAlign = "center";
+        g.fillText("!", sx, sy - 8);
+      } else {
+        const spr = p.v > 10 ? coinBigSpr : coinSpr;
+        const sc = p.v > 10 ? 1.2 : 1;
+        g.drawImage(spr, sx - 3 * sc, sy - 3 * sc, spr.width * sc, spr.height * sc);
+      }
+    });
+
+    // créatures texturées
+    EX.creatures.forEach(c => {
+      const sx = c.x - ox, sy = c.y - oy + (c.kind === "jelly" ? Math.sin(c.ph * 2) * 2 : 0);
+      if (sx < -24 || sy < -24 || sx > W + 24 || sy > H + 24) return;
+      if (c.kind === "fish") {
+        const spr = EXP_FISH[c.type % 3];
+        const flip = c.vx < 0;
+        g.save();
+        g.translate(sx, sy);
+        if (flip) g.scale(-1, 1);
+        if (c.angry) { g.filter = "hue-rotate(-30deg) saturate(1.4)"; }
+        g.drawImage(spr, -7, -4, 14, 8);
+        g.filter = "none";
+        g.restore();
+      } else if (c.kind === "jelly") {
+        g.save();
+        g.translate(sx, sy);
+        g.drawImage(expJellySpr, -5, -4, 10, 12);
+        if (c.angry) { g.strokeStyle = "rgba(255,80,80,0.5)"; g.strokeRect(-6, -5, 12, 14); }
+        g.restore();
+      } else {
+        g.save();
+        g.translate(sx, sy);
+        if (c.vx < 0) g.scale(-1, 1);
+        if (c.angry) g.filter = "brightness(1.2) saturate(1.3)";
+        g.drawImage(expSharkSpr, -10, -5, 20, 10);
+        g.filter = "none";
+        g.restore();
+      }
+    });
+
+    // bulles
+    EX.bubbles.forEach(b => {
+      const sx = b.x - ox, sy = b.y - oy;
+      g.strokeStyle = "rgba(180,220,255,0.45)"; g.lineWidth = 1;
+      g.beginPath(); g.arc(sx, sy, b.r, 0, Math.PI * 2); g.stroke();
+    });
+    EX.particles.forEach(p => {
+      g.globalAlpha = Math.max(0, p.life * 2);
+      g.fillStyle = p.col || "#ffd447";
+      g.fillRect(p.x - ox - 1, p.y - oy - 1, 2, 2);
+      g.globalAlpha = 1;
+    });
+
+    // drone forage + hélico
+    if (EX.farmDrone) {
+      const fd = EX.farmDrone, fsx = fd.x - ox, fsy = fd.y - oy;
+      g.fillStyle = "#6a7a8a"; g.fillRect(fsx - 6, fsy - 3, 12, 6);
+      g.fillStyle = "#43c6e3"; g.fillRect(fsx - 2, fsy - 2, 4, 3);
+    }
+    if (EX.heli) {
+      const hx = EX.x - ox, hy = (SURF_Y - 28) - oy;
+      g.fillStyle = "#2a3040"; g.fillRect(hx - 16, hy - 6, 32, 10);
+      g.fillStyle = "#5a6578"; g.fillRect(hx - 6, hy - 12, 12, 8);
+      g.strokeStyle = "rgba(220,220,220,0.8)"; g.lineWidth = 1;
+      g.beginPath(); g.moveTo(hx, hy + 4); g.lineTo(EX.x - ox, EX.y - oy - 8); g.stroke();
+    }
+    // sous-marin animé
+    const moving = Math.hypot(EX.vx, EX.vy) > 8;
+    const bob = moving ? Math.sin(EX.frame * 12) * 1.5 : Math.sin(EX.frame * 2.2) * 1;
+    const sh = (EX.shake > 0 ? rnd(-2, 2) : 0);
+    if (!(EX.iFrames > 0 && Math.floor(EX.time * 10) % 2 === 0)) {
+    const sub = subSprite(upgradeColor());
+    const sx = EX.x - ox - 12 + sh, sy = EX.y - oy - 7 + bob;
+    g.save();
+    g.translate(EX.x - ox + sh, EX.y - oy + bob);
+    if (EX.facing < 0) g.scale(-1, 1);
+    g.drawImage(sub, -12, -7, 24, 14);
+    // hélice animée
+    if (moving) {
+      g.strokeStyle = "rgba(200,220,240,0.7)"; g.lineWidth = 1;
+      const ang = EX.frame * 18;
+      g.beginPath(); g.moveTo(-12, 0); g.lineTo(-12 - Math.cos(ang) * 4, -Math.sin(ang) * 3); g.stroke();
+      g.beginPath(); g.moveTo(-12, 0); g.lineTo(-12 - Math.cos(ang + Math.PI) * 4, -Math.sin(ang + Math.PI) * 3); g.stroke();
+    }
+    g.restore();
+    } // end iframe blink
+    if (account && account.upgrades.lamp1) {
+      g.fillStyle = "rgba(255,220,100," + (0.12 + d01 * 0.08) + ")";
+      const fx = EX.facing > 0 ? 1 : -1;
+      g.beginPath();
+      g.moveTo(EX.x - ox + fx * 10, EX.y - oy);
+      g.lineTo(EX.x - ox + fx * 55, EX.y - oy - 16);
+      g.lineTo(EX.x - ox + fx * 55, EX.y - oy + 16);
+      g.fill();
+    }
+
+    // fog
+    const vr = visibilityRadius();
+    const cx = EX.x - ox, cy = EX.y - oy;
+    g.save();
+    g.fillStyle = "rgba(0,0,0," + (0.55 + d01 * 0.3) + ")";
+    g.beginPath(); g.rect(0, 0, W, H); g.arc(cx, cy, vr, 0, Math.PI * 2, true); g.fill("evenodd");
+    g.restore();
+
+    if (EX.sonarT > 0) {
+      g.strokeStyle = "rgba(67,198,227," + Math.min(1, EX.sonarT) * 0.9 + ")";
+      g.lineWidth = 2;
+      g.beginPath(); g.arc(cx, cy, 24 + (2.4 - EX.sonarT) * 55, 0, Math.PI * 2); g.stroke();
+    }
+
+    // HUD pièces flottant
+    g.fillStyle = EX.coinFlash > 0 ? "#fff" : "#ffd447";
+    g.font = "bold 11px 'Courier New', monospace";
+    g.textAlign = "left";
+    g.fillText("⚙ Banque " + fr(account.coins), 14, H - 10);
+    g.fillStyle = EX.coins > 0 ? "#5eead4" : "#668";
+    g.fillText("Sac " + fr(EX.coins) + (EX.atBase && EX.coins > 0 ? " → sécuriser !" : " (session)"), 14, H - 22);
+    g.fillStyle = "#9fdcff";
+    g.textAlign = "right";
+    g.fillText(Math.round(dm) + " / " + maxDepthM() + " m", W - 8, H - 10);
+    for (let i = 0; i < (EX.maxHp || 3); i++) {
+      g.fillStyle = i < EX.hp ? "#4cc46a" : "#333";
+      g.fillRect(8 + i * 12, H - 14, 10, 6);
+    }
+    if (EX.silence) { g.fillStyle = "#8a93a8"; g.textAlign = "center"; g.fillText("SILENCE", W/2, H - 10); }
+    if (EX.contraband > 0) { g.fillStyle = "#e0453a"; g.textAlign = "center"; g.fillText("CONTREBANDE ×" + EX.contraband, W/2, 30); }
+    if (EX.bosses && EX.bosses.length) { g.fillStyle = "#ff6b6b"; g.textAlign = "center"; g.fillText("⚠ BOSS EN ZONE", W/2, H - 22); }
+
+    if (EX.holdT > 0 && EX.holdTarget) {
+      const need = EX.holdTarget.type === "leak" ? 1.1 : (EX.holdTarget.type === "puzzle" ? 0.5 : 0.65);
+      const p = Math.min(1, EX.holdT / need);
+      g.strokeStyle = "#ffd447"; g.lineWidth = 3;
+      g.beginPath(); g.arc(cx, cy, 18, -Math.PI/2, -Math.PI/2 + p * Math.PI * 2); g.stroke();
+    }
+    if ((EX.heliCharge || 0) > 0.05 && !EX.heli) {
+      const p = Math.min(1, EX.heliCharge / 0.85);
+      g.strokeStyle = "#9fdcff"; g.lineWidth = 3;
+      g.beginPath(); g.arc(cx, cy, 22, -Math.PI/2, -Math.PI/2 + p * Math.PI * 2); g.stroke();
+      g.fillStyle = "#9fdcff"; g.font = "bold 10px sans-serif"; g.textAlign = "center";
+      g.fillText("▲ HÉLICO", cx, cy - 28);
+    }
+    if (EX.msgT > 0 && EX.msg) {
+      g.fillStyle = "#ffd447";
+      g.font = "bold 10px sans-serif";
+      g.textAlign = "center";
+      g.fillText(EX.msg, W / 2, 18);
+    }
+
+    // minimap progressive
+    const mm = $("mMiniMap"), mx = mm.getContext("2d");
+    mx.imageSmoothingEnabled = false;
+    mx.fillStyle = "#0a1020"; mx.fillRect(0, 0, 72, 72);
+    mx.strokeStyle = "#445"; mx.strokeRect(0.5, 0.5, 71, 71);
+    const msx = 72 / WORLD_W, msy = 72 / WORLD_H;
+    mx.strokeStyle = "rgba(150,200,255,0.45)";
+    mx.beginPath(); mx.moveTo(0, SURF_Y * msy); mx.lineTo(72, SURF_Y * msy); mx.stroke();
+    mx.fillStyle = "rgba(67,198,227,0.1)";
+    mx.fillRect(0, SURF_Y * msy, 72, Math.max(2, (yForDepth(maxDepthM()) - SURF_Y) * msy));
+    const u = (account && account.upgrades) || {};
+    if (u.radar1) {
+      const cells = {};
+      EX.pickups.forEach(p => {
+        if (p.taken) return;
+        const k = (p.x / 200 | 0) + "," + (p.y / 200 | 0);
+        cells[k] = (cells[k] || 0) + p.v;
+      });
+      Object.keys(cells).forEach(k => {
+        if (cells[k] < 15) return;
+        const [cx, cy] = k.split(",").map(Number);
+        mx.fillStyle = "rgba(94,234,212,0.28)";
+        mx.beginPath(); mx.arc((cx * 200 + 100) * msx, (cy * 200 + 100) * msy, 5, 0, Math.PI * 2); mx.fill();
+      });
+    }
+    if (u.radar2) {
+      mx.fillStyle = "rgba(94,234,212,0.75)";
+      EX.pickups.forEach(p => { if (!p.taken && p.v <= 10) mx.fillRect(p.x * msx, p.y * msy, 1, 1); });
+    }
+    if (u.radar3) {
+      mx.fillStyle = "#ffd447";
+      EX.pickups.forEach(p => { if (!p.taken && p.v > 10) mx.fillRect(p.x * msx - 0.5, p.y * msy - 0.5, 2, 2); });
+      mx.fillStyle = "#c4a040";
+      (EX.chests || []).forEach(c => { if (!c.open) mx.fillRect(c.x * msx - 1, c.y * msy - 1, 3, 2); });
+    }
+    (EX.sonarBlips || []).forEach(b => {
+      const a = Math.min(1, b.t / 2);
+      mx.fillStyle = b.kind === "chest" ? "rgba(255,180,50," + a + ")" : "rgba(100,220,255," + a + ")";
+      mx.beginPath(); mx.arc(b.x * msx, b.y * msy, 2.5, 0, Math.PI * 2); mx.fill();
+    });
+    if (curMap().base && curMap().base.base_radar) {
+      mx.fillStyle = "#ffaa00";
+      (curMap().beacons || []).forEach(b => mx.fillRect(b.x * msx - 1, b.y * msy - 1, 3, 3));
+    }
+    mx.fillStyle = "#ffaa00"; mx.fillRect(BASE.x * msx - 2, SURF_Y * msy - 1, 5, 3);
+    mx.fillStyle = "#ffd447"; mx.fillRect(EX.x * msx - 1, EX.y * msy - 1, 3, 3);
+    mx.strokeStyle = "rgba(255,255,255,0.7)";
+    mx.strokeRect(EX.camX * msx, EX.camY * msy, W * msx, H * msy);
+  }
+
+  function restoreArcadeHudLabels() {
+    try {
+      const keys = document.querySelectorAll("#mHud .mstat .k");
+      if (keys[0]) keys[0].textContent = "SCORE";
+      if (keys[3]) keys[3].textContent = "À BATTRE";
+    } catch (e) {}
+  }
+  $("mModeArcade").addEventListener("click", () => {
+    gameMode = "arcade";
+    EX = null;
+    $("mControls").classList.remove("explore-mode");
+    $("mMiniMap").classList.remove("on");
+    $("mDepthBar").classList.remove("on");
+    restoreArcadeHudLabels();
+    G = fresh();
+    panel("mStart");
+    renderSkin();
+    loadBoard($("mBoardStart"), null);
+    sfx("select");
+  });
+  $("mModeExplore").addEventListener("click", () => {
+    gameMode = "explore";
+    panel("mWorkshop");
+    renderWorkshop();
+    sfx("select");
+  });
+  $("mModesBack").addEventListener("click", () => {
+    account = null; gameMode = null;
+    panel("mAccount");
+    renderAcct();
+  });
+  $("wsBack").addEventListener("click", () => { panel("mModes"); });
+  $("wsSail").addEventListener("click", () => startExplorePlay());
+
+
   // ---- Ouverture / fermeture ----
   function openMini() {
     open = true;
     root.hidden = false;
     spriteColor = (typeof state !== "undefined" && state.myChar && state.chars[state.myChar] && state.chars[state.myChar].color) || "#e4c77a";
     G = fresh();
-    panel("mStart");
-    renderSkin();
-    loadBoard($("mBoardStart"), null);
+    EX = null; gameMode = null;
+    $("mControls").classList.remove("explore-mode");
+    $("mMiniMap").classList.remove("on");
+    $("mDepthBar").classList.remove("on");
+    try {
+      const n = localStorage.getItem(LS_NAME);
+      if (n && /^[A-Z]{3}$/.test(n)) acctLetters = n.split("");
+    } catch (e) {}
+    panel("mAccount");
+    renderAcct();
     last = performance.now();
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(frame);
@@ -3359,8 +5635,13 @@ startRoomList();
     raf = requestAnimationFrame(frame);
     const dt = Math.min(0.033, Math.max(0, (now - last) / 1000));
     last = now;
-    step(dt);
-    draw();
+    if (gameMode === "explore" && EX && EX.state === "explore") {
+      stepExplore(dt);
+      drawExplore();
+    } else {
+      step(dt);
+      draw();
+    }
   }
   function pause(on) {
     if (on && G.state === "playing") { G.state = "paused"; inputs.kbd = inputs.btn = inputs.cv = false; panel("mPauseP"); }
@@ -3378,14 +5659,92 @@ startRoomList();
   }
   holdBtn($("mUp"), "btn", true);
   holdBtn(cv, "cv", false);
-  $("mFire").addEventListener("pointerdown", e => { e.preventDefault(); $("mFire").classList.add("on"); fire(); });
+  // D-pad exploration (tactile)
+  holdBtn($("mExpUp"), "kbd", true);
+  holdBtn($("mExpDown"), "down", true);
+  holdBtn($("mExpLeft"), "left", true);
+  holdBtn($("mExpRight"), "right", true);
+  $("mFire").addEventListener("pointerdown", e => {
+    e.preventDefault(); $("mFire").classList.add("on");
+    fire();
+  });
   ["pointerup", "pointercancel", "pointerleave"].forEach(ev => $("mFire").addEventListener(ev, () => $("mFire").classList.remove("on")));
+  let sonarHoldStart = 0, sonarDidPulse = false;
+  $("mExpSonar").addEventListener("pointerdown", e => {
+    e.preventDefault(); $("mExpSonar").classList.add("on");
+    if (!(gameMode === "explore" && EX)) return;
+    sonarHoldStart = performance.now();
+    sonarDidPulse = false;
+    inputs.sonarHold = true;
+    EX.baseHold = 0;
+    if (nearBase()) return; // court = banque à la releve, long = atelier
+    if (!findInteractTarget()) { pulseSonar(); sonarDidPulse = true; }
+  });
+  function endSonarHold() {
+    $("mExpSonar").classList.remove("on");
+    const held = (performance.now() - sonarHoldStart) / 1000;
+    inputs.sonarHold = false;
+    if (gameMode === "explore" && EX && nearBase()) {
+      if (held < 0.75) dockAndRestock();
+      // long press déjà géré dans stepExplore → returnToWorkshop
+    }
+    if (EX) { EX.holdT = 0; EX.holdTarget = null; EX.baseHold = 0; }
+  }
+  ["pointerup", "pointercancel", "pointerleave"].forEach(ev => $("mExpSonar").addEventListener(ev, endSonarHold));
+  let fireHoldStart = 0;
+  $("mExpFire").addEventListener("pointerdown", e => {
+    e.preventDefault(); $("mExpFire").classList.add("on");
+    fireHoldStart = performance.now();
+  });
+  function endFireHold() {
+    $("mExpFire").classList.remove("on");
+    if (!(gameMode === "explore" && EX)) return;
+    const held = (performance.now() - fireHoldStart) / 1000;
+    if (held >= 0.55 && account.upgrades && account.upgrades.mod_mine) deployMine();
+    else fireTorpedo();
+  }
+  ["pointerup", "pointercancel", "pointerleave"].forEach(ev =>
+    $("mExpFire").addEventListener(ev, endFireHold));
+
+  // Stick virtuel sur le canvas en mode exploration
+  let expTouch = null; // { id, x0, y0 }
+  cv.addEventListener("pointerdown", e => {
+    if (gameMode !== "explore" || !EX) return;
+    e.preventDefault();
+    const rect = cv.getBoundingClientRect();
+    const x = e.clientX - rect.left, y = e.clientY - rect.top;
+    expTouch = { id: e.pointerId, x0: x, y0: y };
+    try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+  cv.addEventListener("pointermove", e => {
+    if (!expTouch || e.pointerId !== expTouch.id) return;
+    const rect = cv.getBoundingClientRect();
+    const x = e.clientX - rect.left, y = e.clientY - rect.top;
+    const dx = x - expTouch.x0, dy = y - expTouch.y0;
+    const dead = 12;
+    inputs.left = dx < -dead; inputs.right = dx > dead;
+    inputs.kbd = dy < -dead; inputs.down = dy > dead;
+  });
+  function clearExpTouch(e) {
+    if (!expTouch || (e && e.pointerId !== expTouch.id)) return;
+    expTouch = null;
+    inputs.left = inputs.right = inputs.kbd = inputs.down = false;
+  }
+  cv.addEventListener("pointerup", clearExpTouch);
+  cv.addEventListener("pointercancel", clearExpTouch);
+
   root.addEventListener("contextmenu", e => e.preventDefault());
 
   $("btnMini").addEventListener("click", openMini);
   $("mPlay").addEventListener("click", begin);
   $("mAgain").addEventListener("click", begin);
-  $("mMenu").addEventListener("click", () => { G = fresh(); panel("mStart"); renderSkin(); loadBoard($("mBoardStart"), null); });
+  $("mMenu").addEventListener("click", () => {
+    G = fresh(); EX = null; gameMode = null;
+    $("mControls").classList.remove("explore-mode");
+    $("mMiniMap").classList.remove("on"); $("mDepthBar").classList.remove("on");
+    if (account) { panel("mModes"); $("mModesHello").textContent = "Bienvenue, " + account.id + " · " + account.coins + " pièces"; }
+    else { panel("mAccount"); renderAcct(); }
+  });
   $("mResume").addEventListener("click", () => pause(false));
   $("mPause").addEventListener("click", () => pause(G.state === "playing"));
   $("mSave").addEventListener("click", saveScore);
@@ -3412,6 +5771,55 @@ startRoomList();
   window.addEventListener("keydown", e => {
     if (!open) return;
     const k = e.key;
+    // Compte : navigation
+    if ($("mAccount") && !$("mAccount").classList.contains("off")) {
+      if (k === "ArrowLeft") { e.preventDefault(); if (acctFocus === "pin") { acctFocus = "letters"; acctSel = 2; } else acctSel = Math.max(0, acctSel - 1); renderAcct(); return; }
+      if (k === "ArrowRight" || k === "Tab") { e.preventDefault(); if (acctFocus === "letters" && acctSel >= 2) { acctFocus = "pin"; acctSel = 0; } else if (acctFocus === "pin" && acctSel >= 2) {} else acctSel = Math.min(2, acctSel + 1); renderAcct(); return; }
+      if (k === "ArrowUp") { e.preventDefault(); bumpAcct(acctFocus === "letters" ? "L" : "P", acctSel, 1); return; }
+      if (k === "ArrowDown") { e.preventDefault(); bumpAcct(acctFocus === "letters" ? "L" : "P", acctSel, -1); return; }
+      if (/^[a-zA-Z]$/.test(k) && acctFocus === "letters") { acctLetters[acctSel] = k.toUpperCase(); acctSel = Math.min(2, acctSel + 1); if (acctSel === 2 && acctLetters.every(Boolean)) { /* stay */ } renderAcct(); e.preventDefault(); return; }
+      if (/^[0-9]$/.test(k) && acctFocus === "pin") { acctPin[acctSel] = k; acctSel = Math.min(2, acctSel + 1); renderAcct(); e.preventDefault(); return; }
+      if (k === "Enter") { e.preventDefault(); tryLoginAccount(); return; }
+      return;
+    }
+    // Exploration controls
+    if (gameMode === "explore" && EX && EX.state === "explore") {
+      if (k === "ArrowLeft" || k === "a" || k === "A" || k === "q" || k === "Q") { e.preventDefault(); inputs.left = true; }
+      if (k === "ArrowRight" || k === "d" || k === "D") { e.preventDefault(); inputs.right = true; }
+      if (k === "ArrowUp" || k === "w" || k === "W" || k === "z" || k === "Z" || k === " ") { e.preventDefault(); inputs.kbd = true; }
+      if (k === "ArrowDown" || k === "s" || k === "S") { e.preventDefault(); inputs.down = true; }
+      if (k === "f" || k === "F" || k === "e" || k === "E" || k === "Enter") { e.preventDefault(); if (!e.repeat) pulseSonar(); }
+      if (k === "x" || k === "X" || k === " ") {
+        e.preventDefault();
+        if (!e.repeat) fireTorpedo();
+        return;
+      }
+      if ((k === "m" || k === "M") && !e.repeat) { e.preventDefault(); deployMine(); return; }
+      if ((k === "h" || k === "H") && !e.repeat) { e.preventDefault(); callHelicopter(); return; }
+      if ((k === "v" || k === "V") && !e.repeat && account.upgrades && account.upgrades.mod_silence) {
+        e.preventDefault(); EX.silence = !EX.silence;
+        EX.msg = EX.silence ? "Mode silence ON" : "Mode silence OFF"; EX.msgT = 1.5; return;
+      }
+      if (k === "e" || k === "E" || k === "f" || k === "F" || k === "Enter") {
+        e.preventDefault();
+        if (nearBase()) {
+          inputs.sonarHold = true; // long hold → atelier via step
+        } else {
+          inputs.sonarHold = true;
+          if (!findInteractTarget() && !e.repeat) pulseSonar();
+        }
+        return;
+      }
+      if (k === "Escape") {
+        e.preventDefault();
+        if (nearBase()) returnToWorkshop();
+        else {
+          EX.msg = "Plateforme : SONAR = sécuriser + régénérer · Échap = atelier"; EX.msgT = 2.5;
+        }
+        return;
+      }
+      return;
+    }
     if (G.state === "perk") { if (/^[1-3]$/.test(k)) { e.preventDefault(); choosePerk(+k - 1); } return; }
     if (G.state === "over" && !$("mEntry").classList.contains("off")) {
       if (/^[a-zA-Z]$/.test(k)) { letters[sel] = k.toUpperCase(); sel = Math.min(2, sel + 1); renderLetters(); e.preventDefault(); return; }
@@ -3438,6 +5846,15 @@ startRoomList();
     if (!open) return;
     const k = e.key;
     if (k === " " || k === "ArrowUp" || k === "w" || k === "W" || k === "z" || k === "Z") { inputs.kbd = false; if (k === " ") e.preventDefault(); }
+    if (k === "ArrowLeft" || k === "a" || k === "A" || k === "q" || k === "Q") inputs.left = false;
+    if (k === "ArrowRight" || k === "d" || k === "D") inputs.right = false;
+    if (k === "ArrowDown" || k === "s" || k === "S") inputs.down = false;
+    if (k === "e" || k === "E" || k === "f" || k === "F" || k === "Enter") {
+      const held = EX && EX.baseHold ? EX.baseHold : 0;
+      inputs.sonarHold = false;
+      if (EX && nearBase() && held < 0.75 && held >= 0) dockAndRestock();
+      if (EX) { EX.holdT = 0; EX.holdTarget = null; EX.baseHold = 0; }
+    }
   });
   document.addEventListener("visibilitychange", () => { if (open && document.hidden) pause(true); });
 })();
