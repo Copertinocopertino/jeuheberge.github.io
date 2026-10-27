@@ -564,6 +564,45 @@
   .mbtn { border: 3px solid #fff; background: #e9edf7; color: #121522; font-size: 13px; font-weight: 900; padding: 7px 10px; cursor: pointer; box-shadow: 3px 3px 0 #080a10; font-family: inherit; }
   .mbtn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #080a10; }
   #mHud .mbtn:first-child { margin-right: auto; }
+
+  #mCtrlArcade.blitz-only { grid-template-columns: 1fr; }
+  #mCtrlArcade.blitz-only #mFire { display: none; }
+  #mScoreGauge { display: none; align-items: center; gap: 8px; padding: 2px 2px 0; flex: none; }
+  #mini.blitz-over #mScoreGauge { display: flex; }
+  #mScoreGauge .sg-l, #mScoreGauge .sg-r {
+    font-size: 10px; font-weight: 900; opacity: .55; min-width: 28px; font-variant-numeric: tabular-nums;
+  }
+  #mScoreGauge .sg-r { text-align: right; color: #ffd447; opacity: .85; }
+  #mScoreGauge .sg-track {
+    flex: 1; height: 14px; background: #0a1520; border: 2px solid #2a3548; position: relative; overflow: hidden;
+  }
+  #mScoreFill {
+    display: block; height: 100%; width: 0%;
+    background: linear-gradient(180deg, #6ed0f0 0%, #1d80b3 55%, #0a4a6e 100%);
+    box-shadow: inset 0 2px 0 rgba(255,255,255,.25); position: relative;
+  }
+  #mScoreFill::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 35%;
+    background: linear-gradient(180deg, rgba(255,255,255,.28), transparent);
+  }
+  #mScorePct {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 900; letter-spacing: 1px;
+    color: #e8f6ff; text-shadow: 0 1px 2px #000; pointer-events: none;
+  }
+  #mScoreCurveWrap { display: none; width: min(340px, 100%); margin: 4px auto 0; text-align: center; }
+  #mini.blitz-over #mScoreCurveWrap { display: block; }
+  #mScoreCurveWrap .sc-label { font-size: 11px; opacity: .75; margin-bottom: 4px; letter-spacing: 1px; }
+  #mScoreCurve { width: 100%; height: 72px; background: #151a2a; border: 2px solid #58617d; display: block; }
+  #mScoreCurveWrap .sc-axis {
+    display: flex; justify-content: space-between; font-size: 9px; opacity: .55; margin-top: 2px; font-variant-numeric: tabular-nums;
+  }
+  #mini.blitz-play #mHud .mstat { border-width: 2px; padding: 1px 6px; min-width: 48px; background: rgba(32,38,58,.72); }
+  #mini.blitz-play #mHud .mstat .k { font-size: 8px; letter-spacing: 1px; opacity: .55; }
+  #mini.blitz-play #mHud .mstat b { font-size: 13px; color: #cfd8ee; }
+  #mini.blitz-play #mProg { height: 3px; border-width: 1px; opacity: .7; }
+  #mini.blitz-play #mLives { display: none; }
+
   #mProg { height: 6px; background: #0d1018; border: 2px solid #080a10; flex: none; }
   #mProg i { display: block; height: 100%; width: 0; background: #43c6e3; }
   #mStage { position: relative; flex: 1; min-height: 0; border: 4px solid #fff; background: #050914; box-shadow: 6px 6px 0 #080a10; overflow: hidden; }
@@ -780,6 +819,11 @@
         <button class="mbtn" id="mSound" type="button" title="Son">🔊</button>
       </div>
       <div id="mProg"><i id="mProgBar"></i></div>
+      <div id="mScoreGauge">
+        <span class="sg-l">0</span>
+        <div class="sg-track"><i id="mScoreFill"></i><b id="mScorePct">0%</b></div>
+        <span class="sg-r" id="mScoreMaxLbl">2075</span>
+      </div>
       <div id="mStage">
         <canvas id="mCanvas" width="320" height="180"></canvas>
         <canvas id="mMiniMap" width="72" height="72"></canvas>
@@ -818,7 +862,11 @@
             </button>
             <button type="button" class="mode-card" id="mModeExplore">
               <strong>◈ EXPLORATION</strong>
-              <small>Monde libre — profondeur, pression, sonar, atelier d’améliorations. (nouveau)</small>
+              <small>Monde libre — profondeur, pression, sonar, atelier d’améliorations.</small>
+            </button>
+            <button type="button" class="mode-card" id="mModeBlitz">
+              <strong>⚡ SPRINT PORTES</strong>
+              <small>90 s — portiques, multi de série, mode secret à 117 sans faute.</small>
             </button>
           </div>
           <button class="lobby-btn" id="mModesBack" type="button" style="background:#2a324c;color:#fff;border-color:#58617d">Changer de compte</button>
@@ -854,11 +902,11 @@
 
         <div id="mStart" class="mpanel off">
           <div class="kicker">MINI-JEU</div>
-          <h2 class="mtitle">TOUCHER LE FOND</h2>
-          <p class="mhow">Évite les mines et les bestioles, et ne touche surtout pas le fond.<br>
+          <h2 class="mtitle" id="mStartTitle">TOUCHER LE FOND</h2>
+          <p class="mhow" id="mStartHow">Évite les mines et les bestioles, et ne touche surtout pas le fond.<br>
             <b>Espace</b> ou appui long = remonter (sinon tu coules)<br>
             <b>F</b> ou bouton = torpille, rechargée en quelques secondes</p>
-          <p class="mhow" style="font-size:11px;opacity:.8">Ramasse les bulles : <b>S</b> bouclier · <b>N</b> niveau +1 · <b>+</b> coque · <b>T</b> triple tir · <b>x2</b> score · <b>~</b> ralenti · <b>$</b> prime x2.<br>Un boss t'attend tous les 3 niveaux.<br>Tu choisis un atout au départ et après chaque boss.</p>
+          <p class="mhow" id="mStartHow2" style="font-size:11px;opacity:.8">Ramasse les bulles : <b>S</b> bouclier · <b>N</b> niveau +1 · <b>+</b> coque · <b>T</b> triple tir · <b>x2</b> score · <b>~</b> ralenti · <b>$</b> prime x2.<br>Un boss t'attend tous les 3 niveaux.<br>Tu choisis un atout au départ et après chaque boss.</p>
           <div id="mSkinBox">
             <button class="mbtn" id="mSkinL" type="button" aria-label="Skin précédent">◀</button>
             <div class="skinview"><canvas id="mSkinCv" width="24" height="14"></canvas><div id="mSkinName">CLASSIQUE</div><small id="mSkinInfo"></small><small id="mSkinCount" style="opacity:.55"></small></div>
@@ -2289,6 +2337,15 @@ function sfx(kind) {
     case "boom":   tone(130, t, 0.4, "sawtooth", 0.16, 32); hat(t, 0.16); break;
     case "ping":   tone(988, t, 0.07, "square", 0.06); tone(1319, t + 0.07, 0.1, "square", 0.06); break;
     case "pop":    tone(660, t, 0.06, "square", 0.07, 990); break;
+    case "glug": {
+      const n = 3 + Math.floor(Math.random() * 2);
+      for (let i = 0; i < n; i++) {
+        const f = 180 + Math.random() * 220 + i * 40;
+        tone(f, t + i * 0.045, 0.09 + Math.random() * 0.04, "sine", 0.05 + Math.random() * 0.03, f * 1.8);
+      }
+      tone(90 + Math.random() * 40, t, 0.12, "triangle", 0.04, 40);
+      break;
+    }
   }
 }
 
@@ -2343,11 +2400,15 @@ startRoomList();
 (function () {
   "use strict";
   const W = 320, H = 180, SURF = 16;
-  const LEVEL_TIME = 60;          // secondes par niveau
+  const LEVEL_TIME = 60;
+  const BLITZ_TIME = 90;
+  const BLITZ_BASE_SPEED = 150;
+  const BLITZ_SCORE_MAX = 2075;
+  const BLITZ_PERFECT_GATES = 117;
   const BASE_SPEED = 62;          // px/s du défilement au niveau 1
   const RELOAD = 4;               // secondes de rechargement de la torpille
   const PX = 58;                  // position horizontale fixe du sous-marin
-  const LS_SCORES = "cm_mini_scores", LS_NAME = "cm_mini_name";
+  const LS_SCORES = "cm_mini_scores", LS_BLITZ = "cm_mini_blitz_scores", LS_NAME = "cm_mini_name";
 
   const root = $("mini"), cv = $("mCanvas"), g = cv.getContext("2d");
   g.imageSmoothingEnabled = false;
@@ -2617,6 +2678,8 @@ startRoomList();
       buff: { shield: 0, mult2: 0, slow: 0, dbl: 0, torp: 0 }, slowF: 1, puLeft: 12, pearlLeft: 150, curLeft: 420,
       zones: [], boss: null, bossSpawned: false, tintD: 0, tintR: 0, perm: {}, half: false, perkPending: false, perkChoices: [],
       combo: 0, comboT: 0, maxCombo: 0, record: bestKnown(), recBeaten: false, recFlash: 0,
+      blitzMode: false, blitzLeft: 90, portals: [], nextGate: 0, streak: 0, maxStreak: 0, gates: 0,
+      scoreShown: 0, glugAcc: 0, scoreReveal: false, blitzPerfect: true, blitzEndless: false,
       skin: isUnlocked(prog.skin) ? prog.skin : "classic", toasts: [], toastT: 0, lvlTorps: 0, firstPick: false
     };
   }
@@ -2628,12 +2691,34 @@ startRoomList();
   function begin() {
     G = fresh();
     G.state = "playing";
-    G.firstPick = true;
     G.skin = isUnlocked(prog.skin) ? prog.skin : "classic";
     panel(null);
     if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
     inputs.kbd = inputs.btn = inputs.cv = false;
     sfx("select");
+    if (gameMode === "blitz") {
+      G.blitzMode = true;
+      G.blitzLeft = BLITZ_TIME;
+      G.portals = [];
+      G.nextGate = 0;
+      G.streak = 0; G.maxStreak = 0; G.gates = 0;
+      G.score = 0; G.scoreShown = 0; G.glugAcc = 0; G.scoreReveal = false;
+      G.blitzPerfect = true; G.blitzEndless = false;
+      for (let i = 0; i < 4; i++) spawnPortal();
+      G.banner = { text: "GO", t: 0.7, sub: "", sub2: "", small: true };
+      try { root.classList.add("blitz-play"); root.classList.remove("blitz-over"); } catch (e) {}
+      try {
+        $("mCtrlArcade").classList.add("blitz-only");
+        const keys = document.querySelectorAll("#mHud .mstat .k");
+        if (keys[0]) keys[0].textContent = "SCORE";
+        if (keys[1]) keys[1].textContent = "PORTES";
+        if (keys[2]) keys[2].textContent = "MULTI";
+        if (keys[3]) keys[3].textContent = "TEMPS";
+      } catch (e) {}
+      return;
+    }
+    G.firstPick = true;
+    try { root.classList.remove("blitz-play"); root.classList.remove("blitz-over"); $("mCtrlArcade").classList.remove("blitz-only"); } catch (e) {}
     openPerk("CHOISIS TON ATOUT DE DÉPART");
     /*__TEST_HOOK__*/
   }
@@ -2731,7 +2816,8 @@ startRoomList();
   }
   function die(reason) {
     if (G.state !== "playing") return;
-    G.reason = reason; G.state = "dying"; G.dieT = 1.2;
+    try { root.classList.remove("blitz-play"); if (reason === "temps" || reason === "porte" || reason === "fond") root.classList.add("blitz-over"); } catch (e) {}
+    G.reason = reason; G.state = "dying"; G.dieT = (reason === "temps" || reason === "porte") ? 0.55 : 1.2;
     inputs.kbd = inputs.btn = inputs.cv = false;
     boom(PX + 12, G.sub.y, 26);
     G.shake = 0.5;
@@ -2895,7 +2981,285 @@ startRoomList();
     }
   }
 
+  function streakMult(streak) {
+    const m = 1 + 0.1 * Math.floor(Math.max(0, streak) / 5);
+    if (G && G.blitzEndless) return m;
+    return Math.min(2, m);
+  }
+  function gapFor(n) {
+    // n0 ≈ portes passées en ~10 s à vitesse moyenne ~160–180 px/s, spacing ~130
+    // → environ 12–14 portes. On converge vers gap stable ~38–42 px.
+    const gStart = 68;   // très large au début
+    const gStable = 40;  // largeur "10 s" gardée jusqu'à la fin
+    const nRamp = 12;    // atteint le plateau vers la 12e porte
+    const tt = Math.min(1, n / nRamp);
+    // ease-out doux
+    const e = 1 - (1 - tt) * (1 - tt);
+    return gStart + (gStable - gStart) * e;
+  }
+  function spacingFor(n) {
+    // assez d'espace horizontal pour corriger l'altitude
+    return Math.max(120, 155 - Math.min(n, 12) * 1.2);
+  }
+  function blitzSpeed(t) {
+    // vitesse élevée mais plafonnée pour rester pilotable
+    return BLITZ_BASE_SPEED + Math.min(55, t * 0.85);
+  }
+  function spawnPortal() {
+    const n = G.nextGate;
+    const gap = gapFor(n);
+    const gy = terr.h[W + 14];
+    const minCy = SURF + 16 + gap / 2;
+    const maxCy = Math.min(H - 18, gy - 12) - gap / 2;
+    const lo = minCy, hi = Math.max(minCy + 1, maxCy);
+
+    // Centre de la porte précédente → delta vertical limité (enchaînement possible)
+    let prevCy = null;
+    if (G.portals.length) {
+      let best = null, bestX = -1e9;
+      for (let i = 0; i < G.portals.length; i++) {
+        if (G.portals[i].x > bestX) { bestX = G.portals[i].x; best = G.portals[i]; }
+      }
+      if (best) prevCy = best.cy;
+    }
+
+    // Déplacement vertical max entre deux portes (px), selon spacing / physique sub
+    // sub vy typique après 0.4–0.6 s de pilotage ≈ 40–55 px
+    const maxDy = 28 + Math.min(10, n * 0.4); // reste raisonnable
+    let cy;
+    if (prevCy == null) {
+      cy = (lo + hi) / 2 + rnd(-8, 8);
+    } else {
+      const target = prevCy + rnd(-maxDy, maxDy);
+      cy = cl(target, lo, hi);
+      // si on est collé au bord, ramener un peu vers le centre pour éviter les pièges
+      if (cy < lo + 6) cy = lo + rnd(4, 12);
+      if (cy > hi - 6) cy = hi - rnd(4, 12);
+    }
+    cy = cl(cy, lo, hi);
+
+    let x = W + 24;
+    if (G.portals.length) {
+      let maxX = -1e9;
+      for (let i = 0; i < G.portals.length; i++) if (G.portals[i].x > maxX) maxX = G.portals[i].x;
+      x = Math.max(x, maxX + spacingFor(n));
+    }
+    G.portals.push({ x: x, cy: cy, gap: gap, passed: false, missed: false, id: n });
+    G.nextGate++;
+  }
+
+  function enterBlitzEndless() {
+    if (G.blitzEndless) return;
+    G.blitzEndless = true;
+    G.blitzLeft = 9999;
+    G.banner = { text: "MODE SECRET", t: 2.2, sub: "SANS FAUTE · MULTI ILLIMITÉ · 1 RATE = MORT", sub2: "", small: false };
+    sfx("win");
+  }
+  function playBlitz(dt) {
+    const s = G.sub;
+    if (!G.blitzEndless) {
+      G.blitzLeft -= dt;
+      if (G.blitzLeft <= 0) {
+        G.blitzLeft = 0;
+        try {
+          if (G.blitzPerfect && G.gates >= BLITZ_PERFECT_GATES) {
+            enterBlitzEndless();
+          } else {
+            die("temps");
+            return;
+          }
+        } catch (err) {
+          die("temps");
+          return;
+        }
+      }
+    }
+    const spd = blitzSpeed(G.time);
+    G.speed = spd;
+    scenery(dt, spd);
+    // physique arcade
+    const up = inputs.kbd || inputs.btn || inputs.cv;
+    if (up) s.vy -= 520 * dt; else s.vy += 420 * dt;
+    s.vy *= 0.90;
+    s.y += s.vy * dt;
+    if (s.y < SURF + 8) { s.y = SURF + 8; s.vy = 0; }
+    const floor = floorUnderSub();
+    if (s.y + 12 >= floor) { s.y = floor - 12; die("fond"); return; }
+    if (G.inv > 0) G.inv -= dt;
+    if (G.shake > 0) G.shake -= dt;
+    if (G.banner) { G.banner.t -= dt; if (G.banner.t <= 0) G.banner = null; }
+    // portals — toujours en garder plusieurs devant
+    let ahead = 0;
+    for (let i = 0; i < G.portals.length; i++) if (G.portals[i].x > W * 0.4) ahead++;
+    while (ahead < 4) { spawnPortal(); ahead++; }
+    const line = PX + 18;
+    for (let i = G.portals.length - 1; i >= 0; i--) {
+      const p = G.portals[i];
+      p.x -= spd * dt;
+      if (p.x < -40) { G.portals.splice(i, 1); continue; }
+      if (!p.passed && !p.missed && p.x <= line && p.x > line - spd * dt - 4) {
+        const subTop = s.y, subBot = s.y + 12;
+        const openTop = p.cy - p.gap / 2, openBot = p.cy + p.gap / 2;
+        if (subTop >= openTop - 2 && subBot <= openBot + 2) {
+          p.passed = true;
+          G.gates++;
+          G.streak++;
+          if (G.streak > G.maxStreak) G.maxStreak = G.streak;
+          G.combo = G.streak; G.maxCombo = G.maxStreak;
+          const mult = streakMult(G.streak);
+          const gain = Math.round(10 * mult);
+          G.score += gain;
+          pop(PX + 18, s.y - 8, "+" + gain);
+          sfx("ping");
+          if (!G.blitzEndless && G.blitzPerfect && G.gates >= BLITZ_PERFECT_GATES) enterBlitzEndless();
+        } else {
+          p.missed = true;
+          if (G.blitzEndless) { sfx("hit"); die("porte"); return; }
+          G.blitzPerfect = false;
+          G.streak = 0; G.combo = 0;
+          G.shake = 0.12; G.inv = 0.2;
+          sfx("hit");
+        }
+      }
+    }
+    // fx only
+    for (let i = G.parts.length - 1; i >= 0; i--) {
+      const p = G.parts[i]; p.life -= dt; p.x += (p.vx || 0) * dt; p.y += (p.vy || 0) * dt;
+      if (p.life <= 0) G.parts.splice(i, 1);
+    }
+    for (let i = G.pops.length - 1; i >= 0; i--) {
+      G.pops[i].t += dt; G.pops[i].y -= 10 * dt;
+      if (G.pops[i].t > 0.55) G.pops.splice(i, 1);
+    }
+    // jauge score : se remplit avec glouglou
+    updateScoreGauge(dt);
+  }
+
+  function updateScoreGauge(dt) {
+    if (!G || !G.blitzMode || !G.scoreReveal) return;
+    const target = Math.max(0, G.score);
+    const prev = G.scoreShown || 0;
+    // remplissage type niveau d'eau
+    const k = 1 - Math.pow(0.0003, dt);
+    G.scoreShown = prev + (target - prev) * Math.min(1, k * 2.4);
+    if (G.scoreShown > target - 0.15) G.scoreShown = target;
+    const delta = G.scoreShown - prev;
+    if (delta > 0.2) {
+      G.glugAcc = (G.glugAcc || 0) + delta;
+      while (G.glugAcc >= 12) {
+        G.glugAcc -= 12;
+        sfx("glug");
+      }
+    }
+    const pctRaw = (G.scoreShown / BLITZ_SCORE_MAX) * 100;
+    const pct = Math.max(0, Math.min(100, pctRaw));
+    const fill = $("mScoreFill");
+    const lab = $("mScorePct");
+    if (fill) fill.style.width = pct.toFixed(2) + "%";
+    if (lab) lab.textContent = Math.round(pctRaw) + "%";
+    const maxL = $("mScoreMaxLbl");
+    if (maxL) maxL.textContent = String(BLITZ_SCORE_MAX);
+    // point sur la courbe suit le score affiché pendant le fill
+    drawScoreCurve(G.scoreShown);
+    if (G.scoreShown >= target - 0.05) G.scoreReveal = false;
+  }
+
+  /** Courbe gaussienne des scores probables + point joueur */
+  function drawScoreCurve(scoreVal) {
+    const cv = $("mScoreCurve");
+    if (!cv) return;
+    const ctx = cv.getContext("2d");
+    const W = cv.width, H = cv.height;
+    ctx.clearRect(0, 0, W, H);
+    // Distribution hypothetique : moyenne ~950, écart-type ~380
+    // → la plupart des joueurs entre ~400 et ~1500, 2075 très rare
+    const mean = 950, sd = 380, maxS = BLITZ_SCORE_MAX;
+    function gauss(x) {
+      const z = (x - mean) / sd;
+      return Math.exp(-0.5 * z * z);
+    }
+    // peak height
+    const peak = gauss(mean);
+    const padX = 8, padTop = 8, padBot = 14;
+    const plotW = W - padX * 2, plotH = H - padTop - padBot;
+
+    // fill under curve
+    ctx.beginPath();
+    ctx.moveTo(padX, padTop + plotH);
+    for (let i = 0; i <= 80; i++) {
+      const x = (i / 80) * maxS;
+      const px = padX + (i / 80) * plotW;
+      const py = padTop + plotH - (gauss(x) / peak) * plotH * 0.92;
+      ctx.lineTo(px, py);
+    }
+    ctx.lineTo(padX + plotW, padTop + plotH);
+    ctx.closePath();
+    const grd = ctx.createLinearGradient(0, padTop, 0, padTop + plotH);
+    grd.addColorStop(0, "rgba(67,198,227,0.35)");
+    grd.addColorStop(1, "rgba(67,198,227,0.05)");
+    ctx.fillStyle = grd;
+    ctx.fill();
+
+    // curve stroke
+    ctx.beginPath();
+    for (let i = 0; i <= 80; i++) {
+      const x = (i / 80) * maxS;
+      const px = padX + (i / 80) * plotW;
+      const py = padTop + plotH - (gauss(x) / peak) * plotH * 0.92;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = "#43c6e3";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // mean dashed line
+    const meanPx = padX + (mean / maxS) * plotW;
+    ctx.strokeStyle = "rgba(255,255,255,0.25)";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(meanPx, padTop);
+    ctx.lineTo(meanPx, padTop + plotH);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // player point
+    const s = Math.max(0, Math.min(maxS, scoreVal));
+    const ppx = padX + (s / maxS) * plotW;
+    const ppy = padTop + plotH - (gauss(s) / peak) * plotH * 0.92;
+    // stem
+    ctx.strokeStyle = "#ffd447";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(ppx, padTop + plotH);
+    ctx.lineTo(ppx, ppy);
+    ctx.stroke();
+    // dot
+    ctx.fillStyle = "#ffd447";
+    ctx.beginPath();
+    ctx.arc(ppx, ppy, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#10131f";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // label near point
+    ctx.font = "bold 9px sans-serif";
+    ctx.fillStyle = "#ffd447";
+    ctx.textAlign = "center";
+    const label = Math.round(s).toLocaleString("fr-FR");
+    const ly = Math.max(padTop + 10, ppy - 8);
+    ctx.fillText(label, ppx, ly);
+
+    const meanL = $("mCurveMean");
+    if (meanL) meanL.textContent = "moy. " + mean;
+    const maxL = $("mCurveMax");
+    if (maxL) maxL.textContent = String(maxS);
+  }
+
+
   function play(dt) {
+    if (G.blitzMode) { playBlitz(dt); return; }
     const s = G.sub, B = G.buff;
     for (const k in B) if (B[k] > 0) B[k] = Math.max(0, B[k] - dt);
     G.slowF += ((B.slow > 0 ? 0.62 : 1) - G.slowF) * Math.min(1, dt * 4);
@@ -3005,6 +3369,7 @@ startRoomList();
       if (G.dieT <= 0) showOver();
     } else if (G.state === "paused") { /* gel */ }
     else if (G.state === "perk") { fx(dt); }
+    else if (G.state === "over") { if (G.blitzMode && G.scoreReveal) updateScoreGauge(dt); }
     else { scenery(dt, 34); fx(dt); }
     hud();
   }
@@ -3072,6 +3437,33 @@ startRoomList();
       }
     });
 
+    if (G.blitzMode && G.portals) {
+      G.portals.forEach(p => {
+        const x = Math.round(p.x);
+        const top = Math.round(p.cy - p.gap / 2);
+        const bot = Math.round(p.cy + p.gap / 2);
+        const col = p.passed ? "#4cc46a" : (p.missed ? "#e0453a" : "#ffd447");
+        g.globalAlpha = (p.passed || p.missed) ? 0.4 : 1;
+        g.fillStyle = "#2a3548";
+        g.fillRect(x, SURF, 8, Math.max(0, top - SURF));
+        g.fillRect(x, bot, 8, Math.max(0, H - bot));
+        g.fillStyle = col;
+        g.fillRect(x - 2, top - 3, 12, 4);
+        g.fillRect(x - 2, bot - 1, 12, 4);
+        g.fillStyle = "#8a93a8";
+        g.fillRect(x, top, 2, Math.max(0, bot - top));
+        g.fillRect(x + 6, top, 2, Math.max(0, bot - top));
+        if (!p.passed && !p.missed) {
+          g.fillStyle = "rgba(255,212,71,0.10)";
+          g.fillRect(x + 2, top, 4, Math.max(0, bot - top));
+          g.fillStyle = "rgba(255,212,71,0.35)";
+          const mid = Math.round(p.cy);
+          g.fillRect(x - 4, mid, 3, 1);
+          g.fillRect(x + 9, mid, 3, 1);
+        }
+        g.globalAlpha = 1;
+      });
+    }
     // obstacles, ennemis et bonus
     G.objs.forEach(o => {
       const x = Math.round(o.x), y = Math.round(o.y);
@@ -3218,12 +3610,18 @@ startRoomList();
       g.globalAlpha = 1;
     }
     if (G.banner && G.state !== "menu") {
-      const a = Math.min(1, G.banner.t / 0.5);
-      g.globalAlpha = a;
-      g.font = "bold 18px 'Courier New', monospace"; g.lineWidth = 4;
-      g.strokeText(G.banner.text, W / 2, 62); g.fillText(G.banner.text, W / 2, 62);
-      if (G.banner.sub) { g.font = "bold 8px 'Courier New', monospace"; g.lineWidth = 3; g.strokeText(G.banner.sub, W / 2, 76); g.fillText(G.banner.sub, W / 2, 76); }
-      if (G.banner.sub2) { g.font = "bold 9px 'Courier New', monospace"; g.lineWidth = 3; g.strokeText(G.banner.sub2, W / 2, 90); g.fillText(G.banner.sub2, W / 2, 90); }
+      const a = Math.min(1, G.banner.t / 0.35);
+      g.globalAlpha = a * (G.blitzMode || G.banner.small ? 0.75 : 1);
+      if ((G.blitzMode || G.banner.small) && G.banner.text === "GO") {
+        g.font = "bold 10px 'Courier New', monospace"; g.lineWidth = 3;
+        g.strokeStyle = "#10131f"; g.fillStyle = "#cfd8ee";
+        g.strokeText(G.banner.text, W / 2, 28); g.fillText(G.banner.text, W / 2, 28);
+      } else {
+        g.font = "bold 18px 'Courier New', monospace"; g.lineWidth = 4;
+        g.strokeText(G.banner.text, W / 2, 62); g.fillText(G.banner.text, W / 2, 62);
+        if (G.banner.sub) { g.font = "bold 8px 'Courier New', monospace"; g.lineWidth = 3; g.strokeText(G.banner.sub, W / 2, 76); g.fillText(G.banner.sub, W / 2, 76); }
+        if (G.banner.sub2) { g.font = "bold 9px 'Courier New', monospace"; g.lineWidth = 3; g.strokeText(G.banner.sub2, W / 2, 90); g.fillText(G.banner.sub2, W / 2, 90); }
+      }
       g.globalAlpha = 1;
     }
   }
@@ -3237,18 +3635,35 @@ startRoomList();
   }
   function hud() {
     setText("mScore", fr(G.score));
-    setText("mLevel", String(G.level));
-    setText("mMult", "×" + sMult().toLocaleString("fr-FR"));
-    if (G.record > 0) {
-      if (G.recBeaten) { setText("mRecK", "RECORD !"); setText("mRec", "★ +" + fr(G.score - G.record)); }
-      else { setText("mRecK", "À BATTRE"); setText("mRec", fr(G.state === "menu" ? G.record : Math.ceil(G.record - G.score))); }
-    } else { setText("mRecK", "RECORD"); setText("mRec", "—"); }
-    $("mRec").style.color = G.recBeaten ? "#ffd447" : "#ffb347";
+    if (G.blitzMode) {
+      setText("mLevel", String(G.gates || 0));
+      setText("mMult", "×" + streakMult(G.streak || 0).toFixed(1));
+      if (G.blitzEndless) {
+        setText("mRecK", "SECRET"); setText("mRec", "∞");
+        $("mRec").style.color = "#ffd447";
+      } else {
+        const tl = Math.max(0, G.blitzLeft || 0);
+        const mm = Math.floor(tl / 60), ss = Math.floor(tl % 60);
+        setText("mRecK", "TEMPS");
+        setText("mRec", mm + ":" + (ss < 10 ? "0" : "") + ss);
+        $("mRec").style.color = tl < 12 ? "#ff6b6b" : "#43c6e3";
+      }
+    } else {
+      setText("mLevel", String(G.level));
+      setText("mMult", "×" + sMult().toLocaleString("fr-FR"));
+      if (G.record > 0) {
+        if (G.recBeaten) { setText("mRecK", "RECORD !"); setText("mRec", "★ +" + fr(G.score - G.record)); }
+        else { setText("mRecK", "À BATTRE"); setText("mRec", fr(G.state === "menu" ? G.record : Math.ceil(G.record - G.score))); }
+        $("mRec").style.color = G.recBeaten ? "#ffd447" : "#ffb347";
+      } else { setText("mRecK", "RECORD"); setText("mRec", "—"); $("mRec").style.color = "#ffb347"; }
+    }
     let hs = "";
     for (let i = 0, ml = maxLives(), full = Math.max(0, G.lives); i < ml; i++)
       hs += i >= full ? '<span style="opacity:.25">♥</span>' : (i === full - 1 && G.half ? '<span style="opacity:.5">♥</span>' : "♥");
     setText("mLives", hs, true);
-    const pct = G.state === "menu" ? 0 : Math.min(100, G.levelT / LEVEL_TIME * 100);
+    const pct = G.state === "menu" ? 0 : (G.blitzMode
+      ? (G.blitzEndless ? 100 : Math.min(100, (1 - (G.blitzLeft || 0) / BLITZ_TIME) * 100))
+      : Math.min(100, G.levelT / LEVEL_TIME * 100));
     $("mProgBar").style.width = pct.toFixed(1) + "%";
     const ready = G.reload <= 0;
     $("mFire").classList.toggle("cool", !ready);
@@ -3268,18 +3683,20 @@ startRoomList();
     rows.forEach(r => { if (!best[r.name] || r.score > best[r.name].score) best[r.name] = r; });
     return Object.keys(best).map(k => best[k]).sort((x, y) => y.score - x.score);
   }
+  function scoresKey() { return ((G && G.blitzMode) || gameMode === "blitz") ? LS_BLITZ : LS_SCORES; }
   function localScores() {
-    try { return bestByName((JSON.parse(localStorage.getItem(LS_SCORES) || "[]") || []).filter(validRow)); } catch (e) { return []; }
+    try { return bestByName((JSON.parse(localStorage.getItem(scoresKey()) || "[]") || []).filter(validRow)); } catch (e) { return []; }
   }
   function addLocal(e) {
     const a = bestByName(localScores().concat([e]));
-    try { localStorage.setItem(LS_SCORES, JSON.stringify(a.slice(0, 20))); } catch (err) {}
+    try { localStorage.setItem(scoresKey(), JSON.stringify(a.slice(0, 20))); } catch (err) {}
   }
   const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error("délai dépassé")), ms))]);
 
   async function fetchBoard() {
     const db = await connectDb();
-    const snap = await db.ref("minigame/scores").orderByChild("score").limitToLast(10).once("value");
+    const path = ((G && G.blitzMode) || gameMode === "blitz") ? "minigame/blitzScores" : "minigame/scores";
+    const snap = await db.ref(path).orderByChild("score").limitToLast(10).once("value");
     const arr = [];
     snap.forEach(ch => {
       const v = ch.val();
@@ -3325,11 +3742,33 @@ startRoomList();
   function showOver() {
     G.state = "over";
     saved = false; sel = 0;
-    $("mOverTitle").textContent = G.reason === "fond" ? "TOUCHÉ LE FOND !" : "COQUE PERCÉE !";
-    $("mFinalScore").textContent = fr(G.score);
-    $("mFinalLevel").textContent = String(G.level);
-    $("mFinalCombo").textContent = String(G.maxCombo);
-    $("mRecLine").textContent = G.recBeaten ? "★ NOUVEAU RECORD ! ★" : (G.record > 0 ? "Record à battre : " + fr(G.record) : "");
+    $("mOverTitle").textContent = G.reason === "temps" ? "TEMPS ÉCOULÉ !" : (G.reason === "porte" ? "PORTE RATÉE !" : (G.reason === "fond" ? "TOUCHÉ LE FOND !" : "COQUE PERCÉE !"));
+    try {
+      $("mFinalScore").textContent = fr(G.score);
+      $("mFinalLevel").textContent = G.blitzMode ? String(G.gates || 0) : String(G.level);
+      $("mFinalCombo").textContent = String(G.blitzMode ? (G.maxStreak || 0) : G.maxCombo);
+      if ($("mFinalMidLabel")) $("mFinalMidLabel").textContent = G.blitzMode ? "PORTES" : "NIVEAU";
+      if ($("mFinalComboLabel")) $("mFinalComboLabel").textContent = G.blitzMode ? "SÉRIE" : "COMBO";
+      $("mRecLine").textContent = G.blitzMode
+        ? ((G.gates || 0) + " portes · série " + (G.maxStreak || 0)
+            + (G.blitzEndless || (G.gates || 0) >= 117 ? " · MODE SECRET" : "")
+            + " · " + Math.round(Math.min(999, G.score / BLITZ_SCORE_MAX * 100)) + " % du max 90s")
+        : (G.recBeaten ? "★ NOUVEAU RECORD ! ★" : (G.record > 0 ? "Record à battre : " + fr(G.record) : ""));
+    } catch (e) {}
+    if (G.blitzMode) {
+      G.scoreShown = 0; G.glugAcc = 0; G.scoreReveal = true;
+      try { root.classList.add("blitz-over"); root.classList.remove("blitz-play"); } catch (e) {}
+      if ($("mScoreFill")) $("mScoreFill").style.width = "0%";
+      if ($("mScorePct")) $("mScorePct").textContent = "0%";
+      if ($("mScoreMaxLbl")) $("mScoreMaxLbl").textContent = String(BLITZ_SCORE_MAX);
+      try { drawScoreCurve(0); } catch (e) {}
+    }
+    // Même flux d'enregistrement que l'arcade (initiales + ENREGISTRER)
+    try {
+      if (account && account.id && /^[A-Z]{3}$/.test(String(account.id).toUpperCase())) {
+        letters = String(account.id).toUpperCase().slice(0, 3).split("");
+      }
+    } catch (e) {}
     $("mEntry").classList.remove("off");
     $("mBoardWrap").classList.add("off");
     $("mNote").textContent = "";
@@ -3342,9 +3781,11 @@ startRoomList();
     if (saved || G.state !== "over") return;
     saved = true;
     $("mSave").disabled = true;
-    const name = letters.join("");
+    let name = letters.join("").toUpperCase();
+    if (!/^[A-Z]{3}$/.test(name) && account && account.id) name = String(account.id).slice(0, 3).toUpperCase();
+    if (!/^[A-Z]{3}$/.test(name)) name = "AAA";
     try { localStorage.setItem(LS_NAME, name); } catch (e) {}
-    const entry = { name, score: Math.floor(G.score), level: G.level, ts: Date.now() };
+    const entry = { name, score: Math.floor(G.score), level: G.blitzMode ? (G.gates || 0) : G.level, gates: G.blitzMode ? (G.gates || 0) : 0, ts: Date.now() };
     addLocal(entry);
     $("mEntry").classList.add("off");
     $("mBoardWrap").classList.remove("off");
@@ -3352,7 +3793,7 @@ startRoomList();
     let key = null, wrote = false, better = null;
     try {
       const db = await withTimeout(connectDb(), 6000);
-      const ref = db.ref("minigame/scores/" + name);                 // un seul enregistrement par trigramme
+      const ref = db.ref((((G && G.blitzMode) || gameMode === "blitz") ? "minigame/blitzScores/" : "minigame/scores/") + name);                 // un seul enregistrement par trigramme
       const old = (await withTimeout(ref.once("value"), 6000)).val();
       key = name;
       if (old && typeof old.score === "number" && old.score >= entry.score) better = old.score;
@@ -3551,7 +3992,7 @@ startRoomList();
   // ========== COMPTE PILOTE (3 lettres + code 3 chiffres) ==========
   const LS_ACCOUNTS = "cm_mini_accounts";
   let account = null; // { id, pin, coins, upgrades, skin }
-  let gameMode = null; // "arcade" | "explore"
+  let gameMode = null; // "arcade" | "explore" | "blitz"
   const DIGITS = "0123456789";
   let acctLetters = ["A", "A", "A"], acctPin = ["0", "0", "0"], acctSel = 0, acctFocus = "letters"; // letters | pin
 
@@ -5837,14 +6278,31 @@ startRoomList();
       if (keys[3]) keys[3].textContent = "À BATTRE";
     } catch (e) {}
   }
+  
+  function setStartScreenForMode() {
+    const title = $("mStartTitle"), how = $("mStartHow"), how2 = $("mStartHow2");
+    if (!title) return;
+    if (gameMode === "blitz") {
+      title.textContent = "SPRINT PORTES";
+      if (how) how.innerHTML = "<b>90 secondes</b> — enfile un maximum de portiques.<br><b>Espace</b> ou appui long = remonter.<br>10 pts / porte · multi +0,1 tous les 5 (max ×2). 117 sans faute = mode secret.";
+      if (how2) how2.innerHTML = "Pas d'ennemis. Rater une porte casse la série. Mode secret : multi illimité, 1 rate = mort.";
+    } else {
+      title.textContent = "TOUCHER LE FOND";
+      if (how) how.innerHTML = "Évite les mines et les bestioles, et ne touche surtout pas le fond.<br><b>Espace</b> ou appui long = remonter (sinon tu coules)<br><b>F</b> ou bouton = torpille, rechargée en quelques secondes";
+      if (how2) how2.innerHTML = "Ramasse les bulles : <b>S</b> bouclier · <b>N</b> niveau +1 · <b>+</b> coque · <b>T</b> triple tir · <b>x2</b> score · <b>~</b> ralenti · <b>$</b> prime x2.<br>Un boss t'attend tous les 3 niveaux.<br>Tu choisis un atout au départ et après chaque boss.";
+    }
+  }
+
   $("mModeArcade").addEventListener("click", () => {
     gameMode = "arcade";
     EX = null;
     $("mControls").classList.remove("explore-mode");
     $("mMiniMap").classList.remove("on");
     $("mDepthBar").classList.remove("on");
+    try { $("mCtrlArcade").classList.remove("blitz-only"); root.classList.remove("blitz-play","blitz-over"); } catch (e) {}
     restoreArcadeHudLabels();
     G = fresh();
+    setStartScreenForMode();
     panel("mStart");
     renderSkin();
     loadBoard($("mBoardStart"), null);
@@ -5854,6 +6312,29 @@ startRoomList();
     gameMode = "explore";
     panel("mWorkshop");
     renderWorkshop();
+    sfx("select");
+  });
+  const _btnBlitz = $("mModeBlitz");
+  if (_btnBlitz) _btnBlitz.addEventListener("click", () => {
+    gameMode = "blitz";
+    EX = null;
+    $("mControls").classList.remove("explore-mode");
+    $("mMiniMap").classList.remove("on");
+    $("mDepthBar").classList.remove("on");
+    G = fresh();
+    G.blitzMode = true;
+    setStartScreenForMode();
+    panel("mStart");
+    try {
+      const keys = document.querySelectorAll("#mHud .mstat .k");
+      if (keys[0]) keys[0].textContent = "SCORE";
+      if (keys[1]) keys[1].textContent = "PORTES";
+      if (keys[2]) keys[2].textContent = "MULTI";
+      if (keys[3]) keys[3].textContent = "TEMPS";
+    } catch (e) {}
+    try { $("mCtrlArcade").classList.add("blitz-only"); } catch (e) {}
+    renderSkin();
+    loadBoard($("mBoardStart"), null);
     sfx("select");
   });
   $("mModesBack").addEventListener("click", () => {
